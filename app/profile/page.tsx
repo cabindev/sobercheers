@@ -3,10 +3,13 @@
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import axios from 'axios';
+import Link from 'next/link';
+import Timeline from './components/timeline/timeline';
+
 
 interface Campaign {
+  id: number; // Add the id field
   firstName: string;
   lastName: string;
   birthday: string;
@@ -21,9 +24,11 @@ interface Campaign {
   drinkingFrequency: string;
   intentPeriod: string;
   monthlyExpense: number;
-  motivation: string[];
+  motivations: string[];
   healthImpact: string;
 }
+
+const siteUrl = 'https://healthy-sobriety.sdnthailand.com/';
 
 export default function Profile() {
   const { data: session, status } = useSession();
@@ -54,22 +59,28 @@ export default function Profile() {
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   };
 
+  if (status !== "authenticated" || !session?.user) {
+    return null;
+  }
+
+  const isAdmin = session.user.role === 'admin';
+
+  const handleEditProfile = () => {
+    router.push(`/auth/form_signup/edit/${session.user.id}`);
+  };
+
   return (
-    status === "authenticated" &&
-    session.user && (
+    <>
       <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-4">
-        <div className="avatar online mb-4">
-          <div className="w-32 h-32 rounded-full border-4 border-indigo-500">
-            <Image
+        <div className="avatar">
+          <div className="w-32 rounded-full">
+            <img
               src={
                 imageError
                   ? "/images/default-profile.png"
                   : session.user.image || "/images/default-profile.png"
               }
               alt="User image"
-              width={128}
-              height={128}
-              className="rounded-full"
               onError={() => setImageError(true)}
             />
           </div>
@@ -103,18 +114,32 @@ export default function Profile() {
             </div>
           </div>
           <button
-            className=" badge flex-1 px-6 py-2 text-center bg-indigo-500 text-white font-semibold rounded-lg hover:bg-indigo-600"
+            className="badge flex-1 px-6 py-2 mt-4 text-center bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600"
+            onClick={handleEditProfile}
+          >
+            แก้ไขข้อมูลส่วนตัว
+          </button>
+          <button
+            className="badge flex-1 px-6 py-2 text-center bg-indigo-500 text-white font-semibold rounded-lg hover:bg-indigo-600"
             onClick={() => setShowCampaigns(!showCampaigns)}
           >
             กิจกรรม
           </button>
+          {isAdmin && (
+            <button
+              className="badge flex-1 px-6 py-2 mt-4 text-center bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600"
+              onClick={() => router.push("/dashboard")}
+            >
+              ไปที่แดชบอร์ด
+            </button>
+          )}
         </div>
-
         {showCampaigns && (
           <div className="mt-8 w-full max-w-4xl bg-white p-6 rounded-md shadow-md">
             <h1 className="text-2xl font-semibold mb-4">
               กิจกรรม : งดเหล้าเข้าพรรษา
             </h1>
+
             <ul>
               {campaigns.map((campaign, index) => (
                 <li key={index} className="border-b py-2">
@@ -122,8 +147,8 @@ export default function Profile() {
                     <div className="card-body">
                       <div className="chat chat-start">
                         <div className="chat-image avatar">
-                          <div className="w-10 rounded-full">
-                            <Image
+                          <div className="ring-primary ring-offset-base-100 w-10 rounded-full ring ring-offset-2">
+                            <img
                               src={
                                 imageError
                                   ? "/images/default-profile.png"
@@ -131,9 +156,6 @@ export default function Profile() {
                                     "/images/default-profile.png"
                               }
                               alt="User image"
-                              width={128}
-                              height={128}
-                              className="rounded-full"
                               onError={() => setImageError(true)}
                             />
                           </div>
@@ -186,9 +208,9 @@ export default function Profile() {
                           )}
                           <p>
                             <strong>แรงจูงใจ:</strong>{" "}
-                            {Array.isArray(campaign.motivation)
-                              ? campaign.motivation.join(", ")
-                              : campaign.motivation}
+                            {Array.isArray(campaign.motivations)
+                              ? campaign.motivations.join(", ")
+                              : campaign.motivations}
                           </p>
                           <p>
                             <strong>ผลกระทบต่อสุขภาพ:</strong>{" "}
@@ -196,17 +218,25 @@ export default function Profile() {
                           </p>
                         </div>
                       )}
-                      <div
-                        className="badge badge-ghost cursor-pointer"
-                        onClick={() =>
-                          setSelectedCampaign(
-                            selectedCampaign === campaign ? null : campaign
-                          )
-                        }
-                      >
-                        {selectedCampaign === campaign
-                          ? "show less"
-                          : "show more"}
+                      <div className="flex items-center space-x-2 mt-4">
+                        <div
+                          className="badge badge-ghost cursor-pointer"
+                          onClick={() =>
+                            setSelectedCampaign(
+                              selectedCampaign === campaign ? null : campaign
+                            )
+                          }
+                        >
+                          {selectedCampaign === campaign
+                            ? "show less"
+                            : "show more"}
+                        </div>
+                        <Link
+                          className="badge badge-ghost cursor-pointer"
+                          href={`/form_campaign_buddhist_lent/edit/${campaign.id}`}
+                        >
+                          Edit
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -214,14 +244,15 @@ export default function Profile() {
               ))}
             </ul>
             <button
-              onClick={() => signOut({ callbackUrl: "/api/auth/signin" })}
+              onClick={() => signOut({ callbackUrl: "/" })}
               className="btn-btn-xs flex-1 px-6 py-2 text-center bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600"
             >
               Logout
             </button>
           </div>
         )}
+        <Timeline userId={session.user.id} />
       </div>
-    )
+    </>
   );
 }

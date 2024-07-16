@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     // Check if user with the same email already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      return new NextResponse(JSON.stringify({ error: 'Email already exists' }), { status: 400 });
+      return new NextResponse(JSON.stringify({ error: 'มีอีเมลนี้แล้ว ในระบบ' }), { status: 400 });
     }
 
     // Hash the password
@@ -30,10 +30,10 @@ export async function POST(request: NextRequest) {
       const timestamp = new Date().getTime();
       const fileExtension = path.extname(image.name) || '.jpg';
       const fileName = `${timestamp}${fileExtension}`;
-      const imageSavePath = path.join(process.cwd(), 'public/userImages', fileName);
+      const imageSavePath = path.join(process.cwd(), 'public/img', fileName);
 
       await fs.writeFile(imageSavePath, bufferData);
-      imagePath = `/userImages/${fileName}`;
+      imagePath = `/img/${fileName}`;
     }
 
     // Create the new user
@@ -52,5 +52,15 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating user:', error);
     return new NextResponse(JSON.stringify({ error: 'User could not be created' }), { status: 500 });
+  }
+}
+export async function GET(request: NextRequest) {
+  try {
+    const userCount = await prisma.user.count();
+
+    return new NextResponse(JSON.stringify({ userCount }), { status: 200 });
+  } catch (error) {
+    console.error('Error fetching user count:', error);
+    return new NextResponse(JSON.stringify({ error: 'Could not fetch user count' }), { status: 500 });
   }
 }

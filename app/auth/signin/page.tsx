@@ -59,10 +59,10 @@ export default function SignIn() {
   return (
     <div className="flex h-screen items-center justify-center bg-gray-100">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-md shadow-md w-full max-w-sm">
-        <h1 className="text-lg font-semibold mb-4 text-center">Sign In</h1>
+        <h1 className="text-lg font-semibold mb-4 text-center">เข้าระบบ</h1>
         {error && <p className="text-red-500 text-center">{error}</p>} {/* Display error */}
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">อีเมล</label>
           <input
             id="email"
             type="email"
@@ -73,7 +73,7 @@ export default function SignIn() {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">รหัสผ่าน</label>
           <input
             id="password"
             type="password"
@@ -83,8 +83,8 @@ export default function SignIn() {
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           />
         </div>
-        <button type="submit" className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-          Sign In
+        <button type="submit" className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+          ล็อกอิน
         </button>
         <div className="text-center mt-4">
           <button
@@ -92,7 +92,7 @@ export default function SignIn() {
             onClick={() => router.push('./forgot-password')}
             className="text-slate-800 hover:text-slate-500 font-bold"
           >
-            Forgot Password?
+            ลืม รหัสผ่าน?
           </button>
         </div>
       </form>

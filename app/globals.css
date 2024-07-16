@@ -17,6 +17,7 @@
   transition: transform 2s ease;
 }
 
+/* section hero form_return */
 @keyframes moveRight {
   0% {
     transform: translateX(0);
@@ -34,4 +35,41 @@
     transform: translateX(-100px); /* Adjust as needed */
   }
 }
+.polaroid {
+  background: white;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: 10px;
+  display: inline-block;
+  position: relative;
+  transform: rotate(-5deg);
+}
 
+.polaroid:nth-child(even) {
+  transform: rotate(5deg);
+}
+
+.polaroid .relative {
+  overflow: hidden;
+  background-color: white; /* Ensure the background is white */
+}
+
+.polaroid.small {
+  width: 170px;
+  height: 210px;
+}
+
+.polaroid.large {
+  width: 200px;
+  height: 250px;
+}
+
+@media (max-width: 768px) {
+  .timeline-box p {
+    display: none;
+  }
+
+  .timeline-box p:last-child {
+    display: block;
+  }
+}

@@ -38,7 +38,6 @@ declare module 'next-auth/jwt' {
     picture?: string;
   }
 }
-
 const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -103,8 +102,8 @@ const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    async redirect({ baseUrl }) {
-      return `${baseUrl}/profile`;
+    async redirect() {
+      return 'https://healthy-sobriety.sdnthailand.com/';
     },
   },
 };

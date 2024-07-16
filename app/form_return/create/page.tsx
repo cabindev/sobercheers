@@ -28,6 +28,7 @@ const CreateFormReturn = () => {
   const [image2, setImage2] = useState<File | null>(null);
   const [imagePreview2, setImagePreview2] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [isPhoneNumberDuplicate, setIsPhoneNumberDuplicate] = useState(false);
 
   const router = useRouter();
 
@@ -48,7 +49,7 @@ const CreateFormReturn = () => {
 
       try {
         const options = {
-          maxSizeMB: 0.5, // 500 KB
+          maxSizeMB: 0.5,
           maxWidthOrHeight: 1024,
           useWebWorker: true,
         };
@@ -74,7 +75,7 @@ const CreateFormReturn = () => {
       const response = await axios.get(`/api/form_return/check-phone?phoneNumber=${phoneNumber}`);
       return response.data.exists;
     } catch (error) {
-      console.error('Error checking phone number:', error);
+      console.error('กรุณาตรวจสอบเบอร์โทรศัพท์', error);
       return false;
     }
   };
@@ -82,11 +83,13 @@ const CreateFormReturn = () => {
   const validateStep = (currentStep: number) => {
     switch (currentStep) {
       case 1:
-        return firstName && lastName && organizationName && addressLine1;
+        return firstName && lastName && organizationName;
       case 2:
-        return district && amphoe && province && zipcode;
+        return addressLine1 && district && amphoe && province && zipcode;
       case 3:
-        return phoneNumber && numberOfSigners;
+        return phoneNumber && numberOfSigners && 
+          parseInt(numberOfSigners.replace(/,/g, ''), 10) > 1 && 
+          phoneNumber.length === 10;
       default:
         return true;
     }
@@ -94,10 +97,36 @@ const CreateFormReturn = () => {
 
   const validateForm = () => {
     if (!firstName || !lastName || !organizationName || !addressLine1 || !district || !amphoe || !province || !zipcode || !phoneNumber || !numberOfSigners) {
-      toast.error('Please fill in all required fields.');
+      toast.error('กรุณากรอกข้อมูลให้ครบ');
+      return false;
+    }
+    if (isPhoneNumberDuplicate) {
+      toast.error('เบอร์นี้ถูกใช้แล้ว');
+      return false;
+    }
+    if (phoneNumber.length !== 10) {
+      toast.error('หมายเลขโทรศัพท์ต้องมี 10 หลัก');
+      return false;
+    }
+    if (parseInt(numberOfSigners.replace(/,/g, ''), 10) <= 1) {
+      toast.error('จำนวนผู้ลงนามต้องมากกว่า 1 คน');
       return false;
     }
     return true;
+  };
+
+  const handlePhoneNumberChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '');
+    if (value.length <= 10) {
+      setPhoneNumber(value);
+    }
+
+    if (value.length === 10) {
+      const phoneExists = await checkPhoneNumberExists(value);
+      setIsPhoneNumberDuplicate(phoneExists);
+    } else {
+      setIsPhoneNumberDuplicate(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -108,12 +137,6 @@ const CreateFormReturn = () => {
     }
 
     try {
-      const phoneExists = await checkPhoneNumberExists(phoneNumber);
-      if (phoneExists) {
-        toast.error('This phone number is already in use.');
-        return;
-      }
-
       const formData = new FormData();
       formData.append('firstName', firstName);
       formData.append('lastName', lastName);
@@ -123,9 +146,9 @@ const CreateFormReturn = () => {
       formData.append('amphoe', amphoe);
       formData.append('province', province);
       formData.append('zipcode', zipcode);
-      formData.append('type', type); // ส่งค่า type ไปยังฐานข้อมูล
+      formData.append('type', type);
       formData.append('phoneNumber', phoneNumber);
-      formData.append('numberOfSigners', numberOfSigners.toString());
+      formData.append('numberOfSigners', numberOfSigners.replace(/,/g, ''));
       if (image1) formData.append('image1', image1);
       if (image2) formData.append('image2', image2);
 
@@ -138,12 +161,12 @@ const CreateFormReturn = () => {
       if (response.data.error) {
         toast.error(response.data.error);
       } else {
-        toast.success('Form submitted successfully.');
-        router.push('/form_return');
+        toast.success('ส่งคืนข้อมูลเข้าพรรษาสำเร็จ');
+        router.push('/form_return/usercard');
       }
     } catch (error) {
       console.error('Error in form submission:', error);
-      toast.error('An error occurred while submitting the form.');
+      toast.error('เกิดข้อผิดพลาดขณะส่งแบบฟอร์ม ตรวจสอบก่อนส่งอีกครั้ง');
     }
   };
 
@@ -171,19 +194,28 @@ const CreateFormReturn = () => {
   };
 
   const handleNumberOfSignersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const formattedValue = Number(value.replace(/[^0-9]/g, '')).toLocaleString();
-    setNumberOfSigners(formattedValue);
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    if (value === '') {
+      setNumberOfSigners('');
+    } else {
+      const numValue = parseInt(value, 10);
+      setNumberOfSigners(numValue.toLocaleString());
+    }
   };
 
   const nextStep = () => {
+    if (step === 4 && !image2) {
+      toast.error('กรุณาแนบรูปภาพที่ 2 ก่อนดำเนินการต่อ');
+      return;
+    }
+
     if (validateStep(step)) {
       setStep(step + 1);
     } else {
-      toast.error('Please fill in all required fields.');
+      toast.error('กรุณากรอกข้อมูลให้ครบ');
     }
   };
-  
+
   const prevStep = () => setStep(step - 1);
 
   const progressValue = (step / 5) * 100;
@@ -242,20 +274,6 @@ const CreateFormReturn = () => {
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
               />
             </div>
-            <div>
-              <label htmlFor="addressLine1" className="block text-sm font-medium text-gray-700">
-                ที่อยู่ (เลขที่/หมู่บ้าน)
-              </label>
-              <input
-                type="text"
-                name="addressLine1"
-                id="addressLine1"
-                required
-                value={addressLine1}
-                onChange={(e) => setAddressLine1(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
-              />
-            </div>
             <div className="flex justify-between">
               <button
                 type="button"
@@ -271,8 +289,22 @@ const CreateFormReturn = () => {
         {step === 2 && (
           <>
             <div>
+              <label htmlFor="addressLine1" className="block text-sm font-medium text-gray-700">
+                ที่อยู่ (เลขที่/หมู่บ้าน)
+              </label>
+              <input
+                type="text"
+                name="addressLine1"
+                id="addressLine1"
+                required
+                value={addressLine1}
+                onChange={(e) => setAddressLine1(e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
+              />
+            </div>
+            <div>
               <label htmlFor="district" className="block text-sm font-medium text-gray-700">
-                ตำบล/เขต
+                ตำบล/แขวง
               </label>
               <input
                 type="text"
@@ -299,7 +331,7 @@ const CreateFormReturn = () => {
             </div>
             <div>
               <label htmlFor="amphoe" className="block text-sm font-medium text-gray-700">
-                อำเภอ
+                อำเภอ/เขต
               </label>
               <input
                 type="text"
@@ -372,14 +404,15 @@ const CreateFormReturn = () => {
                 value={phoneNumber}
                 onBlur={async () => {
                   const phoneExists = await checkPhoneNumberExists(phoneNumber);
+                  setIsPhoneNumberDuplicate(phoneExists);
                   if (phoneExists) {
-                    toast.error('This phone number is already in use.');
+                    toast.error('เบอร์นี้ถูกใช้ไปแล้ว');
                   }
                 }}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={handlePhoneNumberChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
               />
-              <small className="text-gray-500">(085-938-77xx)</small>
+              <small className="text-gray-500">(08593877xx)</small>
             </div>
             <div className="form-control">
               <label htmlFor="numberOfSigners" className="block text-sm font-medium text-gray-700">
@@ -394,6 +427,7 @@ const CreateFormReturn = () => {
                 onChange={handleNumberOfSignersChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
               />
+              <span className="ml-2">คน</span>
               <small className="text-gray-500">(กรอกเฉพาะตัวเลข)</small>
             </div>
             <div className="flex justify-between">
@@ -491,7 +525,7 @@ const CreateFormReturn = () => {
                 <p>ชื่อองค์กร: {organizationName}</p>
                 <p>ที่อยู่: {addressLine1}, {district}, {amphoe}, {province}, {zipcode}</p>
                 <p>หมายเลขโทรศัพท์: {phoneNumber}</p>
-                <p>จำนวนผู้ลงนาม: {numberOfSigners}</p>
+                <p>จำนวนผู้ลงนาม: {numberOfSigners} คน</p>
                 {imagePreview1 && <Image src={imagePreview1} alt="Image 1 Preview" width={200} height={200} className="rounded-md" />}
                 {imagePreview2 && <Image src={imagePreview2} alt="Image 2 Preview" width={200} height={200} className="rounded-md" />}
               </div>

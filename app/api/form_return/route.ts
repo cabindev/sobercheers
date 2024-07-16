@@ -5,28 +5,71 @@ import path from 'path';
 
 const prisma = new PrismaClient();
 
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
+  const phoneNumber = searchParams.get('phoneNumber');
   const search = searchParams.get('search') || '';
-  const sort = searchParams.get('sort') || 'desc';
+  const page = parseInt(searchParams.get('page') || '1');
+  const limit = parseInt(searchParams.get('limit') || '10');
+  const skip = (page - 1) * limit;
 
   try {
-    const forms = await prisma.form_return.findMany({
-      where: {
-        OR: [
-          { firstName: { contains: search } },
-          { lastName: { contains: search } },
-        ],
-      },
-      orderBy: {
-        createdAt: sort === 'asc' ? 'asc' : 'desc',
-      },
-    });
-    return NextResponse.json({ forms });
+    if (phoneNumber) {
+      // Fetch the form by phone number
+      const forms = await prisma.form_return.findMany({
+        where: { phoneNumber: phoneNumber },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      });
+      return NextResponse.json({ forms });
+    } else if (searchParams.has('count')) {
+      // Fetch the total count of forms
+      const totalForms = await prisma.form_return.count();
+      return NextResponse.json({ totalForms });
+    } else if (searchParams.has('sumSigners')) {
+      // Fetch the sum of numberOfSigners
+      const sumSigners = await prisma.form_return.aggregate({
+        _sum: {
+          numberOfSigners: true,
+        },
+      });
+      return NextResponse.json({ sumSigners: sumSigners._sum.numberOfSigners || 0 });
+    } else {
+      // Fetch the list of forms
+      const [forms, totalForms] = await prisma.$transaction([
+        prisma.form_return.findMany({
+          where: {
+            OR: [
+              { firstName: { contains: search } },
+              { lastName: { contains: search } },
+            ],
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+          skip,
+          take: limit,
+        }),
+        prisma.form_return.count({
+          where: {
+            OR: [
+              { firstName: { contains: search } },
+              { lastName: { contains: search } },
+            ],
+          },
+        }),
+      ]);
+
+      const totalPages = Math.ceil(totalForms / limit);
+      return NextResponse.json({ forms, totalPages });
+    }
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
   }
 }
+
 
 export async function POST(request: NextRequest) {
   try {

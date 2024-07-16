@@ -23,31 +23,33 @@ export default function ListFormReturn() {
   const [forms, setForms] = useState<FormReturn[]>([]);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('desc');
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
     fetchForms();
-  }, [search, sort]);
+  }, [search, sort, page, rowsPerPage]);
 
   const fetchForms = async () => {
     try {
-      const query = new URLSearchParams({ search, sort }).toString();
+      const query = new URLSearchParams({ search, sort, page: page.toString(), limit: rowsPerPage.toString() }).toString();
       const res = await axios.get(`/api/form_return?${query}`);
       const data = res.data;
-  
+
       if (data && Array.isArray(data.forms)) {
         setForms(data.forms);
+        setTotalItems(data.totalItems || 0);
       } else {
         console.error('Invalid forms data:', data);
-        setForms([]); // Set forms to an empty array if the data is invalid
+        setForms([]);
+        setTotalItems(0);
       }
     } catch (error) {
       console.error('Failed to fetch forms', error);
-      setForms([]); // Set forms to an empty array in case of an error
+      setForms([]);
+      setTotalItems(0);
     }
-  };
-
-  const handleApplyFilters = () => {
-    fetchForms();
   };
 
   const deleteForm = async (id: number) => {
@@ -59,9 +61,20 @@ export default function ListFormReturn() {
     }
   };
 
+  const totalPages = Math.ceil(totalItems / rowsPerPage);
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold mb-6">Form Returns</h1>
+      <div className="hero bg-gradient-to-r from-amber-500 to-amber-700 text-white py-10 mb-8 rounded-lg shadow-lg relative overflow-hidden">
+        <div className="relative z-10 hero-content text-center">
+          <h1 className="text-4xl font-bold drop-shadow-lg">
+            ส่งข้อมูล : งดเหล้า 3,500 องค์กร
+          </h1>
+          <p className="mt-4 text-lg">
+            ร่วมกันสร้างสังคมที่ดีขึ้นด้วยการงดเหล้าในองค์กรของคุณ
+          </p>
+        </div>
+      </div>
 
       <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
         <div className="flex flex-wrap gap-4 w-full sm:w-auto">
@@ -72,47 +85,60 @@ export default function ListFormReturn() {
             onChange={(e) => setSearch(e.target.value)}
             className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto"
           />
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto"
-          >
-            <option value="desc">Latest</option>
-            <option value="asc">Oldest</option>
-          </select>
-          <button
-            onClick={handleApplyFilters}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors w-full sm:w-auto"
-          >
-            Apply
-          </button>
         </div>
       </div>
 
-      <div className="shadow overflow-x-auto border-b border-gray-200 sm:rounded-lg">
+      <div className="hidden lg:block shadow overflow-x-auto border-b border-gray-200 sm:rounded-lg">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Name
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                ชื่อผู้ส่งข้อมูล
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Organization
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                ชื่อองค์กร
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Address
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                ที่อยู่
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Phone
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                เบอร์โทร
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Image/1
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                เข้าร่วม
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Image/2
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                รูป/1
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                รูป/2
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                จัดการ
               </th>
             </tr>
           </thead>
@@ -131,7 +157,8 @@ export default function ListFormReturn() {
                 </td>
                 <td className="px-6 py-4 whitespace-normal">
                   <div className="text-sm font-medium text-gray-900">
-                    {form.addressLine1}, {form.subDistrict}, {form.district}, {form.province}, {form.zipcode}
+                    {form.addressLine1}, {form.subDistrict}, {form.district},{" "}
+                    {form.province}, {form.zipcode}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-normal">
@@ -140,10 +167,19 @@ export default function ListFormReturn() {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-normal">
+                  <div className="text-sm font-medium text-gray-900">
+                    {form.numberOfSigners.toLocaleString()}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-normal">
                   {form.image1 && (
                     <div className="avatar">
                       <div className="w-8 rounded">
-                        <img src={form.image1} alt={`image1-${form.id}`} className="object-cover" />
+                        <img
+                          src={form.image1}
+                          alt={`image1-${form.id}`}
+                          className="object-cover"
+                        />
                       </div>
                     </div>
                   )}
@@ -152,16 +188,26 @@ export default function ListFormReturn() {
                   {form.image2 && (
                     <div className="avatar">
                       <div className="w-8 rounded">
-                        <img src={form.image2} alt={`image2-${form.id}`} className="object-cover" />
+                        <img
+                          src={form.image2}
+                          alt={`image2-${form.id}`}
+                          className="object-cover"
+                        />
                       </div>
                     </div>
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-normal text-sm font-medium">
-                  <Link className="text-indigo-600 hover:text-indigo-900 mr-4" href={`/form_return/edit/${form.id}`}>
+                  <Link
+                    className="text-indigo-600 hover:text-indigo-900 mr-4"
+                    href={`/form_return/edit/${form.id}`}
+                  >
                     Edit
                   </Link>
-                  <button onClick={() => deleteForm(form.id)} className="text-red-600 hover:text-red-900">
+                  <button
+                    onClick={() => deleteForm(form.id)}
+                    className="text-red-600 hover:text-red-900"
+                  >
                     Delete
                   </button>
                 </td>
@@ -169,6 +215,120 @@ export default function ListFormReturn() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="lg:hidden">
+        {forms.map((form) => (
+          <div key={form.id} className="bg-white shadow-md rounded-lg p-4 mb-4">
+            <div className="flex flex-col space-y-2">
+              <div className="text-lg font-semibold text-gray-900">
+                {form.firstName} {form.lastName}
+              </div>
+              <div className="text-sm text-gray-700">
+                Organization: {form.organizationName}
+              </div>
+              <div className="text-sm text-gray-700">
+                Address: {form.addressLine1}, {form.subDistrict},{" "}
+                {form.district}, {form.province}, {form.zipcode}
+              </div>
+              <div className="text-sm text-gray-700">
+                Phone: {form.phoneNumber}
+              </div>
+              <div className="text-sm text-gray-700">
+                Number of Signers: {form.numberOfSigners.toLocaleString()}
+              </div>
+              <div className="flex space-x-4">
+                {form.image1 && (
+                  <div className="avatar">
+                    <div className="w-8 rounded">
+                      <img
+                        src={form.image1}
+                        alt={`image1-${form.id}`}
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                )}
+                {form.image2 && (
+                  <div className="avatar">
+                    <div className="w-8 rounded">
+                      <img
+                        src={form.image2}
+                        alt={`image2-${form.id}`}
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="flex space-x-4">
+                <Link
+                  className="text-indigo-600 hover:text-indigo-900"
+                  href={`/form_return/edit/${form.id}`}
+                >
+                  Edit
+                </Link>
+                <button
+                  onClick={() => deleteForm(form.id)}
+                  className="text-red-600 hover:text-red-900"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex justify-between items-center mt-4">
+        <div className="flex items-center">
+          <span>Rows per page: </span>
+          <select
+            value={rowsPerPage}
+            onChange={(e) => setRowsPerPage(parseInt(e.target.value))}
+            className="mx-2 px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+          </select>
+        </div>
+        <div className="flex items-center space-x-2">
+          <span className="text-sm">
+            {page * rowsPerPage - rowsPerPage + 1}-
+            {Math.min(page * rowsPerPage, totalItems)} of {totalItems}
+          </span>
+          <div className="flex space-x-1">
+            <button
+              className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              onClick={() => setPage(1)}
+              disabled={page === 1}
+            >
+              {"<<"}
+            </button>
+            <button
+              className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              onClick={() => setPage(page - 1)}
+              disabled={page === 1}
+            >
+              {"<"}
+            </button>
+            <button
+              className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              onClick={() => setPage(page + 1)}
+              disabled={page === totalPages}
+            >
+              {">"}
+            </button>
+            <button
+              className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              onClick={() => setPage(totalPages)}
+              disabled={page === totalPages}
+            >
+              {">>"}
+            </button>
+          </div>
+        </div>
       </div>
 
       <Link
