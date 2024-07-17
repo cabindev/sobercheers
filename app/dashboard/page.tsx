@@ -11,7 +11,7 @@ import HealthImpactChart from './components/healthImpactChart';
 import { UserIcon } from '@heroicons/react/outline';
 import IntentPeriodChart from './components/intentPeriodChart';
 import { FaAddressCard, FaUsers } from 'react-icons/fa';
-import TablePage from './table/page';
+import TablePage from './components/memberTable/page';
 
 const Dashboard: NextPage = () => {
   const [userCount, setUserCount] = useState<number | null>(null);

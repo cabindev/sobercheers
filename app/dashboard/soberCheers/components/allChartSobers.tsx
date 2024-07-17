@@ -10,6 +10,7 @@ import DrinkingFrequencyChart from './drinkingFrequency';
 import IntentPeriodChart from './intentPeriod';
 import MonthlyExpenseSummary from './monthlyExpense';
 import HealthImpactChart from './healthyImpact';
+import MotiVation from './motivations';
 
 const TotalCount: React.FC = () => {
   const [totalRegistered, setTotalRegistered] = useState<number>(0);
@@ -179,6 +180,9 @@ const DashboardSober: React.FC = () => {
             <HealthImpactChart />
           </ChartCard>
         </div>
+        <ChartCard title="Motivation" icon={<FaWineGlass />} className="mb-8">
+          <MotiVation />
+        </ChartCard>
       </div>
     </div>
   );

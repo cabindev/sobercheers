@@ -50,6 +50,11 @@ export default function Navbar() {
         label: <Link href="/dashboard/soberCheers/components/soberTable" className="text-sm text-gray-700">ข้อมูลงดเหล้าเข้าพรรษา 2567</Link>,
         icon: <BarChartOutlined />,
       },
+      {
+        key: 'addSobersUser',
+        label: <Link href="/soberCheers" className="text-sm text-gray-700">เพิ่มข้อมูล SoberCheers</Link>,
+        icon: <BarChartOutlined />,
+      },
     ],
   };
 
@@ -77,6 +82,10 @@ export default function Navbar() {
             {
               key: 'soberTable',
               label: <Link href="/dashboard/soberCheers/components/soberTable">ข้อมูลงดเหล้าเข้าพรรษา 2567</Link>,
+            },
+            {
+              key: 'addSobersUser',
+              label: <Link href="/soberCheers">เพิ่มข้อมูล SoberCheers</Link>,
             },
           ],
         },

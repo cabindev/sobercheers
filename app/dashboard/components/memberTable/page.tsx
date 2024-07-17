@@ -1,26 +1,12 @@
 'use client'
-import React, { useState, useEffect } from 'react';
-import { Table, Select, Button, Space, Typography, Input, Card, Row, Col, Checkbox, ConfigProvider } from 'antd';
-import { DownloadOutlined, FileExcelOutlined, SearchOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Table, Input, Select, Button, Space, Typography, Card, Row, Col, Checkbox, ConfigProvider } from 'antd';
+import { DownloadOutlined, FileExcelOutlined, SearchOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
-
-type FilterType = 'district' | 'amphoe' | 'province' | 'type' | 'region' | 'job' | 'drinkingFrequency' | 'intentPeriod';
-
-interface Filters {
-  district: string;
-  amphoe: string;
-  province: string;
-  type: string;
-  region: string;
-  name: string;
-  job: string;
-  drinkingFrequency: string;
-  intentPeriod: string;
-}
 
 interface SoberCheersItem {
   id: number;
@@ -34,33 +20,27 @@ interface SoberCheersItem {
   province: string;
   zipcode: string;
   type: string;
-  alcoholConsumption: string;
-  healthImpact: string;
   phone: string;
   job: string;
+  alcoholConsumption: string;
   drinkingFrequency: string;
   intentPeriod: string;
   monthlyExpense: number;
-  motivations: any;
+  motivations: string;
+  healthImpact: string;
 }
 
-const SoberCheersTable: React.FC = () => {
+const MemberTable: React.FC = () => {
   const [data, setData] = useState<SoberCheersItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [filters, setFilters] = useState<Filters>({
-    district: '',
-    amphoe: '',
-    province: '',
-    type: '',
-    region: '',
-    name: '',
-    job: '',
-    drinkingFrequency: '',
-    intentPeriod: '',
-  });
-  
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
+  const [totalItems, setTotalItems] = useState(0);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [search, setSearch] = useState('');
+  const [selectedType, setSelectedType] = useState('');
+  const [types, setTypes] = useState<string[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
 
   const theme = {
     token: {
@@ -70,48 +50,44 @@ const SoberCheersTable: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchData();
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     handleResize();
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    fetchData();
+  }, [page, pageSize, search, selectedType]);
+
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get<{ soberCheers: SoberCheersItem[] }>('/api/soberCheersCharts');
-      setData(response.data.soberCheers);
+      const response = await axios.get('/api/campaign-buddhist-lent', {
+        params: {
+          page,
+          limit: pageSize,
+          search,
+          type: selectedType,
+        },
+      });
+      setData(response.data.campaigns);
+      setTotalItems(response.data.totalItems);
+      setTypes(Array.from(new Set(response.data.campaigns.map((item: SoberCheersItem) => item.type))));
     } catch (error) {
       console.error('Error fetching data:', error);
     }
     setLoading(false);
   };
 
-  const handleFilterChange = (value: string, filterType: FilterType | 'name') => {
-    setFilters(prevFilters => ({ ...prevFilters, [filterType]: value }));
+  const handleSearch = (value: string) => {
+    setSearch(value);
+    setPage(1);
   };
 
-  const filteredData = data.filter((item: SoberCheersItem) => {
-    return (
-      (!filters.district || item.district === filters.district) &&
-      (!filters.amphoe || item.amphoe === filters.amphoe) &&
-      (!filters.province || item.province === filters.province) &&
-      (!filters.type || item.type === filters.type) &&
-      (!filters.region || getRegion(item.province) === filters.region) &&
-      (!filters.name || `${item.firstName} ${item.lastName}`.toLowerCase().includes(filters.name.toLowerCase())) &&
-      (!filters.job || item.job === filters.job) &&
-      (!filters.drinkingFrequency || item.drinkingFrequency === filters.drinkingFrequency) &&
-      (!filters.intentPeriod || item.intentPeriod === filters.intentPeriod)
-    );
-  });
-
-  const getRegion = (province: string): string => {
-    const northernProvinces = ['เชียงใหม่', 'เชียงราย', 'ลำปาง'];
-    const centralProvinces = ['กรุงเทพมหานคร', 'นนทบุรี', 'ปทุมธานี'];
-    if (northernProvinces.includes(province)) return 'ภาคเหนือ';
-    if (centralProvinces.includes(province)) return 'ภาคกลาง';
-    return 'ไม่ระบุ';
+  const handleTypeChange = (value: string) => {
+    setSelectedType(value);
+    setPage(1);
   };
 
   const columns = [
@@ -138,42 +114,28 @@ const SoberCheersTable: React.FC = () => {
     { title: 'ความถี่ในการดื่ม', dataIndex: 'drinkingFrequency' },
     { title: 'ระยะเวลาตั้งใจเลิกดื่ม', dataIndex: 'intentPeriod' },
     { title: 'ค่าใช้จ่ายต่อเดือน (บาท)', dataIndex: 'monthlyExpense' },
-    {
-      title: 'แรงจูงใจในการเลิกดื่ม',
-      dataIndex: 'motivations',
-      render: (motivations: any) => JSON.stringify(motivations),
-    },
+    { title: 'แรงจูงใจในการเลิกดื่ม', dataIndex: 'motivations' },
   ];
 
   const handleExportCSV = () => {
     const dataToExport = selectedRowKeys.length > 0 
-      ? filteredData.filter(item => selectedRowKeys.includes(item.id))
-      : filteredData;
-  
-    const escapeCSV = (data: any) => {
-      if (data == null) return '';
-      return typeof data === 'string' ? `"${data.replace(/"/g, '""')}"` : data;
-    };
+      ? data.filter(item => selectedRowKeys.includes(item.id))
+      : data;
   
     const csvContent = [
-      columns.map(col => escapeCSV(col.title)).join(';'),
+      columns.map(col => col.title).join(';'),
       ...dataToExport.map(item => 
         columns.map(col => {
-          let value;
-          if ('render' in col && typeof col.render === 'function') {
-            value = col.render(item[col.dataIndex as keyof SoberCheersItem], item);
-          } else {
-            value = item[col.dataIndex as keyof SoberCheersItem];
+          let value = col.dataIndex ? item[col.dataIndex as keyof SoberCheersItem] : '';
+          if (col.render) {
+            value = col.render(value, item);
           }
-          return escapeCSV(value);
+          return typeof value === 'string' ? `"${value.replace(/"/g, '""')}"` : value;
         }).join(';')
       )
     ].join('\r\n');
 
-    const BOM = '\uFEFF';
-    const csvContentWithBOM = BOM + csvContent;
-
-    const blob = new Blob([csvContentWithBOM], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     if (link.download !== undefined) {
       const url = URL.createObjectURL(blob);
@@ -188,16 +150,16 @@ const SoberCheersTable: React.FC = () => {
 
   const handleExportExcel = () => {
     const dataToExport = selectedRowKeys.length > 0 
-      ? filteredData.filter(item => selectedRowKeys.includes(item.id))
-      : filteredData;
+      ? data.filter(item => selectedRowKeys.includes(item.id))
+      : data;
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport.map(item => {
       return columns.reduce((acc, col) => {
-        if ('render' in col && typeof col.render === 'function') {
-          acc[col.title] = col.render(item[col.dataIndex as keyof SoberCheersItem], item);
-        } else {
-          acc[col.title] = item[col.dataIndex as keyof SoberCheersItem];
+        let value = col.dataIndex ? item[col.dataIndex as keyof SoberCheersItem] : '';
+        if (col.render) {
+          value = col.render(value, item);
         }
+        acc[col.title] = value;
         return acc;
       }, {} as { [key: string]: any });
     }));
@@ -238,7 +200,7 @@ const SoberCheersTable: React.FC = () => {
       <Text style={{ fontSize: '12px' }}><strong>ความถี่ในการดื่ม:</strong> {item.drinkingFrequency}</Text><br />
       <Text style={{ fontSize: '12px' }}><strong>ระยะเวลาตั้งใจเลิกดื่ม:</strong> {item.intentPeriod}</Text><br />
       <Text style={{ fontSize: '12px' }}><strong>ค่าใช้จ่ายต่อเดือน:</strong> {item.monthlyExpense} บาท</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>แรงจูงใจในการเลิกดื่ม:</strong> {JSON.stringify(item.motivations)}</Text>
+      <Text style={{ fontSize: '12px' }}><strong>แรงจูงใจในการเลิกดื่ม:</strong> {item.motivations}</Text>
     </Card>
   );
 
@@ -251,104 +213,35 @@ const SoberCheersTable: React.FC = () => {
 
   return (
     <ConfigProvider theme={theme}>
-      <div
-        style={{
-          padding: "20px",
-          backgroundColor: "#f0f2f5",
-          minHeight: "100vh",
-        }}
-      >
-        <Card
-          style={{
-            marginBottom: 20,
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <Title
-            level={3}
-            style={{ color: "#f59e0b", marginBottom: 20, fontSize: "18px" }}
-          >
+      <div style={{ padding: "20px", backgroundColor: "#f0f2f5", minHeight: "100vh" }}>
+        <Card style={{ marginBottom: 20, boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
+          <Title level={3} style={{ color: "#f59e0b", marginBottom: 20, fontSize: "18px" }}>
             ข้อมูล Sober Cheers
           </Title>
           <Space style={{ marginBottom: 16 }} wrap>
             <Input
               placeholder="ค้นหาด้วยชื่อ"
-              onChange={(e) => handleFilterChange(e.target.value, "name")}
+              onChange={(e) => handleSearch(e.target.value)}
               style={{ width: 200 }}
               prefix={<SearchOutlined />}
             />
             <Select
               style={{ width: 200 }}
-              placeholder="เลือกตำบล"
-              onChange={(value: string) =>
-                handleFilterChange(value, "district")
-              }
-            >
-              {Array.from(new Set(data.map((item) => item.district))).map(
-                (district) => (
-                  <Option key={district} value={district}>
-                    {district}
-                  </Option>
-                )
-              )}
-            </Select>
-            <Select
-              style={{ width: 200 }}
-              placeholder="เลือกอำเภอ"
-              onChange={(value: string) => handleFilterChange(value, "amphoe")}
-            >
-              {Array.from(new Set(data.map((item) => item.amphoe))).map(
-                (amphoe) => (
-                  <Option key={amphoe} value={amphoe}>
-                    {amphoe}
-                  </Option>
-                )
-              )}
-            </Select>
-            <Select
-              style={{ width: 200 }}
-              placeholder="เลือกจังหวัด"
-              onChange={(value: string) =>
-                handleFilterChange(value, "province")
-              }
-            >
-              {Array.from(new Set(data.map((item) => item.province))).map(
-                (province) => (
-                  <Option key={province} value={province}>
-                    {province}
-                  </Option>
-                )
-              )}
-            </Select>
-            <Select
-              style={{ width: 200 }}
               placeholder="เลือกภาค"
-              onChange={(value: string) => handleFilterChange(value, "type")}
+              onChange={handleTypeChange}
+              value={selectedType}
             >
-              {Array.from(new Set(data.map((item) => item.type))).map(
-                (type) => (
-                  <Option key={type} value={type}>
-                    {type}
-                  </Option>
-                )
-              )}
-            </Select>
-            <Select
-              style={{ width: 200 }}
-              placeholder="เลือกอาชีพ"
-              onChange={(value: string) => handleFilterChange(value, "job")}
-            >
-              {Array.from(new Set(data.map((item) => item.job))).map((job) => (
-                <Option key={job} value={job}>
-                  {job}
-                </Option>
+              <Option value="">ทั้งหมด</Option>
+              {types.map((type) => (
+                <Option key={type} value={type}>{type}</Option>
               ))}
             </Select>
           </Space>
         </Card>
+        
         {isMobile ? (
           <Row gutter={[16, 16]}>
-            {filteredData.map((item) => (
+            {data.map((item) => (
               <Col xs={24} sm={12} md={8} key={item.id}>
                 {renderMobileCard(item)}
               </Col>
@@ -359,19 +252,28 @@ const SoberCheersTable: React.FC = () => {
             <Table
               rowSelection={rowSelection}
               columns={columns}
-              dataSource={filteredData}
+              dataSource={data}
               loading={loading}
               rowKey="id"
-              pagination={{ pageSize: 10 }}
+              pagination={{
+                total: totalItems,
+                current: page,
+                pageSize: pageSize,
+                onChange: (page, pageSize) => {
+                  setPage(page);
+                  setPageSize(pageSize);
+                },
+                showSizeChanger: true,
+                showQuickJumper: true,
+                showTotal: (total) => `รวม ${total} รายการ`,
+              }}
               size="small"
               scroll={{ x: true }}
             />
           </Card>
         )}
 
-        <Card
-          style={{ marginTop: 20, boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}
-        >
+        <Card style={{ marginTop: 20, boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
           <Space>
             <Button
               type="primary"
@@ -390,9 +292,7 @@ const SoberCheersTable: React.FC = () => {
               บันทึกข้อมูลที่เลือกเป็น Excel
             </Button>
             <Button
-              onClick={() =>
-                setSelectedRowKeys(filteredData.map((item) => item.id))
-              }
+              onClick={() => setSelectedRowKeys(data.map((item) => item.id))}
               size="small"
             >
               เลือกทั้งหมด
@@ -406,4 +306,5 @@ const SoberCheersTable: React.FC = () => {
     </ConfigProvider>
   );
 };
-export default SoberCheersTable;
+
+export default MemberTable;

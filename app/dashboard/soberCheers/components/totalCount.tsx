@@ -1,3 +1,4 @@
+// app/soberCheersCharts/totalCount/page.tsx
 'use client'
 import React, { useEffect, useState } from 'react';
 import { Typography, Row, Col, Card } from 'antd';
@@ -9,16 +10,23 @@ const { Title } = Typography;
 const TotalCount: React.FC = () => {
   const [totalRegistered, setTotalRegistered] = useState(0);
 
+  const fetchTotalRegistered = async () => {
+    try {
+      const response = await axios.get('/api/soberCheersCharts/totalCount');
+      setTotalRegistered(response.data.totalCount);
+    } catch (error) {
+      console.error('Error fetching total registered:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchTotalRegistered = async () => {
-      try {
-        const response = await axios.get('/api/soberCheersCharts/totalCount');
-        setTotalRegistered(response.data.totalCount);
-      } catch (error) {
-        console.error('Error fetching total registered:', error);
-      }
-    };
     fetchTotalRegistered();
+
+    // Set up an interval to fetch data every minute (adjust as needed)
+    const intervalId = setInterval(fetchTotalRegistered, 60000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   return (

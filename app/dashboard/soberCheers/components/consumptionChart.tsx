@@ -1,4 +1,3 @@
-// AlcoholConsumptionChart.tsx
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Pie } from 'react-chartjs-2';
 import axios from 'axios';
@@ -9,6 +8,9 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface SoberCheersData {
   alcoholConsumption: string;
+  _count: {
+    alcoholConsumption: number;
+  };
 }
 
 const AlcoholConsumptionChart: React.FC = () => {
@@ -20,8 +22,8 @@ const AlcoholConsumptionChart: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get<{ soberCheers: SoberCheersData[] }>('/api/soberCheersCharts');
-        setSoberCheersData(response.data.soberCheers);
+        const response = await axios.get<{ campaigns: SoberCheersData[] }>('/api/dashboard');
+        setSoberCheersData(response.data.campaigns);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('Failed to load data. Please try again later.');
@@ -32,7 +34,7 @@ const AlcoholConsumptionChart: React.FC = () => {
 
   const chartData = useMemo(() => {
     const consumptionData = soberCheersData.reduce((acc, item) => {
-      acc[item.alcoholConsumption] = (acc[item.alcoholConsumption] || 0) + 1;
+      acc[item.alcoholConsumption] = (acc[item.alcoholConsumption] || 0) + item._count.alcoholConsumption;
       return acc;
     }, {} as Record<string, number>);
 

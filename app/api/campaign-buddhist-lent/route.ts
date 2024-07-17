@@ -25,6 +25,8 @@ export async function GET(request: NextRequest) {
       totalItems = await prisma.campaignBuddhistLent.count({
         where: { userId: parseInt(userId) },
       });
+
+      return NextResponse.json({ campaigns, totalItems, completed: campaigns.length > 0 });
     } else {
       campaigns = await prisma.campaignBuddhistLent.findMany({
         where: {
@@ -61,9 +63,9 @@ export async function GET(request: NextRequest) {
           ]
         }
       });
-    }
 
-    return NextResponse.json({ campaigns, totalItems });
+      return NextResponse.json({ campaigns, totalItems });
+    }
   } catch (error) {
     console.error('Error in GET /api/campaign-buddhist-lent:', error);
     return NextResponse.json({ error: 'Failed to retrieve campaign status' }, { status: 500 });

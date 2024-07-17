@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   try {
-    // ดึงข้อมูลประเภทการลงทะเบียนจากตาราง CampaignBuddhistLent
     const campaigns = await prisma.campaignBuddhistLent.groupBy({
       by: ['type', 'alcoholConsumption', 'drinkingFrequency', 'intentPeriod', 'monthlyExpense', 'motivations', 'healthImpact'],
       _count: {

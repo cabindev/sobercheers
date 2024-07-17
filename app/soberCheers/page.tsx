@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 interface SoberCheer {
   id: number;
@@ -33,11 +34,24 @@ export default function ListSoberCheers() {
   const [totalItems, setTotalItems] = useState(0);
   const [participantCount, setParticipantCount] = useState<number | null>(null);
   const [selectedType, setSelectedType] = useState('');
+  const [types, setTypes] = useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const { data: session } = useSession();
 
   useEffect(() => {
     fetchSoberCheers();
     fetchParticipantCount();
+    fetchTypes();
   }, [search, sort, page, rowsPerPage, selectedType]);
+
+  const fetchTypes = async () => {
+    try {
+      const response = await axios.get('/api/soberCheers/typeRegions');
+      setTypes(response.data.typeRegions);
+    } catch (error) {
+      console.error('Failed to fetch type regions:', error);
+    }
+  };
 
   const fetchParticipantCount = async () => {
     try {
@@ -81,13 +95,14 @@ export default function ListSoberCheers() {
     }
   };
 
-  const deleteSoberCheer = async (id: number) => {
+  const deleteSelectedSoberCheers = async () => {
     try {
-      await axios.delete(`/api/soberCheers/${id}`);
-      await fetchSoberCheers(); // Fetch the updated list
-      await fetchParticipantCount(); // Fetch the updated count
+      await Promise.all(selectedItems.map(id => axios.delete(`/api/soberCheers/${id}`)));
+      await fetchSoberCheers();
+      await fetchParticipantCount();
+      setSelectedItems([]);
     } catch (error) {
-      console.error('Failed to delete the SoberCheer', error);
+      console.error('Failed to delete selected SoberCheers', error);
     }
   };
 
@@ -98,6 +113,15 @@ export default function ListSoberCheers() {
   };
 
   const totalPages = Math.ceil(totalItems / rowsPerPage);
+  const isAdmin = session?.user?.role === 'admin';
+
+  const handleSelectItem = (id: number) => {
+    setSelectedItems(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const filteredSoberCheers = soberCheers.filter(cheer => selectedType === '' || cheer.type === selectedType);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -107,11 +131,6 @@ export default function ListSoberCheers() {
           <p className="text-xl mt-2">ชวนช่วย ชมเชียร์ เชิดชู</p>
           <p className="text-lg mt-4">ร่วมเป็นส่วนหนึ่งในการเปลี่ยนแปลงและสนับสนุน งดเหล้าครบพรรษา ปี 2567</p>
         </div>
-        {/* <div className="flex justify-end mt-4">
-          <button className="bg-white text-amber-600 py-2 px-4 rounded-lg shadow-sm">
-            ผู้เข้าร่วมทั้งหมด: {participantCount?.toLocaleString() ?? "..."} คน
-          </button>
-        </div> */}
       </div>
 
       <div className="bg-white shadow-lg rounded-lg p-6">
@@ -123,15 +142,37 @@ export default function ListSoberCheers() {
             onChange={(e) => setSearch(e.target.value)}
             className="px-4 py-2 border border-amber-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
           />
+          <select
+            value={selectedType}
+            onChange={(e) => {
+              setSelectedType(e.target.value);
+              setPage(1);
+            }}
+            className="px-4 py-2 border border-amber-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+          >
+            <option value="">ทุกภาค</option>
+            {types.map((type) => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
           <Link href="/soberCheers/create" className="bg-amber-600 text-white py-2 px-4 rounded-lg shadow-sm hover:bg-amber-500 transition duration-150">
             เพิ่มรายชื่อ
           </Link>
+          {isAdmin && selectedItems.length > 0 && (
+            <button
+              onClick={deleteSelectedSoberCheers}
+              className="bg-red-600 text-white py-2 px-4 rounded-lg shadow-sm hover:bg-red-500 transition duration-150"
+            >
+              ลบรายการที่เลือก ({selectedItems.length})
+            </button>
+          )}
         </div>
 
         <div className="hidden lg:block overflow-x-auto">
           <table className="min-w-full divide-y divide-amber-200">
             <thead className="bg-amber-50">
               <tr>
+                {isAdmin && <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">เลือก</th>}
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">ลำดับ</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">ชื่อ</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">อายุ</th>
@@ -143,8 +184,18 @@ export default function ListSoberCheers() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-amber-100">
-              {soberCheers.map((soberCheer, index) => (
+              {filteredSoberCheers.map((soberCheer, index) => (
                 <tr key={soberCheer.id} className={`${index % 2 === 0 ? 'bg-amber-50' : 'bg-white'} hover:bg-amber-100 transition-colors duration-150 ease-in-out`}>
+                  {isAdmin && (
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.includes(soberCheer.id)}
+                        onChange={() => handleSelectItem(soberCheer.id)}
+                        className="form-checkbox h-5 w-5 text-amber-600"
+                      />
+                    </td>
+                  )}
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{index + 1}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -163,7 +214,6 @@ export default function ListSoberCheers() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{soberCheer.intentPeriod || "-"}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <Link href={`/soberCheers/edit/${soberCheer.id}`} className="text-indigo-600 hover:text-indigo-900 mr-4">แก้ไข</Link>
-                    {/* <button onClick={() => deleteSoberCheer(soberCheer.id)} className="text-red-600 hover:text-red-900">ลบ</button> */}
                   </td>
                 </tr>
               ))}
@@ -172,9 +222,17 @@ export default function ListSoberCheers() {
         </div>
 
         <div className="lg:hidden space-y-4">
-          {soberCheers.map((soberCheer, index) => (
+          {filteredSoberCheers.map((soberCheer, index) => (
             <div key={soberCheer.id} className="bg-white shadow-md rounded-lg p-4 border border-amber-200">
               <div className="flex justify-between items-start">
+                {isAdmin && (
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.includes(soberCheer.id)}
+                    onChange={() => handleSelectItem(soberCheer.id)}
+                    className="form-checkbox h-5 w-5 text-amber-600"
+                  />
+                )}
                 <div className="text-lg font-semibold text-amber-700">{index + 1}. {soberCheer.firstName} {soberCheer.lastName}</div>
                 {index === 0 && (
                   <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 animate-pulse">ล่าสุด</span>
@@ -189,7 +247,6 @@ export default function ListSoberCheers() {
               </div>
               <div className="mt-4 flex space-x-4">
                 <Link href={`/soberCheers/edit/${soberCheer.id}`} className="text-indigo-600 hover:text-indigo-900">แก้ไข</Link>
-                {/* <button onClick={() => deleteSoberCheer(soberCheer.id)} className="text-red-600 hover:text-red-900">ลบ</button> */}
               </div>
             </div>
           ))}
@@ -197,7 +254,11 @@ export default function ListSoberCheers() {
 
         <div className="flex justify-between items-center mt-6">
           <div className="flex items-center">
-            <select value={rowsPerPage} onChange={(e) => setRowsPerPage(parseInt(e.target.value))} className="mx-2 px-2 py-1 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+            <select
+              value={rowsPerPage}
+              onChange={(e) => setRowsPerPage(parseInt(e.target.value))}
+              className="mx-2 px-2 py-1 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+            >
               <option value={10}>10</option>
               <option value={25}>25</option>
               <option value={50}>50</option>
@@ -205,10 +266,26 @@ export default function ListSoberCheers() {
             <span className="text-sm text-gray-700">รายการต่อหน้า</span>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-700">{page * rowsPerPage - rowsPerPage + 1}-{Math.min(page * rowsPerPage, totalItems)} จาก {totalItems}</span>
+          <span className="text-sm text-gray-700">
+              {filteredSoberCheers.length > 0 
+                ? `${(page - 1) * rowsPerPage + 1}-${Math.min(page * rowsPerPage, filteredSoberCheers.length)} จาก ${filteredSoberCheers.length}`
+                : 'ไม่พบข้อมูล'}
+            </span>
             <div className="flex space-x-1">
-              <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1} className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50">ก่อนหน้า</button>
-              <button onClick={() => setPage(Math.min(totalPages, page + 1))} disabled={page === totalPages} className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50">ถัดไป</button>
+              <button
+                onClick={() => setPage(Math.max(1, page - 1))}
+                disabled={page === 1}
+                className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50"
+              >
+                ก่อนหน้า
+              </button>
+              <button
+                onClick={() => setPage(Math.min(totalPages, page + 1))}
+                disabled={page === totalPages || filteredSoberCheers.length === 0}
+                className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50"
+              >
+                ถัดไป
+              </button>
             </div>
           </div>
         </div>

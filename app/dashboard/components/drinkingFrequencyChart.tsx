@@ -1,34 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Bar } from 'react-chartjs-2';
 import axios from 'axios';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+interface FrequencyData {
+  [key: string]: number;
+}
 
-const options = {
-  indexAxis: 'y' as const, // Set the index axis to y for horizontal bar chart
-  maintainAspectRatio: false,
-  scales: {
-    x: {
-      beginAtZero: true,
-      ticks: {
-        stepSize: 1,
-      },
-    },
-  },
-  plugins: {
-    tooltip: {
-      callbacks: {
-        label: function (context: any) {
-          return `${context.dataset.label}: ${context.raw}`;
-        }
-      }
-    }
-  }
-};
-
-const DrinkingFrequencyChart: React.FC = () => {
-  const [chartData, setChartData] = useState<any>(null);
+const DrinkingFrequencyTable: React.FC = () => {
+  const [frequencyData, setFrequencyData] = useState<FrequencyData | null>(null);
+  const [totalRegistered, setTotalRegistered] = useState(0);
+  const [totalResponded, setTotalResponded] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,56 +16,95 @@ const DrinkingFrequencyChart: React.FC = () => {
         const response = await axios.get('/api/dashboard');
         const { campaigns } = response.data;
 
-        const drinkingFrequencyCounts: Record<string, number> = {};
+        const newData: FrequencyData = {};
+        let total = 0;
 
         campaigns.forEach((campaign: any) => {
           if (campaign.drinkingFrequency) {
-            if (drinkingFrequencyCounts[campaign.drinkingFrequency]) {
-              drinkingFrequencyCounts[campaign.drinkingFrequency] += campaign._count.drinkingFrequency;
+            if (newData[campaign.drinkingFrequency]) {
+              newData[campaign.drinkingFrequency] += campaign._count.drinkingFrequency;
             } else {
-              drinkingFrequencyCounts[campaign.drinkingFrequency] = campaign._count.drinkingFrequency;
+              newData[campaign.drinkingFrequency] = campaign._count.drinkingFrequency;
             }
+            total += campaign._count.drinkingFrequency;
           }
         });
 
-        const labels = Object.keys(drinkingFrequencyCounts).map(
-          (drinkingFrequency) => `${drinkingFrequency} (${drinkingFrequencyCounts[drinkingFrequency]})`
-        );
-        const data = Object.values(drinkingFrequencyCounts);
+        if (newData['Unknown']) {
+          newData['เลิกดื่มมาแล้วมากกว่า 3 ปี หรือ ไม่เคยดื่มเลยตลอดชีวิต'] = newData['Unknown'];
+          delete newData['Unknown'];
+        }
 
-        setChartData({
-          labels,
-          datasets: [
-            {
-              label: 'Drinking Frequency',
-              data,
-              backgroundColor: 'rgba(75, 192, 192, 0.6)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-            },
-          ],
-        });
+        setFrequencyData(newData);
+        setTotalRegistered(campaigns.reduce((sum: number, campaign: any) => sum + campaign._count.drinkingFrequency, 0));
+        setTotalResponded(total);
       } catch (error) {
-        console.error('Error fetching chart data:', error);
+        console.error('Error fetching frequency data:', error);
       }
     };
-
     fetchData();
   }, []);
 
-  if (!chartData) {
+  if (!frequencyData) {
     return <div>Loading...</div>;
   }
 
+  const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#C7B198'];
+
+  const calculatePercentage = (count: number, total: number) => {
+    if (total === 0) return '0.0';
+    return ((count / total) * 100).toFixed(1);
+  };
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
-      <h2 className="text-xl font-bold mb-2">ความถี่ในการดื่ม</h2>
-      <p className="text-gray-500 mb-4">Overview of Drinking Frequency</p>
-      <div style={{ height: '300px', width: '100%' }}>
-        <Bar data={chartData} options={options} />
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <h2 className="text-xl font-bold text-center mb-4">ความถี่ในการดื่ม (จำนวนคน)</h2>
+      <p className="text-center mb-4">
+        จำนวนผู้ลงทะเบียนทั้งหมด: {totalRegistered} คน | 
+        ตอบแบบสอบถาม: {totalResponded} คน
+        ({calculatePercentage(totalResponded, totalRegistered)}%)
+      </p>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ความถี่</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">จำนวนคน</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">สัดส่วนผู้ตอบ</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">สัดส่วนทั้งหมด</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {Object.entries(frequencyData).map(([category, count], index) => {
+              const percentageOfResponded = calculatePercentage(count, totalResponded);
+              const percentageOfTotal = calculatePercentage(count, totalRegistered);
+              return (
+                <tr key={category}>
+                  <td className="px-6 py-4 whitespace-nowrap">{category}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{count}</td>
+                  <td className="px-6 py-4 whitespace-nowrap relative">
+                    <div 
+                      style={{
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: `${percentageOfResponded}%`,
+                        backgroundColor: colors[index % colors.length],
+                        opacity: 0.3,
+                      }}
+                    ></div>
+                    <span className="relative z-10">{percentageOfResponded}%</span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{percentageOfTotal}%</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );
 };
 
-export default DrinkingFrequencyChart;
+export default DrinkingFrequencyTable;

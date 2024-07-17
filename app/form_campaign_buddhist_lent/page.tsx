@@ -37,7 +37,12 @@ export default function ListCampaignBuddhistLent() {
 
   const fetchCampaigns = async () => {
     try {
-      const query = new URLSearchParams({ search, sort, page: page.toString(), limit: rowsPerPage.toString() }).toString();
+      const query = new URLSearchParams({ 
+        search, 
+        sort, 
+        page: page.toString(), 
+        limit: rowsPerPage.toString() 
+      }).toString();
       const res = await axios.get(`/api/campaign-buddhist-lent?${query}`);
       const data = res.data;
 
@@ -56,10 +61,6 @@ export default function ListCampaignBuddhistLent() {
     }
   };
 
-  const handleApplyFilters = () => {
-    fetchCampaigns();
-  };
-
   const deleteCampaign = async (id: number) => {
     try {
       await axios.delete(`/api/campaign-buddhist-lent/${id}`);
@@ -76,109 +77,70 @@ export default function ListCampaignBuddhistLent() {
       <div className="hero bg-gradient-to-r from-amber-500 to-amber-700 text-white py-10 mb-8 rounded-lg shadow-lg relative overflow-hidden">
         <div className="relative z-10 hero-content text-center">
           <h1 className="text-4xl font-bold drop-shadow-lg">
-            กิจกรรม : SOBER CHEERs ชวนช่วย ชมเชียร์ ชมเชียร์
+            กิจกรรม : SOBER CHEERs ชวนช่วย ชมเชียร์ เชิดชู
           </h1>
           <p className="mt-4 text-lg">
             ร่วมเป็นส่วนหนึ่งในการเปลี่ยนแปลงและสนับสนุนการงดเหล้าเข้าพรรษา
           </p>
         </div>
       </div>
+
       <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
-        <div className="flex flex-wrap gap-4 w-full sm:w-auto">
-          <input
-            type="text"
-            placeholder="Search by name..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto"
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="ค้นหาตามชื่อ..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 w-full sm:w-auto"
+        />
       </div>
 
-      <div className="hidden lg:block shadow overflow-x-auto border-b border-gray-200 sm:rounded-lg">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="hidden lg:block overflow-x-auto">
+        <table className="min-w-full divide-y divide-amber-200">
+          <thead className="bg-amber-50">
             <tr>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                ชื่อ
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                วันเกิด
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                ที่อยู่
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                เบอร์โทร
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                งาน
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                จัดการ
-              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">ชื่อ</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">วันเกิด</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">ที่อยู่</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">เบอร์โทร</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">งาน</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">จัดการ</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {campaigns.map((campaign) => (
-              <tr key={campaign.id}>
-                <td className="px-6 py-4 whitespace-normal">
-                  <div className="text-sm font-medium text-gray-900">
-                    {campaign.firstName} {campaign.lastName}
+          <tbody className="bg-white divide-y divide-amber-100">
+            {campaigns.map((campaign, index) => (
+              <tr key={campaign.id} className="hover:bg-amber-50">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <div className="text-sm font-medium text-gray-900">
+                      {campaign.firstName} {campaign.lastName}
+                    </div>
+                    {index === 0 && (
+                      <span className="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 animate-pulse">
+                        ล่าสุด
+                      </span>
+                    )}
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-normal">
-                  <div className="text-sm font-medium text-gray-900">
-                    {new Date(campaign.birthday).toLocaleDateString("en-GB")}
-                  </div>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-500">{new Date(campaign.birthday).toLocaleDateString()}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-normal">
-                  <div className="text-sm font-medium text-gray-900">
-                    {campaign.addressLine1}, {campaign.district},{" "}
-                    {campaign.amphoe}, {campaign.province}, {campaign.zipcode}
-                  </div>
+                  <div className="text-sm text-gray-500">{campaign.addressLine1}, {campaign.district}, {campaign.amphoe}, {campaign.province}, {campaign.zipcode}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-normal">
-                  <div className="text-sm font-medium text-gray-900">
-                    {campaign.phone}
-                  </div>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-500">{campaign.phone}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-normal">
-                  <div className="text-sm font-medium text-gray-900">
-                    {campaign.job}
-                  </div>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-500">{campaign.job}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-normal text-sm font-medium">
-                  <Link
-                    className="text-indigo-600 hover:text-indigo-900 mr-4"
-                    href={`/form_campaign_buddhist_lent/edit/${campaign.id}`}
-                  >
-                    Edit
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <Link href={`/form_campaign_buddhist_lent/edit/${campaign.id}`} className="text-indigo-600 hover:text-indigo-900 mr-4">
+                    แก้ไข
                   </Link>
-                  <button
-                    onClick={() => deleteCampaign(campaign.id)}
-                    className="text-red-600 hover:text-red-900"
-                  >
-                    Delete
-                  </button>
+                  {/* <button onClick={() => deleteCampaign(campaign.id)} className="text-red-600 hover:text-red-900">
+                    ลบ
+                  </button> */}
                 </td>
               </tr>
             ))}
@@ -186,103 +148,79 @@ export default function ListCampaignBuddhistLent() {
         </table>
       </div>
 
-      <div className="lg:hidden">
-        {campaigns.map((campaign) => (
-          <div
-            key={campaign.id}
-            className="bg-white shadow-md rounded-lg p-4 mb-4"
-          >
-            <div className="flex flex-col space-y-2">
-              <div className="text-lg font-semibold text-gray-900">
+      <div className="lg:hidden space-y-4">
+        {campaigns.map((campaign, index) => (
+          <div key={campaign.id} className="bg-white shadow-md rounded-lg p-4 border border-amber-200">
+            <div className="flex items-center justify-between">
+              <div className="text-lg font-semibold text-amber-700">
                 {campaign.firstName} {campaign.lastName}
               </div>
-              <div className="text-sm text-gray-700">
-                Birthday:{" "}
-                {new Date(campaign.birthday).toLocaleDateString("en-GB")}
-              </div>
-              <div className="text-sm text-gray-700">
-                Address: {campaign.addressLine1}, {campaign.district},{" "}
-                {campaign.amphoe}, {campaign.province}, {campaign.zipcode}
-              </div>
-              <div className="text-sm text-gray-700">
-                Phone: {campaign.phone}
-              </div>
-              <div className="text-sm text-gray-700">Job: {campaign.job}</div>
-              <div className="flex space-x-4">
-                <Link
-                  className="text-indigo-600 hover:text-indigo-900"
-                  href={`/form_campaign_buddhist_lent/edit/${campaign.id}`}
-                >
-                  Edit
-                </Link>
-                <button
-                  onClick={() => deleteCampaign(campaign.id)}
-                  className="text-red-600 hover:text-red-900"
-                >
-                  Delete
-                </button>
-              </div>
+              {index === 0 && (
+                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 animate-pulse">
+                  ล่าสุด
+                </span>
+              )}
+            </div>
+            <div className="text-sm text-gray-600 mt-2">
+              <p>วันเกิด: {new Date(campaign.birthday).toLocaleDateString()}</p>
+              <p>ที่อยู่: {campaign.addressLine1}, {campaign.district}, {campaign.amphoe}, {campaign.province}, {campaign.zipcode}</p>
+              <p>เบอร์โทร: {campaign.phone}</p>
+              <p>งาน: {campaign.job}</p>
+            </div>
+            <div className="mt-4 flex space-x-4">
+              <Link href={`/form_campaign_buddhist_lent/edit/${campaign.id}`} className="text-indigo-600 hover:text-indigo-900">
+                แก้ไข
+              </Link>
+              {/* <button onClick={() => deleteCampaign(campaign.id)} className="text-red-600 hover:text-red-900">
+                ลบ
+              </button> */}
             </div>
           </div>
         ))}
       </div>
 
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex justify-between items-center mt-6">
         <div className="flex items-center">
           <select
             value={rowsPerPage}
             onChange={(e) => setRowsPerPage(parseInt(e.target.value))}
-            className="mx-2 px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="mx-2 px-2 py-1 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
             <option value={10}>10</option>
             <option value={25}>25</option>
             <option value={50}>50</option>
           </select>
+          <span className="text-sm text-gray-700">รายการต่อหน้า</span>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="text-sm">
-            {page * rowsPerPage - rowsPerPage + 1}-
-            {Math.min(page * rowsPerPage, totalItems)} of {totalItems}
+          <span className="text-sm text-gray-700">
+            {page * rowsPerPage - rowsPerPage + 1}-{Math.min(page * rowsPerPage, totalItems)} จาก {totalItems}
           </span>
           <div className="flex space-x-1">
             <button
-              className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              onClick={() => setPage(1)}
+              onClick={() => setPage(Math.max(1, page - 1))}
               disabled={page === 1}
+              className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50"
             >
-              {"<<"}
+              ก่อนหน้า
             </button>
             <button
-              className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              onClick={() => setPage(page - 1)}
-              disabled={page === 1}
-            >
-              {"<"}
-            </button>
-            <button
-              className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              onClick={() => setPage(page + 1)}
+              onClick={() => setPage(Math.min(totalPages, page + 1))}
               disabled={page === totalPages}
+              className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50"
             >
-              {">"}
-            </button>
-            <button
-              className="px-2 py-1 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              onClick={() => setPage(totalPages)}
-              disabled={page === totalPages}
-            >
-              {">>"}
+              ถัดไป
             </button>
           </div>
         </div>
       </div>
 
-      <Link
-        className="mt-4 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      {/* <Link
         href="/form_campaign_buddhist_lent/create"
+        className="mt-8 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
       >
-        Create a New Campaign
-      </Link>
+        สร้างแคมเปญใหม่
+      </Link> */}
     </div>
   );
 }
