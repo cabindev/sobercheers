@@ -1,9 +1,10 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { Table, Select, Button, Space, Typography, Input, Card, Row, Col, Checkbox, ConfigProvider } from 'antd';
+import { Table, Select, Button, Space, Typography, Input, Card, List, Checkbox, ConfigProvider, Pagination } from 'antd';
 import { DownloadOutlined, FileExcelOutlined, SearchOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
+
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -61,6 +62,8 @@ const SoberCheersTable: React.FC = () => {
   
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   const theme = {
     token: {
@@ -90,6 +93,7 @@ const SoberCheersTable: React.FC = () => {
 
   const handleFilterChange = (value: string, filterType: FilterType | 'name') => {
     setFilters(prevFilters => ({ ...prevFilters, [filterType]: value }));
+    setCurrentPage(1);
   };
 
   const filteredData = data.filter((item: SoberCheersItem) => {
@@ -105,6 +109,8 @@ const SoberCheersTable: React.FC = () => {
       (!filters.intentPeriod || item.intentPeriod === filters.intentPeriod)
     );
   });
+
+  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const getRegion = (province: string): string => {
     const northernProvinces = ['เชียงใหม่', 'เชียงราย', 'ลำปาง'];
@@ -249,25 +255,27 @@ const SoberCheersTable: React.FC = () => {
     },
   };
 
+  const renderMobileView = () => (
+    <>
+      <List
+        dataSource={paginatedData}
+        renderItem={(item) => renderMobileCard(item)}
+      />
+      <Pagination
+        current={currentPage}
+        total={filteredData.length}
+        pageSize={pageSize}
+        onChange={(page) => setCurrentPage(page)}
+        style={{ marginTop: 16, textAlign: 'center' }}
+      />
+    </>
+  );
+
   return (
     <ConfigProvider theme={theme}>
-      <div
-        style={{
-          padding: "20px",
-          backgroundColor: "#f0f2f5",
-          minHeight: "100vh",
-        }}
-      >
-        <Card
-          style={{
-            marginBottom: 20,
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <Title
-            level={3}
-            style={{ color: "#f59e0b", marginBottom: 20, fontSize: "18px" }}
-          >
+      <div className='justify-center items-center' style={{ padding: "20px", backgroundColor: "#f0f2f5", minHeight: "100vh" }}>
+        <Card style={{ marginBottom: 20, boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
+          <Title level={3} style={{ color: "#f59e0b", marginBottom: 20, fontSize: "18px" }}>
             ข้อมูล Sober Cheers
           </Title>
           <Space style={{ marginBottom: 16 }} wrap>
@@ -280,9 +288,7 @@ const SoberCheersTable: React.FC = () => {
             <Select
               style={{ width: 200 }}
               placeholder="เลือกตำบล"
-              onChange={(value: string) =>
-                handleFilterChange(value, "district")
-              }
+              onChange={(value: string) => handleFilterChange(value, "district")}
             >
               {Array.from(new Set(data.map((item) => item.district))).map(
                 (district) => (
@@ -308,9 +314,7 @@ const SoberCheersTable: React.FC = () => {
             <Select
               style={{ width: 200 }}
               placeholder="เลือกจังหวัด"
-              onChange={(value: string) =>
-                handleFilterChange(value, "province")
-              }
+              onChange={(value: string) => handleFilterChange(value, "province")}
             >
               {Array.from(new Set(data.map((item) => item.province))).map(
                 (province) => (
@@ -346,14 +350,9 @@ const SoberCheersTable: React.FC = () => {
             </Select>
           </Space>
         </Card>
+        
         {isMobile ? (
-          <Row gutter={[16, 16]}>
-            {filteredData.map((item) => (
-              <Col xs={24} sm={12} md={8} key={item.id}>
-                {renderMobileCard(item)}
-              </Col>
-            ))}
-          </Row>
+          renderMobileView()
         ) : (
           <Card style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
             <Table
@@ -362,16 +361,19 @@ const SoberCheersTable: React.FC = () => {
               dataSource={filteredData}
               loading={loading}
               rowKey="id"
-              pagination={{ pageSize: 10 }}
+              pagination={{
+                current: currentPage,
+                pageSize: pageSize,
+                total: filteredData.length,
+                onChange: (page) => setCurrentPage(page),
+              }}
               size="small"
               scroll={{ x: true }}
             />
           </Card>
         )}
 
-        <Card
-          style={{ marginTop: 20, boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}
-        >
+        <Card style={{ marginTop: 20, boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
           <Space>
             <Button
               type="primary"
@@ -379,7 +381,7 @@ const SoberCheersTable: React.FC = () => {
               onClick={handleExportCSV}
               size="small"
             >
-              บันทึกข้อมูลที่เลือกเป็น CSV
+              CSV
             </Button>
             <Button
               type="primary"
@@ -387,18 +389,16 @@ const SoberCheersTable: React.FC = () => {
               onClick={handleExportExcel}
               size="small"
             >
-              บันทึกข้อมูลที่เลือกเป็น Excel
+              Excel
             </Button>
             <Button
-              onClick={() =>
-                setSelectedRowKeys(filteredData.map((item) => item.id))
-              }
+              onClick={() => setSelectedRowKeys(filteredData.map((item) => item.id))}
               size="small"
             >
               เลือกทั้งหมด
             </Button>
             <Button onClick={() => setSelectedRowKeys([])} size="small">
-              ยกเลิกการเลือกทั้งหมด
+              ยกเลิกทั้งหมด
             </Button>
           </Space>
         </Card>
@@ -406,4 +406,5 @@ const SoberCheersTable: React.FC = () => {
     </ConfigProvider>
   );
 };
+
 export default SoberCheersTable;

@@ -151,7 +151,7 @@ const DashboardSober: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <ChartCard title="Type Distribution" icon={<FaChartBar />} className="lg:col-span-2">
+          <ChartCard title="Regions Distribution" icon={<FaChartBar />} className="lg:col-span-2">
             <TypeChart />
           </ChartCard>
           <ChartCard title="Gender Distribution" icon={<FaVenusMars />}>

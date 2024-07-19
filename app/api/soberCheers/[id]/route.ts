@@ -84,6 +84,56 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+  const id = Number(params.id);
+  const data = await req.json();
+
+  try {
+    // ตรวจสอบว่า id ถูกต้องและมีอยู่จริง
+    const existingSoberCheer = await prisma.soberCheers.findUnique({
+      where: { id },
+    });
+
+    if (!existingSoberCheer) {
+      return NextResponse.json({ error: 'SoberCheer not found' }, { status: 404 });
+    }
+
+    // แปลงข้อมูลวันที่เกิดให้เป็น Date object
+    if (data.birthday) {
+      data.birthday = new Date(data.birthday);
+    }
+
+    // แปลง monthlyExpense เป็นตัวเลข (ถ้ามี)
+    if (data.monthlyExpense) {
+      data.monthlyExpense = parseInt(data.monthlyExpense.toString().replace(/,/g, ''));
+    }
+
+    // อัปเดตข้อมูล
+    const updatedSoberCheer = await prisma.soberCheers.update({
+      where: { id },
+      data: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        birthday: data.birthday,
+        addressLine1: data.addressLine1,
+        district: data.district,
+        amphoe: data.amphoe,
+        province: data.province,
+        zipcode: data.zipcode,
+        type: data.type,
+        // เพิ่มฟิลด์อื่นๆ ตามที่ต้องการอัปเดต
+      },
+    });
+
+    revalidatePath('/soberCheers');
+
+    return NextResponse.json(updatedSoberCheer);
+  } catch (error) {
+    console.error('Error updating SoberCheer:', error);
+    return NextResponse.json({ error: 'Failed to update SoberCheer' }, { status: 500 });
+  }
+}
+
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const deletedSoberCheers = await prisma.soberCheers.delete({

@@ -32,20 +32,20 @@ const MotivationChart: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/soberCheersCharts/totalCount');
-        const { motivationCounts, totalCount } = response.data;
+        const response = await axios.get('/api/soberCheersCharts/motivations');
+        const { motivationCounts, totalResponses } = response.data;
 
         const processedData = Object.entries(motivationCounts)
           .map(([key, value]) => ({
             label: key,
             count: value as number,
-            percentage: ((value as number) / totalCount) * 100,
+            percentage: ((value as number) / totalResponses) * 100,
             icon: motivationIcons[key as keyof typeof motivationIcons],
           }))
           .sort((a, b) => b.count - a.count);
 
         setMotivationsData(processedData);
-        setTotalResponses(totalCount);
+        setTotalResponses(totalResponses);
       } catch (error) {
         console.error('Error fetching motivation data:', error);
         setError('เกิดข้อผิดพลาดในการโหลดข้อมูล');
