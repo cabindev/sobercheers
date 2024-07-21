@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import Timeline from './components/timeline/timeline';
-
+import ProfileCard from './components/profileCard/card';
 
 interface Campaign {
-  id: number; // Add the id field
+  id: number;
   firstName: string;
   lastName: string;
   birthday: string;
@@ -24,18 +24,33 @@ interface Campaign {
   drinkingFrequency: string;
   intentPeriod: string;
   monthlyExpense: number;
-  motivations: string[];
+  motivations: string[] | string;
   healthImpact: string;
+  userId: string;
+}
+
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  image: string | null;
+  role: string;
+}
+
+interface Session {
+  user: User;
 }
 
 const siteUrl = 'https://healthy-sobriety.sdnthailand.com/';
 
 export default function Profile() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession() as { data: Session | null; status: string };
   const router = useRouter();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
   const [showCampaigns, setShowCampaigns] = useState(false);
+  const [showProfileCard, setShowProfileCard] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
@@ -133,7 +148,24 @@ export default function Profile() {
               ไปที่แดชบอร์ด
             </button>
           )}
+          <button
+            className="badge flex-1 px-6 py-2 mt-4 text-center bg-purple-500 text-white font-semibold rounded-lg hover:bg-purple-600"
+            onClick={() => setShowProfileCard(!showProfileCard)}
+          >
+            การ์ดส่วนตัว
+          </button>
         </div>
+
+        {showProfileCard && campaigns.length > 0 && (
+          <ProfileCard
+            firstName={campaigns[0].firstName}
+            lastName={campaigns[0].lastName}
+            image={session.user.image || "/images/default-profile.png"}
+            motivations={campaigns[0].motivations}
+            intentPeriod={campaigns[0].intentPeriod}
+          />
+        )}
+
         {showCampaigns && (
           <div className="mt-8 w-full max-w-4xl bg-white p-6 rounded-md shadow-md">
             <h1 className="text-2xl font-semibold mb-4">
@@ -202,7 +234,10 @@ export default function Profile() {
                               </p>
                               <p>
                                 <strong>ค่าใช้จ่ายต่อเดือน:</strong>{" "}
-                                {campaign.monthlyExpense.toLocaleString()} บาท
+                                {typeof campaign.monthlyExpense === "number"
+                                  ? campaign.monthlyExpense.toLocaleString() +
+                                    " บาท"
+                                  : "ไม่ระบุ"}
                               </p>
                             </>
                           )}
@@ -251,7 +286,7 @@ export default function Profile() {
             </button>
           </div>
         )}
-        <Timeline userId={session.user.id} />
+        <Timeline userId={session.user.id.toString()} />
       </div>
     </>
   );

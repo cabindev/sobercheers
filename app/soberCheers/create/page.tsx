@@ -89,7 +89,7 @@ export default function CreateSoberCheers() {
     setZipcode(suggestion.zipcode.toString());
     setType(suggestion.type);
     setSuggestions([]);
-    setAutoFilledFields(["amphoe", "province", "zipcode", "type"]);
+    setAutoFilledFields(["amphoe", "province", "zipcode",]);
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -321,7 +321,31 @@ export default function CreateSoberCheers() {
                 </ul>
               )}
             </div>
-
+            <div>
+              <label
+                htmlFor="amphoe"
+                className="block text-sm font-medium text-gray-700"
+              >
+                อำเภอ/เขต
+              </label>
+              <input
+                id="amphoe"
+                type="text"
+                value={amphoe}
+                onChange={(e) => setAmphoe(e.target.value)}
+                required
+                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm ${
+                  autoFilledFields.includes("amphoe")
+                    ? "bg-green-50 border-green-300"
+                    : "border-gray-300"
+                }`}
+              />
+              {autoFilledFields.includes("amphoe") && (
+                <p className="mt-1 text-xs text-green-600">
+                  ข้อมูลถูกกรอกอัตโนมัติ
+                </p>
+              )}
+            </div>
             <div>
               <label
                 htmlFor="province"
@@ -368,31 +392,6 @@ export default function CreateSoberCheers() {
                 }`}
               />
               {autoFilledFields.includes("zipcode") && (
-                <p className="mt-1 text-xs text-green-600">
-                  ข้อมูลถูกกรอกอัตโนมัติ
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="type"
-                className="block text-sm font-medium text-gray-700"
-              >
-                ภาค
-              </label>
-              <input
-                id="type"
-                type="text"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm ${
-                  autoFilledFields.includes("type")
-                    ? "bg-green-50 border-green-300"
-                    : "border-gray-300"
-                }`}
-              />
-              {autoFilledFields.includes("type") && (
                 <p className="mt-1 text-xs text-green-600">
                   ข้อมูลถูกกรอกอัตโนมัติ
                 </p>

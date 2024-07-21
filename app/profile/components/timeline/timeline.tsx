@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
 
-
-
 interface TimelineStep {
   title: string;
   date: Date;
@@ -15,6 +13,10 @@ interface CampaignData {
   monthlyExpense: number;
   intentPeriod: string;
   birthday: Date;
+}
+
+interface TimelineProps {
+  userId: string;
 }
 
 const CongratulationsMessage: React.FC = () => {
@@ -35,7 +37,7 @@ const CongratulationsMessage: React.FC = () => {
   );
 };
 
-const Timeline: React.FC<{ userId: number }> = ({ userId }) => {
+const Timeline: React.FC<TimelineProps> = ({ userId }) => {
   const [campaignData, setCampaignData] = useState<CampaignData | null>(null);
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
@@ -228,7 +230,6 @@ const Timeline: React.FC<{ userId: number }> = ({ userId }) => {
       {showConfetti && (
         <div className="confetti-container fixed top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
           <Confetti recycle={false} numberOfPieces={500} />
-          
         </div>
       )}
       <h2 className="text-2xl font-bold text-center mb-6">บันทึกการเดินทาง "งดเหล้าเข้าพรรษา"</h2>

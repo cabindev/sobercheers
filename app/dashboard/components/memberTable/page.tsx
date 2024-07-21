@@ -281,7 +281,7 @@ const MemberTable: React.FC = () => {
               onClick={handleExportCSV}
               size="small"
             >
-              บันทึกข้อมูลที่เลือกเป็น CSV
+              CSV
             </Button>
             <Button
               type="primary"
@@ -289,7 +289,7 @@ const MemberTable: React.FC = () => {
               onClick={handleExportExcel}
               size="small"
             >
-              บันทึกข้อมูลที่เลือกเป็น Excel
+              Excel
             </Button>
             <Button
               onClick={() => setSelectedRowKeys(data.map((item) => item.id))}
@@ -298,7 +298,7 @@ const MemberTable: React.FC = () => {
               เลือกทั้งหมด
             </Button>
             <Button onClick={() => setSelectedRowKeys([])} size="small">
-              ยกเลิกการเลือกทั้งหมด
+              ยกเลิกทั้งหมด
             </Button>
           </Space>
         </Card>

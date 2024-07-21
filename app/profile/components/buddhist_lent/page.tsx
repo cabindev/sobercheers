@@ -140,7 +140,9 @@ export default function Buddhist() {
           {/* Campaign List */}
           {showCampaigns && (
             <div className="mt-8 max-w-4xl mx-auto bg-white p-6 rounded-md shadow-md">
-              <h1 className="text-2xl font-semibold mb-4">กิจกรรม : งดเหล้าเข้าพรรษา</h1>
+              <h1 className="text-2xl font-semibold mb-4">
+                กิจกรรม : งดเหล้าเข้าพรรษา
+              </h1>
               <ul>
                 {campaigns.map((campaign, index) => (
                   <li key={index} className="border-b py-2">
@@ -180,7 +182,10 @@ export default function Buddhist() {
                             </p>
                             <p>
                               <strong>ค่าใช้จ่ายต่อเดือน:</strong>{" "}
-                              {campaign.monthlyExpense.toLocaleString()} บาท
+                              {typeof campaign.monthlyExpense === "number"
+                                ? campaign.monthlyExpense.toLocaleString() +
+                                  " บาท"
+                                : "ไม่ระบุ"}
                             </p>
                           </>
                         )}

@@ -77,10 +77,10 @@ export default function ListCampaignBuddhistLent() {
       <div className="hero bg-gradient-to-r from-amber-500 to-amber-700 text-white py-10 mb-8 rounded-lg shadow-lg relative overflow-hidden">
         <div className="relative z-10 hero-content text-center">
           <h1 className="text-4xl font-bold drop-shadow-lg">
-            กิจกรรม : SOBER CHEERs ชวนช่วย ชมเชียร์ เชิดชู
+            กิจกรรม : 'งดเหล้าเข้าพรรษา เปลี่ยนคุณเป็นคนใหม่ใน 90 วัน'
           </h1>
           <p className="mt-4 text-lg">
-            ร่วมเป็นส่วนหนึ่งในการเปลี่ยนแปลงและสนับสนุนการงดเหล้าเข้าพรรษา
+          'ฤดูกาลสุขปลอดเหล้า งดเหล้าเข้าพรรษา'
           </p>
         </div>
       </div>
