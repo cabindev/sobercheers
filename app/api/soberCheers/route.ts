@@ -8,30 +8,30 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const search = searchParams.get('search') || '';
   const sort = searchParams.get('sort') || 'desc';
-  const page = parseInt(searchParams.get('page') || '1');
-  const limit = parseInt(searchParams.get('limit') || '10');
-  const skip = (page - 1) * limit;
+  const type = searchParams.get('type') || '';
 
-  const where = search
-    ? {
+  const where = {
+    AND: [
+      search ? {
         OR: [
-          { firstName: { contains: search } },
-          { lastName: { contains: search } },
+          { firstName: { contains: search, mode: 'insensitive' } },
+          { lastName: { contains: search, mode: 'insensitive' } },
+          { addressLine1: { contains: search, mode: 'insensitive' } },
+          { district: { contains: search, mode: 'insensitive' } },
+          { amphoe: { contains: search, mode: 'insensitive' } },
+          { province: { contains: search, mode: 'insensitive' } },
         ],
-      }
-    : {};
+      } : {},
+      type ? { type: { equals: type, mode: 'insensitive' } } : {},
+    ],
+  };
 
   try {
-    const [soberCheers, totalItems] = await Promise.all([
-      prisma.soberCheers.findMany({
-        where,
-        orderBy: { createdAt: sort === 'asc' ? 'asc' : 'desc' },
-        skip,
-        take: limit,
-      }),
-      prisma.soberCheers.count({ where }),
-    ]);
-    return NextResponse.json({ soberCheers, totalItems });
+    const soberCheers = await prisma.soberCheers.findMany({
+      where,
+      orderBy: { createdAt: sort === 'asc' ? 'asc' : 'desc' },
+    });
+    return NextResponse.json({ soberCheers, totalItems: soberCheers.length });
   } catch (error) {
     console.error('Error in GET /api/soberCheers:', error);
     return NextResponse.json({ error: 'Failed to fetch soberCheers' }, { status: 500 });
