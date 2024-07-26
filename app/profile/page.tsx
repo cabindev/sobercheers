@@ -7,7 +7,6 @@ import axios from 'axios';
 import Link from 'next/link';
 import Timeline from './components/timeline/timeline';
 import ProfileCard from './components/profileCard/card';
-
 interface Campaign {
   id: number;
   firstName: string;
