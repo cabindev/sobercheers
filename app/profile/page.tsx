@@ -142,7 +142,7 @@ export default function Profile() {
           {isAdmin && (
             <button
               className="badge flex-1 px-6 py-2 mt-4 text-center bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600"
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.push("/dashboard/soberCheers")}
             >
               ไปที่แดชบอร์ด
             </button>
