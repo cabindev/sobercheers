@@ -48,12 +48,14 @@ const GenderChart: React.FC = () => {
         {
           data: Object.values(genderData),
           backgroundColor: [
-            'rgba(255, 99, 132, 0.8)',
-            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 99, 132, 0.8)',  // Pink for หญิง
+            'rgba(54, 162, 235, 0.8)',  // Blue for ชาย
+            'rgba(75, 192, 192, 0.8)',  // Teal for LGBTQ
           ],
           borderColor: [
             'rgba(255, 99, 132, 1)',
             'rgba(54, 162, 235, 1)',
+            'rgba(75, 192, 192, 1)',
           ],
           borderWidth: 1,
         },
@@ -145,17 +147,22 @@ const GenderChart: React.FC = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 mt-4">
-        {Object.entries(genderData).map(([gender, count]) => (
-          <div key={gender} className="text-center p-3 rounded-lg" style={{backgroundColor: gender === 'ชาย' ? 'rgba(54, 162, 235, 0.2)' : 'rgba(255, 99, 132, 0.2)'}}>
-            <span className="text-lg font-bold">{gender}</span>
-            <span className="block text-2xl font-semibold">{count} คน</span>
-            <span className="text-sm">
-              ({((count / soberCheersData.length) * 100).toFixed(1)}%)
-            </span>
-          </div>
-        ))}
-      </div>
+   <div className="grid grid-cols-2 gap-4 mt-4">
+  {Object.entries(genderData).map(([gender, count]) => (
+    <div key={gender} className="text-center p-3 rounded-lg" style={{
+      backgroundColor: 
+        gender === 'ชาย' ? 'rgba(54, 162, 235, 0.2)' : 
+        gender === 'หญิง' ? 'rgba(255, 99, 132, 0.2)' :
+        'rgba(75, 192, 192, 0.2)'  // For LGBTQ
+    }}>
+      <span className="text-lg font-bold">{gender}</span>
+      <span className="block text-2xl font-semibold">{count} คน</span>
+      <span className="text-sm">
+        ({((count / soberCheersData.length) * 100).toFixed(1)}%)
+      </span>
+    </div>
+  ))}
+</div>
     </div>
   );
 };

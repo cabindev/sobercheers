@@ -147,7 +147,19 @@ const SoberCheersTable: React.FC = () => {
     {
       title: 'แรงจูงใจในการเลิกดื่ม',
       dataIndex: 'motivations',
-      render: (motivations: any) => JSON.stringify(motivations),
+      render: (motivations: string | null | undefined) => {
+        if (typeof motivations === 'string') {
+          try {
+            const parsedMotivations = JSON.parse(motivations);
+            if (Array.isArray(parsedMotivations)) {
+              return parsedMotivations.join(', ');
+            }
+          } catch (error) {
+            console.error('Error parsing motivations:', error);
+          }
+        }
+        return motivations || '-'; // กรณีที่ไม่สามารถ parse ได้ หรือไม่ใช่ string
+      },
     },
   ];
 
@@ -215,9 +227,9 @@ const SoberCheersTable: React.FC = () => {
   };
 
   const renderMobileCard = (item: SoberCheersItem) => (
-    <Card 
-      key={item.id} 
-      style={{ marginBottom: 16, boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}
+    <Card
+      key={item.id}
+      style={{ marginBottom: 16, boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}
       size="small"
       hoverable
     >
@@ -226,25 +238,80 @@ const SoberCheersTable: React.FC = () => {
         onChange={(e) => {
           const newSelectedRowKeys = e.target.checked
             ? [...selectedRowKeys, item.id]
-            : selectedRowKeys.filter(key => key !== item.id);
+            : selectedRowKeys.filter((key) => key !== item.id);
           setSelectedRowKeys(newSelectedRowKeys);
         }}
       >
         เลือก
       </Checkbox>
-      <Title level={5} style={{ marginTop: 8, color: '#f59e0b', fontSize: '14px' }}>{item.firstName} {item.lastName}</Title>
-      <Text style={{ fontSize: '12px' }}><strong>เพศ:</strong> {item.gender}</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>วันเกิด:</strong> {new Date(item.birthday).toLocaleDateString('th-TH')}</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>ที่อยู่:</strong> {item.addressLine1}, {item.district}, {item.amphoe}, {item.province} {item.zipcode}</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>ภาค:</strong> {item.type}</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>การดื่มแอลกอฮอล์:</strong> {item.alcoholConsumption}</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>ผลกระทบต่อสุขภาพ:</strong> {item.healthImpact}</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>เบอร์โทรศัพท์:</strong> {item.phone}</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>อาชีพ:</strong> {item.job}</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>ความถี่ในการดื่ม:</strong> {item.drinkingFrequency}</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>ระยะเวลาตั้งใจเลิกดื่ม:</strong> {item.intentPeriod}</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>ค่าใช้จ่ายต่อเดือน:</strong> {item.monthlyExpense} บาท</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>แรงจูงใจในการเลิกดื่ม:</strong> {JSON.stringify(item.motivations)}</Text>
+      <Title
+        level={5}
+        style={{ marginTop: 8, color: "#f59e0b", fontSize: "14px" }}
+      >
+        {item.firstName} {item.lastName}
+      </Title>
+      <Text style={{ fontSize: "12px" }}>
+        <strong>เพศ:</strong> {item.gender}
+      </Text>
+      <br />
+      <Text style={{ fontSize: "12px" }}>
+        <strong>วันเกิด:</strong>{" "}
+        {new Date(item.birthday).toLocaleDateString("th-TH")}
+      </Text>
+      <br />
+      <Text style={{ fontSize: "12px" }}>
+        <strong>ที่อยู่:</strong> {item.addressLine1}, {item.district},{" "}
+        {item.amphoe}, {item.province} {item.zipcode}
+      </Text>
+      <br />
+      <Text style={{ fontSize: "12px" }}>
+        <strong>ภาค:</strong> {item.type}
+      </Text>
+      <br />
+      <Text style={{ fontSize: "12px" }}>
+        <strong>การดื่มแอลกอฮอล์:</strong> {item.alcoholConsumption}
+      </Text>
+      <br />
+      <Text style={{ fontSize: "12px" }}>
+        <strong>ผลกระทบต่อสุขภาพ:</strong> {item.healthImpact}
+      </Text>
+      <br />
+      <Text style={{ fontSize: "12px" }}>
+        <strong>เบอร์โทรศัพท์:</strong> {item.phone}
+      </Text>
+      <br />
+      <Text style={{ fontSize: "12px" }}>
+        <strong>อาชีพ:</strong> {item.job}
+      </Text>
+      <br />
+      <Text style={{ fontSize: "12px" }}>
+        <strong>ความถี่ในการดื่ม:</strong> {item.drinkingFrequency}
+      </Text>
+      <br />
+      <Text style={{ fontSize: "12px" }}>
+        <strong>ระยะเวลาตั้งใจเลิกดื่ม:</strong> {item.intentPeriod}
+      </Text>
+      <br />
+      <Text style={{ fontSize: "12px" }}>
+        <strong>ค่าใช้จ่ายต่อเดือน:</strong> {item.monthlyExpense} บาท
+      </Text>
+      <br />
+      <Text style={{ fontSize: "12px" }}>
+        <strong>แรงจูงใจในการเลิกดื่ม:</strong>{" "}
+        {(() => {
+          if (typeof item.motivations === "string") {
+            try {
+              const parsedMotivations = JSON.parse(item.motivations);
+              if (Array.isArray(parsedMotivations)) {
+                return parsedMotivations.join(", ");
+              }
+            } catch (error) {
+              console.error("Error parsing motivations:", error);
+            }
+          }
+          return item.motivations || "-";
+        })()}
+      </Text>
     </Card>
   );
 

@@ -114,7 +114,23 @@ const MemberTable: React.FC = () => {
     { title: 'ความถี่ในการดื่ม', dataIndex: 'drinkingFrequency' },
     { title: 'ระยะเวลาตั้งใจเลิกดื่ม', dataIndex: 'intentPeriod' },
     { title: 'ค่าใช้จ่ายต่อเดือน (บาท)', dataIndex: 'monthlyExpense' },
-    { title: 'แรงจูงใจในการเลิกดื่ม', dataIndex: 'motivations' },
+    {
+      title: 'แรงจูงใจในการเลิกดื่ม',
+      dataIndex: 'motivations',
+      render: (motivations: string | null | undefined) => {
+        if (typeof motivations === 'string') {
+          try {
+            const parsedMotivations = JSON.parse(motivations);
+            if (Array.isArray(parsedMotivations)) {
+              return parsedMotivations.join(', ');
+            }
+          } catch (error) {
+            console.error('Error parsing motivations:', error);
+          }
+        }
+        return motivations || '-'; // กรณีที่ไม่สามารถ parse ได้ หรือไม่ใช่ string
+      },
+    },
   ];
 
   const handleExportCSV = () => {
@@ -200,7 +216,22 @@ const MemberTable: React.FC = () => {
       <Text style={{ fontSize: '12px' }}><strong>ความถี่ในการดื่ม:</strong> {item.drinkingFrequency}</Text><br />
       <Text style={{ fontSize: '12px' }}><strong>ระยะเวลาตั้งใจเลิกดื่ม:</strong> {item.intentPeriod}</Text><br />
       <Text style={{ fontSize: '12px' }}><strong>ค่าใช้จ่ายต่อเดือน:</strong> {item.monthlyExpense} บาท</Text><br />
-      <Text style={{ fontSize: '12px' }}><strong>แรงจูงใจในการเลิกดื่ม:</strong> {item.motivations}</Text>
+      <Text style={{ fontSize: "12px" }}>
+        <strong>แรงจูงใจในการเลิกดื่ม:</strong>{" "}
+        {(() => {
+          if (typeof item.motivations === "string") {
+            try {
+              const parsedMotivations = JSON.parse(item.motivations);
+              if (Array.isArray(parsedMotivations)) {
+                return parsedMotivations.join(", ");
+              }
+            } catch (error) {
+              console.error("Error parsing motivations:", error);
+            }
+          }
+          return item.motivations || "-";
+        })()}
+      </Text>
     </Card>
   );
 
