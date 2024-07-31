@@ -73560,6 +73560,16 @@ export const data = [
       "type": "อีสานบน"
   },
   {
+    "district": "เมืองเลย",
+    "amphoe": "เมืองเลย",
+    "province": "เลย",
+    "zipcode": 42000,
+    "district_code": 420104,
+    "amphoe_code": 4201,
+    "province_code": 42,
+    "type": "อีสานบน"
+},
+  {
       "district": "กกดู่",
       "amphoe": "เมืองเลย",
       "province": "เลย",
