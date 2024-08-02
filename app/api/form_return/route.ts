@@ -44,6 +44,7 @@ export async function GET(request: NextRequest) {
             OR: [
               { firstName: { contains: search } },
               { lastName: { contains: search } },
+              { organizationName: { contains: search } },
             ],
           },
           orderBy: {
@@ -57,6 +58,7 @@ export async function GET(request: NextRequest) {
             OR: [
               { firstName: { contains: search } },
               { lastName: { contains: search } },
+              { organizationName: { contains: search } },
             ],
           },
         }),

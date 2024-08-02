@@ -1,13 +1,15 @@
 "use client";
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import { FaImages, FaDownload } from 'react-icons/fa';
+import { PictureOutlined, DownloadOutlined, SearchOutlined, EditOutlined } from '@ant-design/icons';
+import { Input, Button, Spin } from 'antd';
 import * as htmlToImage from 'html-to-image';
 import Style1 from './styles/style1';
 import Style2 from './styles/style2';
 import Style3 from './styles/style3';
 import Style4 from './styles/style4';
 import Style5 from './styles/style5';
+import toast from 'react-hot-toast';
 
 interface FormReturn {
   organizationName: string;
@@ -22,39 +24,32 @@ type DisplayMode = 'style1' | 'style2' | 'style3' | 'style4' | 'style5';
 export default function UserCard() {
   const [form, setForm] = useState<FormReturn | null>(null);
   const [displayMode, setDisplayMode] = useState<DisplayMode>('style1');
-  const [phoneNumber, setPhoneNumber] = useState<string>(''); // เพิ่ม state สำหรับเก็บหมายเลขโทรศัพท์
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumber(e.target.value);
-  };
-
   const cleanPhoneNumber = (phone: string) => {
-    return phone.replace(/-/g, ''); // ลบเครื่องหมายขีดออก
+    return phone.replace(/\D/g, '');
   };
 
   const fetchUserForm = async () => {
+    setIsLoading(true);
     try {
-      const cleanNumber = cleanPhoneNumber(phoneNumber); // ทำความสะอาดหมายเลขโทรศัพท์
+      const cleanNumber = cleanPhoneNumber(phoneNumber);
       const res = await axios.get(`/api/form_return?phoneNumber=${cleanNumber}&limit=1`);
-      const data = res.data.forms[0]; 
+      const data = res.data.forms[0];
       if (data) {
         setForm(data);
+        toast.success('ค้นหาข้อมูลสำเร็จ');
       } else {
         console.error('Invalid form data:', data);
+        toast.error('ไม่พบข้อมูล กรุณาตรวจสอบหมายเลขโทรศัพท์');
       }
     } catch (error) {
       console.error('Failed to fetch form', error);
-    }
-  };
-
-  const handleSearchClick = () => {
-    fetchUserForm();
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      fetchUserForm();
+      toast.error('เกิดข้อผิดพลาดในการค้นหาข้อมูล');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -66,105 +61,88 @@ export default function UserCard() {
           link.href = dataUrl;
           link.download = 'card.png';
           link.click();
+          toast.success('ดาวน์โหลดการ์ดสำเร็จ');
         })
         .catch((error) => {
           console.error('Failed to download image', error);
+          toast.error('ไม่สามารถดาวน์โหลดภาพได้');
         });
     }
   };
 
   const renderStyle = () => {
-    if (!form) return null; // เพิ่มการตรวจสอบเพื่อหลีกเลี่ยงข้อผิดพลาด
+    if (!form) return null;
     const images = [form.image1, form.image2].filter(Boolean) as string[];
-    switch (displayMode) {
-      case 'style1':
-        return <Style1 images={images} form={form} />;
-      case 'style2':
-        return <Style2 images={images} form={form} />;
-      case 'style3':
-        return <Style3 images={images} form={form} />;
-      case 'style4':
-        return <Style4 images={images} form={form} />;
-      case 'style5':
-        return <Style5 images={images} form={form} />;
-      default:
-        return null;
-    }
+    const styles = [Style1, Style2, Style3, Style4, Style5];
+    const SelectedStyle = styles[parseInt(displayMode.slice(-1)) - 1];
+    return <SelectedStyle images={images} form={form} />;
   };
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold mb-6 text-center">ข้อมูลการส่งฟอร์ม</h1>
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Enter your phone number"
+    <div className="max-w-2xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8 text-center text-amber-600">ข้อมูลการส่งฟอร์ม</h1>
+      <div className="mb-6">
+        <Input
+          prefix={<SearchOutlined className="text-amber-600" />}
+          placeholder="กรอกหมายเลขโทรศัพท์"
           value={phoneNumber}
-          onChange={handlePhoneNumberChange}
-          onKeyPress={handleKeyPress} // เพิ่มการตรวจจับการกดปุ่ม Enter
-          className="p-2 border rounded-md w-full"
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          onPressEnter={fetchUserForm}
+          className="mb-4"
         />
-        <button
-          onClick={handleSearchClick}
-          className="mt-2 px-4 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors"
+        <Button
+          type="primary"
+          icon={<SearchOutlined />}
+          loading={isLoading}
+          onClick={fetchUserForm}
+          className="w-full bg-amber-600 hover:bg-amber-700 border-amber-600 hover:border-amber-700"
         >
-          Search
-        </button>
+          {isLoading ? 'กำลังค้นหา...' : 'ค้นหา'}
+        </Button>
       </div>
-      {form ? (
-        <>
-          <div className="flex justify-center space-x-2 mb-4">
-            <button
-              className={`p-2 ${displayMode === 'style1' ? 'bg-slate-500 text-white' : ''} hover:bg-slate-600`}
-              onClick={() => setDisplayMode('style1')}
-              title="Style 1"
-            >
-              <FaImages />
-            </button>
-            <button
-              className={`p-2 ${displayMode === 'style2' ? 'bg-slate-500 text-white' : ''} hover:bg-slate-600`}
-              onClick={() => setDisplayMode('style2')}
-              title="Style 2"
-            >
-              <FaImages />
-            </button>
-            <button
-              className={`p-2 ${displayMode === 'style3' ? 'bg-slate-500 text-white' : ''} hover:bg-slate-600`}
-              onClick={() => setDisplayMode('style3')}
-              title="Style 3"
-            >
-              <FaImages />
-            </button>
-            <button
-              className={`p-2 ${displayMode === 'style4' ? 'bg-slate-500 text-white' : ''} hover:bg-slate-600`}
-              onClick={() => setDisplayMode('style4')}
-              title="Style 4"
-            >
-              <FaImages />
-            </button>
-            <button
-              className={`p-2 ${displayMode === 'style5' ? 'bg-slate-500 text-white' : ''} hover:bg-slate-600`}
-              onClick={() => setDisplayMode('style5')}
-              title="Style 5"
-            >
-              <FaImages />
-            </button>
+      {form && (
+        <div className="mb-6">
+          <div className="flex justify-center space-x-2 mb-6">
+            {[1, 2, 3, 4, 5].map((num) => (
+              <Button
+                key={num}
+                type={displayMode === `style${num}` ? 'primary' : 'default'}
+                icon={<PictureOutlined />}
+                onClick={() => setDisplayMode(`style${num}` as DisplayMode)}
+                className={`flex items-center justify-center ${
+                  displayMode === `style${num}` ? 'bg-amber-600 border-amber-600' : ''
+                }`}
+              />
+            ))}
           </div>
-          <div ref={cardRef}>
+          <div ref={cardRef} className="mb-6">
             {renderStyle()}
           </div>
-          <div className="flex justify-center mt-4">
-            <button
+          <div className="flex justify-center space-x-4">
+            <Button
+              type="primary"
+              icon={<DownloadOutlined />}
               onClick={downloadCard}
-              className="px-4 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors flex items-center space-x-2"
+              className="bg-amber-600 hover:bg-amber-700 border-amber-600 hover:border-amber-700"
             >
-              <FaDownload />
-              <span>Download Card</span>
-            </button>
+              ดาวน์โหลดการ์ด
+            </Button>
+            <Button
+              type="default"
+              icon={<EditOutlined />}
+              onClick={() => {/* เพิ่มฟังก์ชันแก้ไขที่นี่ */}}
+              className="border-amber-600 text-amber-600 hover:bg-amber-50"
+            >
+              แก้ไขข้อมูล
+            </Button>
           </div>
-        </>
-      ) : (
-        <div>Loading...</div>
+        </div>
+      )}
+      {isLoading && (
+        <div className="text-center py-12">
+          <Spin size="large" />
+          <p className="mt-4 text-amber-600">กำลังโหลดข้อมูล...</p>
+        </div>
       )}
     </div>
   );

@@ -4,7 +4,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Menu, Dropdown, Button, Avatar, Skeleton } from 'antd';
-import { HomeOutlined, UserOutlined, LogoutOutlined, MenuOutlined, BarChartOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined, LogoutOutlined, MenuOutlined, BarChartOutlined, TeamOutlined } from '@ant-design/icons';
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -35,11 +35,6 @@ export default function Navbar() {
 
   const dashboardMenu = {
     items: [
-      // {
-      //   key: 'overview',
-      //   label: <Link href="/dashboard/" className="text-sm text-gray-700">ภาพรวม</Link>,
-      //   icon: <HomeOutlined />,
-      // },
       {
         key: 'soberCheers',
         label: <Link href="/dashboard/soberCheers" className="text-sm text-gray-700">SoberCheers</Link>,
@@ -71,10 +66,6 @@ export default function Navbar() {
           label: 'Dashboard',
           icon: <HomeOutlined />,
           children: [
-            // {
-            //   key: 'overview',
-            //   label: <Link href="/dashboard/">ภาพรวม</Link>,
-            // },
             {
               key: 'soberCheers',
               label: <Link href="/dashboard/soberCheers">SoberCheers</Link>,
@@ -89,10 +80,11 @@ export default function Navbar() {
             },
           ],
         },
-        // {
-        //   key: 'sobercheers',
-        //   label: <Link href="/sobercheers">SoberCheers</Link>,
-        // },
+        {
+          key: '3500orgs',
+          label: <Link href="/dashboard/formReturn">3500 องค์กร</Link>,
+          icon: <TeamOutlined />,
+        },
       ] : []),
       ...(session && session.user ? [
         {
@@ -143,9 +135,9 @@ export default function Navbar() {
                       <HomeOutlined /> Dashboard
                     </Button>
                   </Dropdown>
-                  {/* <Link href="/dashboard/soberCheers" className="text-gray-700 hover:text-amber-500 transition-colors">
-                    SoberCheers
-                  </Link> */}
+                  <Link href="/dashboard/formReturn" className="text-gray-700 hover:text-amber-500 transition-colors">
+                    <TeamOutlined /> 3500 องค์กร
+                  </Link>
                 </>
               )
             )}
