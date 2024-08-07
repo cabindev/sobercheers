@@ -162,7 +162,7 @@ const CreateFormReturn = () => {
         toast.error(response.data.error);
       } else {
         toast.success('ส่งคืนข้อมูลเข้าพรรษาสำเร็จ');
-        router.push('/form_return/usercard');
+        router.push('/form_return/orgs');
       }
     } catch (error) {
       console.error('Error in form submission:', error);

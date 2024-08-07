@@ -11,6 +11,9 @@ import IntentPeriodChart from './intentPeriod';
 import MonthlyExpenseSummary from './monthlyExpense';
 import HealthImpactChart from './healthyImpact';
 import MotiVation from './motivations';
+import ProvinceCount from './ProvinceCount';
+import ProvinceMap from './ProvinceMap';
+
 
 const TotalCount: React.FC = () => {
   const [totalRegistered, setTotalRegistered] = useState<number>(0);
@@ -57,7 +60,7 @@ const ClientCount: React.FC = () => {
     <CountCard
       icon={<FaAddressCard />}
       title="องค์กร : คืนข้อมูลเข้าพรรษา"
-      count={clientsCount !== null ? `${clientsCount.toLocaleString()} หน่วยงาน` : 'Loading...'}
+      count={clientsCount !== null && clientsCount !== undefined ? `${clientsCount.toLocaleString()} หน่วยงาน` : 'กำลังโหลด...'}
       color="text-yellow-500"
     />
   );
@@ -83,7 +86,7 @@ const SignerCount: React.FC = () => {
     <CountCard
       icon={<FaUsers />}
       title="ยอดรวมคนเข้าร่วม : คืนข้อมูลเข้าพรรษา"
-      count={sumSigners !== null ? `${sumSigners.toLocaleString()} คน` : 'Loading...'}
+      count={sumSigners !== null && sumSigners !== undefined ? `${sumSigners.toLocaleString()} คน` : 'กำลังโหลด...'}
       color="text-purple-500"
     />
   );
@@ -142,27 +145,45 @@ const DashboardSober: React.FC = () => {
   return (
     <div className="p-5 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-10 text-amber-500">SOBER CHEERs Dashboard</h2>
-        
+        <h2 className="text-4xl font-bold text-center mb-10 text-amber-500">
+          SOBER CHEERs Dashboard
+        </h2>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <TotalCount />
           <ClientCount />
           <SignerCount />
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <ChartCard title="Regions Distribution" icon={<FaChartBar />} className="lg:col-span-2">
+          <ChartCard
+            title="Regions Distribution"
+            icon={<FaChartBar />}
+            className="lg:col-span-2"
+          >
             <TypeChart />
           </ChartCard>
           <ChartCard title="Gender Distribution" icon={<FaVenusMars />}>
             <GenderChart />
           </ChartCard>
         </div>
-        
-        <ChartCard title="Drinking Frequency" icon={<FaWineGlass />} className="mb-8">
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="lg:col-span-1">
+            <ProvinceCount />
+          </div>
+          <div className="lg:col-span-2 h-[70vh] min-h-[500px]">
+            <ProvinceMap />
+          </div>
+        </div>
+        <ChartCard
+          title="Drinking Frequency"
+          icon={<FaWineGlass />}
+          className="mb-8"
+        >
           <DrinkingFrequencyChart />
         </ChartCard>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <ChartCard title="Alcohol Consumption" icon={<FaWineGlass />}>
             <AlcoholConsumptionChart />
@@ -171,7 +192,7 @@ const DashboardSober: React.FC = () => {
             <IntentPeriodChart />
           </ChartCard>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <ChartCard title="Monthly Expense Summary" icon={<FaMoneyBillWave />}>
             <MonthlyExpenseSummary />
