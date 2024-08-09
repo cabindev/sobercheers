@@ -4,7 +4,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Menu, Dropdown, Button, Avatar, Skeleton } from 'antd';
-import { HomeOutlined, UserOutlined, LogoutOutlined, MenuOutlined, BarChartOutlined, TeamOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined, LogoutOutlined, MenuOutlined, BarChartOutlined, TeamOutlined, UserSwitchOutlined } from '@ant-design/icons';
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -50,6 +50,11 @@ export default function Navbar() {
         label: <Link href="/soberCheers" className="text-sm text-gray-700">เพิ่มข้อมูล SoberCheers</Link>,
         icon: <BarChartOutlined />,
       },
+      {
+        key: 'adminPanel',
+        label: <Link href="/dashboard/member/components/admin" className="text-sm text-gray-700">Admin Panel</Link>,
+        icon: <UserSwitchOutlined />,
+      },
     ],
   };
 
@@ -77,6 +82,10 @@ export default function Navbar() {
             {
               key: 'addSobersUser',
               label: <Link href="/soberCheers">เพิ่มข้อมูล SoberCheers</Link>,
+            },
+            {
+              key: 'adminPanel',
+              label: <Link href="/dashboard/member/components/admin">Admin Panel</Link>,
             },
           ],
         },

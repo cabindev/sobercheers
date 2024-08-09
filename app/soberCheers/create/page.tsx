@@ -294,7 +294,11 @@ export default function CreateSoberCheers() {
                 htmlFor="district"
                 className="block text-sm font-medium text-gray-700"
               >
-                ตำบล/แขวง
+                ตำบล/แขวง <br />
+                <span className="text-red-500 block text-center">
+                  ไม่ต้องระบุ ตำบล หรือ ต./ให้ระบุชื่อตำบลโดยไม่มีคำนำหน้า
+                </span>
+                
               </label>
               <input
                 id="district"
@@ -302,7 +306,7 @@ export default function CreateSoberCheers() {
                 value={district}
                 onChange={handleDistrictChange}
                 required
-                placeholder="กรุณาระบุ ตำบล/แขวง ระบบจะแนะนำข้อมูลที่เกี่ยวข้อง"
+                placeholder="ระบุชื่อตำบลโดยไม่มีคำนำหน้า ระบบจะแนะนำข้อมูลที่เกี่ยวข้อง"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
               />
               {suggestions.length > 0 && (
