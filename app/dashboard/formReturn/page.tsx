@@ -3,11 +3,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
-import { Card, Input, message, Carousel, Button } from 'antd';
+import { Card, Input, message, Carousel, Button, Modal } from 'antd';
 import { FiEdit, FiDownload, FiShare2 } from "react-icons/fi";
 import { toPng } from 'html-to-image';
-import { SearchOutlined } from '@ant-design/icons';
-
+import { SearchOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 interface FormReturn {
   id: number;
@@ -25,9 +24,23 @@ interface FormReturn {
   numberOfSigners: number;
 }
 
+const CustomPrevArrow = (props: any) => (
+  <div className="custom-arrow prev" onClick={props.onClick}>
+    <LeftOutlined />
+  </div>
+);
+
+const CustomNextArrow = (props: any) => (
+  <div className="custom-arrow next" onClick={props.onClick}>
+    <RightOutlined />
+  </div>
+);
+
 const InstagramCard: React.FC<{ form: FormReturn }> = ({ form }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isSharing, setIsSharing] = useState(false);
+  const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const downloadImages = () => {
     [form.image1, form.image2].filter(Boolean).forEach((img, index) => {
@@ -63,18 +76,30 @@ const InstagramCard: React.FC<{ form: FormReturn }> = ({ form }) => {
     }
   };
 
+  const showPreview = (index: number) => {
+    setCurrentImageIndex(index);
+    setIsPreviewVisible(true);
+  };
+
+  const handlePreviewClose = () => {
+    setIsPreviewVisible(false);
+  };
+
+  const images = [form.image1, form.image2].filter(Boolean);
+
   return (
     <div ref={cardRef} className="instagram-card">
       <Card
         hoverable
         cover={
           <Carousel autoplay>
-            {[form.image1, form.image2].filter(Boolean).map((img, index) => (
+            {images.map((img, index) => (
               <div key={index} className="carousel-image-container">
                 <img
                   alt={`${form.organizationName} image ${index + 1}`}
                   src={img || "/placeholder.jpg"}
-                  className="carousel-image w-full h-full object-cover"
+                  className="carousel-image w-full h-full object-cover cursor-pointer"
+                  onClick={() => showPreview(index)}
                 />
               </div>
             ))}
@@ -116,6 +141,32 @@ const InstagramCard: React.FC<{ form: FormReturn }> = ({ form }) => {
           />
         </div>
       )}
+      
+      <Modal
+        visible={isPreviewVisible}
+        footer={null}
+        onCancel={handlePreviewClose}
+        width="80%"
+        bodyStyle={{ padding: 0 }}
+      >
+        <Carousel
+          initialSlide={currentImageIndex}
+          dots={false}
+          arrows={true}
+          prevArrow={<CustomPrevArrow />}
+          nextArrow={<CustomNextArrow />}
+        >
+          {images.map((img, index) => (
+            <div key={index} className="preview-image-container">
+              <img
+                src={img || "/placeholder.jpg"}
+                alt={`Preview ${index + 1}`}
+                className="w-full h-auto object-contain"
+              />
+            </div>
+          ))}
+        </Carousel>
+      </Modal>
     </div>
   );
 };

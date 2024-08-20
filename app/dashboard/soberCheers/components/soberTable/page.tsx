@@ -5,7 +5,6 @@ import { DownloadOutlined, FileExcelOutlined, SearchOutlined } from '@ant-design
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 
-
 const { Option } = Select;
 const { Title, Text } = Typography;
 
@@ -120,6 +119,12 @@ const SoberCheersTable: React.FC = () => {
     return 'ไม่ระบุ';
   };
 
+  const calculateAge = (birthday: string): number => {
+    const ageDifMs = Date.now() - new Date(birthday).getTime();
+    const ageDate = new Date(ageDifMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  };
+
   const columns = [
     {
       title: 'ชื่อ-นามสกุล',
@@ -127,9 +132,9 @@ const SoberCheersTable: React.FC = () => {
     },
     { title: 'เพศ', dataIndex: 'gender' },
     {
-      title: 'วันเกิด',
+      title: 'อายุ',
       dataIndex: 'birthday',
-      render: (date: string) => new Date(date).toLocaleDateString('th-TH'),
+      render: (birthday: string) => `${calculateAge(birthday)} ปี`,
     },
     {
       title: 'ที่อยู่',
@@ -158,7 +163,7 @@ const SoberCheersTable: React.FC = () => {
             console.error('Error parsing motivations:', error);
           }
         }
-        return motivations || '-'; // กรณีที่ไม่สามารถ parse ได้ หรือไม่ใช่ string
+        return motivations || '-';
       },
     },
   ];
@@ -255,8 +260,7 @@ const SoberCheersTable: React.FC = () => {
       </Text>
       <br />
       <Text style={{ fontSize: "12px" }}>
-        <strong>วันเกิด:</strong>{" "}
-        {new Date(item.birthday).toLocaleDateString("th-TH")}
+        <strong>อายุ:</strong> {calculateAge(item.birthday)} ปี
       </Text>
       <br />
       <Text style={{ fontSize: "12px" }}>
@@ -346,7 +350,7 @@ const SoberCheersTable: React.FC = () => {
             ข้อมูล Sober Cheers
           </Title>
           <Space style={{ marginBottom: 16 }} wrap>
-            <Input
+          <Input
               placeholder="ค้นหาด้วยชื่อ"
               onChange={(e) => handleFilterChange(e.target.value, "name")}
               style={{ width: 200 }}

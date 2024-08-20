@@ -68,13 +68,12 @@ export default function CreateSoberCheers() {
     const value = e.target.value;
     setDistrict(value);
     setAutoFilledFields([]); // Reset auto-filled fields when user types
-
+  
     if (value.length > 0) {
       const filteredSuggestions = data
         .filter((region) =>
           region.district.toLowerCase().startsWith(value.toLowerCase())
-        )
-        .slice(0, 10);
+        );
       setSuggestions(filteredSuggestions);
     } else {
       setSuggestions([]);

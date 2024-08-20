@@ -4,7 +4,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Menu, Dropdown, Button, Avatar, Skeleton } from 'antd';
-import { HomeOutlined, UserOutlined, LogoutOutlined, MenuOutlined, BarChartOutlined, TeamOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined, LogoutOutlined, MenuOutlined, BarChartOutlined, TeamOutlined, UserSwitchOutlined, PlusOutlined } from '@ant-design/icons';
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -58,6 +58,21 @@ export default function Navbar() {
     ],
   };
 
+  const formReturnMenu = {
+    items: [
+      {
+        key: 'viewFormReturn',
+        label: <Link href="/dashboard/formReturn" className="text-sm text-gray-700">ดูข้อมูล 3500 องค์กร</Link>,
+        icon: <TeamOutlined />,
+      },
+      {
+        key: 'createFormReturn',
+        label: <Link href="/form_return/create" className="text-sm text-gray-700">เพิ่มข้อมูลองค์กร</Link>,
+        icon: <PlusOutlined />,
+      },
+    ],
+  };
+
   const mobileMenu = {
     items: [
       {
@@ -90,9 +105,19 @@ export default function Navbar() {
           ],
         },
         {
-          key: '3500orgs',
-          label: <Link href="/dashboard/formReturn">3500 องค์กร</Link>,
+          key: 'formReturn',
+          label: '3500 องค์กร',
           icon: <TeamOutlined />,
+          children: [
+            {
+              key: 'viewFormReturn',
+              label: <Link href="/dashboard/formReturn">ดูข้อมูล 3500 องค์กร</Link>,
+            },
+            {
+              key: 'createFormReturn',
+              label: <Link href="/form_return/create">เพิ่มข้อมูลองค์กร</Link>,
+            },
+          ],
         },
       ] : []),
       ...(session && session.user ? [
@@ -144,9 +169,11 @@ export default function Navbar() {
                       <HomeOutlined /> Dashboard
                     </Button>
                   </Dropdown>
-                  <Link href="/dashboard/formReturn" className="text-gray-700 hover:text-amber-500 transition-colors">
-                    <TeamOutlined /> 3500 องค์กร
-                  </Link>
+                  <Dropdown menu={formReturnMenu} placement="bottomLeft">
+                    <Button type="text" className="text-gray-700 hover:text-amber-500 transition-colors">
+                      <TeamOutlined /> 3500 องค์กร
+                    </Button>
+                  </Dropdown>
                 </>
               )
             )}
