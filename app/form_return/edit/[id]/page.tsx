@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
+import { data } from '@/app/data/regions';
 
 const EditFormReturn = () => {
   const [firstName, setFirstName] = useState('');
@@ -21,6 +22,9 @@ const EditFormReturn = () => {
   const [imagePreview1, setImagePreview1] = useState<string | null>(null);
   const [image2, setImage2] = useState<File | null>(null);
   const [imagePreview2, setImagePreview2] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [autoFilledFields, setAutoFilledFields] = useState<string[]>([]);
+  
   const router = useRouter();
   const { id } = useParams();
 
@@ -69,6 +73,44 @@ const EditFormReturn = () => {
   const handleNumberOfSignersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/,/g, "");
     setNumberOfSigners(formatNumber(value));
+  };
+
+  const debounce = (func: Function, wait: number) => {
+    let timeout: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  };
+
+  const handleDistrictChange = useCallback(
+    debounce((value: string) => {
+      if (value.length > 0) {
+        const filteredSuggestions = data
+          .filter((region) => region.district.toLowerCase().startsWith(value.toLowerCase()));
+        setSuggestions(filteredSuggestions);
+      } else {
+        setSuggestions([]);
+      }
+    }, 300),
+    []
+  );
+
+  const onDistrictInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDistrict(value);
+    setAutoFilledFields([]);
+    handleDistrictChange(value);
+  };
+
+  const handleSuggestionClick = (suggestion: any) => {
+    setDistrict(suggestion.district);
+    setAmphoe(suggestion.amphoe);
+    setProvince(suggestion.province);
+    setZipcode(suggestion.zipcode.toString());
+    setType(suggestion.type);
+    setSuggestions([]);
+    setAutoFilledFields(['amphoe', 'province', 'zipcode', 'type']);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -153,7 +195,7 @@ const EditFormReturn = () => {
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           />
         </div>
-        <div>
+        <div className="relative">
           <label htmlFor="district" className="block text-sm font-medium text-gray-700">ตำบล/แขวง</label>
           <input
             type="text"
@@ -161,9 +203,22 @@ const EditFormReturn = () => {
             id="district"
             required
             value={district}
-            onChange={(e) => setDistrict(e.target.value)}
+            onChange={onDistrictInputChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           />
+          {suggestions.length > 0 && (
+            <ul className="absolute z-10 w-full bg-white border border-gray-300 mt-1 max-h-60 overflow-auto rounded-md shadow-lg">
+              {suggestions.map((suggestion, index) => (
+                <li
+                  key={index}
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className="cursor-pointer p-2 hover:bg-gray-100 text-sm"
+                >
+                  {suggestion.district} - {suggestion.amphoe}, {suggestion.province}, {suggestion.zipcode}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <div>
           <label htmlFor="amphoe" className="block text-sm font-medium text-gray-700">อำเภอ/เขต</label>
@@ -174,7 +229,9 @@ const EditFormReturn = () => {
             required
             value={amphoe}
             onChange={(e) => setAmphoe(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className={`mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
+              autoFilledFields.includes('amphoe') ? 'bg-green-100 border-green-300' : 'border-gray-300'
+            }`}
           />
         </div>
         <div>
@@ -186,7 +243,9 @@ const EditFormReturn = () => {
             required
             value={province}
             onChange={(e) => setProvince(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className={`mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
+              autoFilledFields.includes('province') ? 'bg-green-100 border-green-300' : 'border-gray-300'
+            }`}
           />
         </div>
         <div>
@@ -198,7 +257,9 @@ const EditFormReturn = () => {
             required
             value={zipcode}
             onChange={(e) => setZipcode(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className={`mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
+              autoFilledFields.includes('zipcode') ? 'bg-green-100 border-green-300' : 'border-gray-300'
+            }`}
           />
         </div>
         <div>
@@ -210,7 +271,9 @@ const EditFormReturn = () => {
             required
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className={`mt-1 block w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
+              autoFilledFields.includes('type') ? 'bg-green-100 border-green-300' : 'border-gray-300'
+            }`}
           />
         </div>
         <div>

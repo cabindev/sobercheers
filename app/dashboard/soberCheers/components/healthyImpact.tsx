@@ -22,44 +22,47 @@ const HealthImpactChart: React.FC = () => {
     fetchData();
   }, []);
 
-  if (!data) return <div>Loading...</div>;
+  if (!data) return (
+    <div className="flex justify-center items-center h-64">
+      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  );
 
   const levels = [
-    { key: 'ไม่มีผลกระทบ', color: '#4CAF50' },
-    { key: 'มีผลกระทบแต่ไม่ต้องการช่วยเหลือ', color: '#FFC107' },
-    { key: 'มีผลกระทบและควรได้รับการช่วยเหลือจากแพทย์หรือผู้เชี่ยวชาญด้านการบำบัดฯ', color: '#FF5722' }
+    { key: 'ไม่มีผลกระทบ', color: 'bg-green-500' },
+    { key: 'มีผลกระทบแต่ไม่ต้องการช่วยเหลือ', color: 'bg-yellow-500' },
+    { key: 'มีผลกระทบและควรได้รับการช่วยเหลือจากแพทย์หรือผู้เชี่ยวชาญด้านการบำบัดฯ', color: 'bg-red-500' }
   ];
 
   const total = Object.values(data).reduce((sum, value) => sum + value, 0);
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>ผลกระทบต่อสุขภาพ</h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">ผลกระทบต่อสุขภาพ</h2>
+      <div className="space-y-6">
         {levels.map((level) => {
           const count = data[level.key] || 0;
           const percentage = (count / total) * 100;
           return (
-            <div key={level.key} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '60%', fontSize: '14px' }}>{level.key}</div>
-              <div style={{ width: '40%', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ 
-                  width: `${percentage}%`, 
-                  height: '20px', 
-                  backgroundColor: level.color,
-                  borderRadius: '10px',
-                  transition: 'width 0.5s ease-in-out'
-                }}></div>
-                <div style={{ minWidth: '90px', textAlign: 'right', fontSize: '14px' }}>
-                  {count} คน ({percentage.toFixed(1)}%)
+            <div key={level.key} className="flex flex-col md:flex-row items-center gap-4">
+              <div className="w-full md:w-1/2 text-sm md:text-base">{level.key}</div>
+              <div className="w-full md:w-1/2 flex items-center gap-4">
+                <div className="flex-grow h-6 bg-gray-200 rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full ${level.color} transition-all duration-500 ease-out`} 
+                    style={{ width: `${percentage}%` }}
+                  ></div>
+                </div>
+                <div className="min-w-[100px] text-right text-sm">
+                  {count.toLocaleString()} คน ({percentage.toFixed(1)}%)
                 </div>
               </div>
             </div>
           );
         })}
       </div>
-      <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '14px' }}>
-        จำนวนผู้ตอบแบบสอบถามทั้งหมด: {total} คน
+      <p className="text-center mt-8 text-gray-600">
+        จำนวนผู้ตอบแบบสอบถามทั้งหมด: <span className="font-semibold">{total.toLocaleString()}</span> คน
       </p>
     </div>
   );

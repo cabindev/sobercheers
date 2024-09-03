@@ -108,11 +108,10 @@ export default function EditSoberCheers({ params }: { params: { id: string } }) 
   const handleDistrictChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setFormData(prev => ({ ...prev, district: value }));
-
+  
     if (value.length > 0) {
       const filteredSuggestions = data
-        .filter((region) => region.district.startsWith(value))
-        .slice(0, 10);
+        .filter((region) => region.district.toLowerCase().startsWith(value.toLowerCase()));
       setSuggestions(filteredSuggestions);
     } else {
       setSuggestions([]);
