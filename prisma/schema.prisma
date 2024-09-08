@@ -31,6 +31,31 @@ model SoberCheers {
   updatedAt         DateTime  @updatedAt
 }
 
+// model SoberCheers {
+//   id                Int       @id @default(autoincrement())
+//   gender            String?
+//   firstName         String
+//   lastName          String?   
+//   birthday          DateTime?  
+//   addressLine1      String?   
+//   district          String?   
+//   amphoe            String?   
+//   province          String?   
+//   zipcode           String?   
+//   type              String?
+//   phone             String?    
+//   job               String?   
+//   alcoholConsumption String?  
+//   drinkingFrequency String?
+//   intentPeriod      String?
+//   monthlyExpense    Int?
+//   motivations       Json?     
+//   healthImpact      String?   
+//   createdAt         DateTime  @default(now())
+//   updatedAt         DateTime  @updatedAt
+// }
+
+
 model CampaignBuddhistLent {
   id                Int       @id @default(autoincrement())
   gender            String

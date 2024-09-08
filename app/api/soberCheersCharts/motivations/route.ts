@@ -13,6 +13,32 @@ if (process.env.NODE_ENV === 'production') {
   prisma = (global as any).prisma;
 }
 
+function parseMotivations(motivationsData: any): string[] {
+  if (Array.isArray(motivationsData)) {
+    return motivationsData;
+  }
+  if (typeof motivationsData === 'string') {
+    try {
+      const parsed = JSON.parse(motivationsData);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    } catch (error) {
+      // If JSON parsing fails, it might be the escaped string format
+      const unescaped = motivationsData.replace(/\\"/g, '"');
+      try {
+        const parsed = JSON.parse(unescaped);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
+      } catch (error) {
+        console.error('Failed to parse motivations:', motivationsData);
+      }
+    }
+  }
+  return [];
+}
+
 export async function GET(req: NextRequest) {
   try {
     const motivations = await prisma.soberCheers.findMany({
@@ -34,16 +60,14 @@ export async function GET(req: NextRequest) {
     let totalResponses = 0;
 
     motivations.forEach(m => {
-      try {
-        const motivationArray = JSON.parse(m.motivations as string);
-        motivationArray.forEach((motivation: string) => {
+      const parsedMotivations = parseMotivations(m.motivations);
+      if (parsedMotivations.length > 0) {
+        parsedMotivations.forEach((motivation: string) => {
           if (motivation in motivationCounts) {
             motivationCounts[motivation]++;
           }
         });
         totalResponses++;
-      } catch (error) {
-        console.error('Invalid JSON in motivations:', m.motivations);
       }
     });
 

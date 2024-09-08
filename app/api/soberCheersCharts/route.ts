@@ -24,22 +24,22 @@ export async function GET(req: NextRequest) {
     });
 
     // Calculate type counts
-    const typeCounts = soberCheers.reduce<Record<string, number>>((acc, item) => {
-      const type = item.type as string || 'Unknown';
-      acc[type] = (acc[type] || 0) + 1;
-      return acc;
-    }, {});
+const typeCounts = soberCheers.reduce<Record<string, number>>((acc, item) => {
+  const type = item.type || 'Unknown';
+  acc[type] = (acc[type] || 0) + 1;
+  return acc;
+}, {});
 
     // Calculate drinking frequency counts
     const drinkingFrequency = soberCheers.reduce<Record<string, number>>((acc, item) => {
-      const frequency = item.drinkingFrequency as string || 'Unknown';
+      const frequency = item.drinkingFrequency || 'Unknown';
       acc[frequency] = (acc[frequency] || 0) + 1;
       return acc;
     }, {});
 
     // Calculate intent period counts
     const intentPeriod = soberCheers.reduce<Record<string, number>>((acc, item) => {
-      const period = item.intentPeriod as string || 'Unknown';
+      const period = item.intentPeriod || 'Unknown';
       acc[period] = (acc[period] || 0) + 1;
       return acc;
     }, {});
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
 
     // Calculate health impact
     const healthImpact = soberCheers.reduce<Record<string, number>>((acc, item) => {
-      const impact = item.healthImpact as string || 'Unknown';
+      const impact = item.healthImpact || 'Unknown';
       acc[impact] = (acc[impact] || 0) + 1;
       return acc;
     }, {});
