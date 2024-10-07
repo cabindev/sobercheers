@@ -17357,7 +17357,7 @@ export const data = [
       "district_code": 301901,
       "amphoe_code": 3019,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บึงอ้อ",
@@ -17367,7 +17367,7 @@ export const data = [
       "district_code": 301905,
       "amphoe_code": 3019,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "พันดุง",
@@ -17377,7 +17377,7 @@ export const data = [
       "district_code": 301903,
       "amphoe_code": 3019,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองสรวง",
@@ -17387,7 +17387,7 @@ export const data = [
       "district_code": 301904,
       "amphoe_code": 3019,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โป่งแดง",
@@ -17397,7 +17397,7 @@ export const data = [
       "district_code": 301902,
       "amphoe_code": 3019,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ขามสะแกแสง",
@@ -17407,7 +17407,7 @@ export const data = [
       "district_code": 301101,
       "amphoe_code": 3011,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ชีวึก",
@@ -17417,7 +17417,7 @@ export const data = [
       "district_code": 301104,
       "amphoe_code": 3011,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "พะงาด",
@@ -17427,7 +17427,7 @@ export const data = [
       "district_code": 301105,
       "amphoe_code": 3011,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองหัวฟาน",
@@ -17437,7 +17437,7 @@ export const data = [
       "district_code": 301106,
       "amphoe_code": 3011,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เมืองนาท",
@@ -17447,7 +17447,7 @@ export const data = [
       "district_code": 301103,
       "amphoe_code": 3011,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เมืองเกษตร",
@@ -17457,7 +17457,7 @@ export const data = [
       "district_code": 301107,
       "amphoe_code": 3011,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนเมือง",
@@ -17467,7 +17467,7 @@ export const data = [
       "district_code": 301102,
       "amphoe_code": 3011,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ขามสมบูรณ์",
@@ -17477,7 +17477,7 @@ export const data = [
       "district_code": 300410,
       "amphoe_code": 3004,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "คูขาด",
@@ -17487,7 +17487,7 @@ export const data = [
       "district_code": 300402,
       "amphoe_code": 3004,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ดอนใหญ่",
@@ -17497,7 +17497,7 @@ export const data = [
       "district_code": 300409,
       "amphoe_code": 3004,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ตาจั่น",
@@ -17507,7 +17507,7 @@ export const data = [
       "district_code": 300404,
       "amphoe_code": 3004,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านปรางค์",
@@ -17517,7 +17517,7 @@ export const data = [
       "district_code": 300405,
       "amphoe_code": 3004,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองบัว",
@@ -17527,7 +17527,7 @@ export const data = [
       "district_code": 300407,
       "amphoe_code": 3004,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองมะนาว",
@@ -17537,7 +17537,7 @@ export const data = [
       "district_code": 300406,
       "amphoe_code": 3004,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เทพาลัย",
@@ -17547,7 +17547,7 @@ export const data = [
       "district_code": 300403,
       "amphoe_code": 3004,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เมืองคง",
@@ -17557,7 +17557,7 @@ export const data = [
       "district_code": 300401,
       "amphoe_code": 3004,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนเต็ง",
@@ -17567,7 +17567,7 @@ export const data = [
       "district_code": 300408,
       "amphoe_code": 3004,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ครบุรี",
@@ -17577,7 +17577,7 @@ export const data = [
       "district_code": 300203,
       "amphoe_code": 3002,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ครบุรีใต้",
@@ -17587,7 +17587,7 @@ export const data = [
       "district_code": 300210,
       "amphoe_code": 3002,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "จระเข้หิน",
@@ -17597,7 +17597,7 @@ export const data = [
       "district_code": 300205,
       "amphoe_code": 3002,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ตะแบกบาน",
@@ -17607,7 +17607,7 @@ export const data = [
       "district_code": 300211,
       "amphoe_code": 3002,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านใหม่",
@@ -17617,7 +17617,7 @@ export const data = [
       "district_code": 300113,
       "amphoe_code": 3002,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "มาบตะโกเอน",
@@ -17627,7 +17627,7 @@ export const data = [
       "district_code": 300206,
       "amphoe_code": 3002,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ลำเพียก",
@@ -17637,7 +17637,7 @@ export const data = [
       "district_code": 300209,
       "amphoe_code": 3002,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สระว่านพระยา",
@@ -17647,7 +17647,7 @@ export const data = [
       "district_code": 300212,
       "amphoe_code": 3002,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "อรพิมพ์",
@@ -17657,7 +17657,7 @@ export const data = [
       "district_code": 300207,
       "amphoe_code": 3002,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เฉลียง",
@@ -17667,7 +17667,7 @@ export const data = [
       "district_code": 300202,
       "amphoe_code": 3002,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "แชะ",
@@ -17677,7 +17677,7 @@ export const data = [
       "district_code": 300201,
       "amphoe_code": 3002,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โคกกระชาย",
@@ -17687,7 +17687,7 @@ export const data = [
       "district_code": 300204,
       "amphoe_code": 3002,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "คลองเมือง",
@@ -17697,7 +17697,7 @@ export const data = [
       "district_code": 300611,
       "amphoe_code": 3006,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "จักราช",
@@ -17707,7 +17707,7 @@ export const data = [
       "district_code": 300601,
       "amphoe_code": 3006,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ทองหลาง",
@@ -17717,7 +17717,7 @@ export const data = [
       "district_code": 300603,
       "amphoe_code": 3006,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ศรีละกอ",
@@ -17727,7 +17727,7 @@ export const data = [
       "district_code": 300610,
       "amphoe_code": 3006,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สีสุก",
@@ -17737,7 +17737,7 @@ export const data = [
       "district_code": 300604,
       "amphoe_code": 3006,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองขาม",
@@ -17747,7 +17747,7 @@ export const data = [
       "district_code": 300605,
       "amphoe_code": 3006,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองพลวง",
@@ -17757,7 +17757,7 @@ export const data = [
       "district_code": 300607,
       "amphoe_code": 3006,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หินโคน",
@@ -17767,7 +17767,7 @@ export const data = [
       "district_code": 300613,
       "amphoe_code": 3006,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ชุมพวง",
@@ -17777,7 +17777,7 @@ export const data = [
       "district_code": 301701,
       "amphoe_code": 3017,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ตลาดไทร",
@@ -17787,7 +17787,7 @@ export const data = [
       "district_code": 301306,
       "amphoe_code": 3017,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ท่าลาด",
@@ -17797,7 +17797,7 @@ export const data = [
       "district_code": 301703,
       "amphoe_code": 3017,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ประสุข",
@@ -17807,7 +17807,7 @@ export const data = [
       "district_code": 301702,
       "amphoe_code": 3017,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สาหร่าย",
@@ -17817,7 +17817,7 @@ export const data = [
       "district_code": 301704,
       "amphoe_code": 3017,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองหลัก",
@@ -17827,7 +17827,7 @@ export const data = [
       "district_code": 301714,
       "amphoe_code": 3017,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนตูม",
@@ -17837,7 +17837,7 @@ export const data = [
       "district_code": 301716,
       "amphoe_code": 3017,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนยอ",
@@ -17847,7 +17847,7 @@ export const data = [
       "district_code": 301717,
       "amphoe_code": 3017,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนรัง",
@@ -17857,7 +17857,7 @@ export const data = [
       "district_code": 301710,
       "amphoe_code": 3017,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กุดพิมาน",
@@ -17867,7 +17867,7 @@ export const data = [
       "district_code": 300801,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ด่านขุนทด",
@@ -17877,7 +17877,7 @@ export const data = [
       "district_code": 300802,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ด่านนอก",
@@ -17887,7 +17887,7 @@ export const data = [
       "district_code": 300803,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ด่านใน",
@@ -17897,7 +17897,7 @@ export const data = [
       "district_code": 300804,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ตะเคียน",
@@ -17907,7 +17907,7 @@ export const data = [
       "district_code": 300805,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านเก่า",
@@ -17917,7 +17917,7 @@ export const data = [
       "district_code": 300806,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านแปรง",
@@ -17927,7 +17927,7 @@ export const data = [
       "district_code": 300807,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "พันชนะ",
@@ -17937,7 +17937,7 @@ export const data = [
       "district_code": 300808,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สระจรเข้",
@@ -17947,7 +17947,7 @@ export const data = [
       "district_code": 300809,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองกราด",
@@ -17957,7 +17957,7 @@ export const data = [
       "district_code": 300810,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองบัวตะเกียด",
@@ -17967,7 +17967,7 @@ export const data = [
       "district_code": 300811,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองบัวละคร",
@@ -17977,7 +17977,7 @@ export const data = [
       "district_code": 300812,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองไทร",
@@ -17987,7 +17987,7 @@ export const data = [
       "district_code": 300818,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หินดาด",
@@ -17997,7 +17997,7 @@ export const data = [
       "district_code": 300813,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ห้วยบง",
@@ -18007,7 +18007,7 @@ export const data = [
       "district_code": 300815,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนเมืองพัฒนา",
@@ -18017,7 +18017,7 @@ export const data = [
       "district_code": 300817,
       "amphoe_code": 3008,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บัวลาย",
@@ -18027,7 +18027,7 @@ export const data = [
       "district_code": 301210,
       "amphoe_code": 3030,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองหว้า",
@@ -18037,7 +18037,7 @@ export const data = [
       "district_code": 301209,
       "amphoe_code": 3030,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เมืองพะไล",
@@ -18047,7 +18047,7 @@ export const data = [
       "district_code": 301222,
       "amphoe_code": 3030,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนจาน",
@@ -18057,7 +18057,7 @@ export const data = [
       "district_code": 301216,
       "amphoe_code": 3030,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กุดจอก",
@@ -18067,7 +18067,7 @@ export const data = [
       "district_code": 301214,
       "amphoe_code": 3012,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ขุนทอง",
@@ -18077,7 +18077,7 @@ export const data = [
       "district_code": 301220,
       "amphoe_code": 3012,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ดอนตะหนิน",
@@ -18087,7 +18087,7 @@ export const data = [
       "district_code": 301206,
       "amphoe_code": 3012,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ด่านช้าง",
@@ -18097,7 +18097,7 @@ export const data = [
       "district_code": 301215,
       "amphoe_code": 3012,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บัวใหญ่",
@@ -18107,7 +18107,7 @@ export const data = [
       "district_code": 301201,
       "amphoe_code": 3012,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองบัวสะอาด",
@@ -18117,7 +18117,7 @@ export const data = [
       "district_code": 301207,
       "amphoe_code": 3012,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองแจ้งใหญ่",
@@ -18127,7 +18127,7 @@ export const data = [
       "district_code": 301224,
       "amphoe_code": 3012,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ห้วยยาง",
@@ -18137,7 +18137,7 @@ export const data = [
       "district_code": 301203,
       "amphoe_code": 3012,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เสมาใหญ่",
@@ -18147,7 +18147,7 @@ export const data = [
       "district_code": 301204,
       "amphoe_code": 3012,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนทองหลาง",
@@ -18157,7 +18157,7 @@ export const data = [
       "district_code": 301208,
       "amphoe_code": 3012,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ช่อระกา",
@@ -18167,7 +18167,7 @@ export const data = [
       "district_code": 300504,
       "amphoe_code": 3005,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านเหลื่อม",
@@ -18177,7 +18177,7 @@ export const data = [
       "district_code": 300501,
       "amphoe_code": 3005,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "วังโพธิ์",
@@ -18187,7 +18187,7 @@ export const data = [
       "district_code": 300502,
       "amphoe_code": 3005,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โคกกระเบื้อง",
@@ -18197,7 +18197,7 @@ export const data = [
       "district_code": 300503,
       "amphoe_code": 3005,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กระทุ่มราย",
@@ -18207,7 +18207,7 @@ export const data = [
       "district_code": 301303,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ดอนมัน",
@@ -18217,7 +18217,7 @@ export const data = [
       "district_code": 301310,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ตลาดไทร",
@@ -18227,7 +18227,7 @@ export const data = [
       "district_code": 301306,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ทุ่งสว่าง",
@@ -18237,7 +18237,7 @@ export const data = [
       "district_code": 301315,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "นางรำ",
@@ -18247,7 +18247,7 @@ export const data = [
       "district_code": 301313,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ประทาย",
@@ -18257,7 +18257,7 @@ export const data = [
       "district_code": 301301,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "วังไม้แดง",
@@ -18267,7 +18267,7 @@ export const data = [
       "district_code": 301304,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองค่าย",
@@ -18277,7 +18277,7 @@ export const data = [
       "district_code": 301308,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองพลวง",
@@ -18287,7 +18287,7 @@ export const data = [
       "district_code": 300607,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หันห้วยทราย",
@@ -18297,7 +18297,7 @@ export const data = [
       "district_code": 301309,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เมืองโดน",
@@ -18307,7 +18307,7 @@ export const data = [
       "district_code": 301318,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โคกกลาง",
@@ -18317,7 +18317,7 @@ export const data = [
       "district_code": 301317,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนเพ็ด",
@@ -18327,7 +18327,7 @@ export const data = [
       "district_code": 301314,
       "amphoe_code": 3013,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "งิ้ว",
@@ -18337,7 +18337,7 @@ export const data = [
       "district_code": 301410,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ดอน",
@@ -18347,7 +18347,7 @@ export const data = [
       "district_code": 301407,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ตะขบ",
@@ -18357,7 +18357,7 @@ export const data = [
       "district_code": 301405,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ตะคุ",
@@ -18367,7 +18367,7 @@ export const data = [
       "district_code": 301402,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ตูม",
@@ -18377,7 +18377,7 @@ export const data = [
       "district_code": 301409,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ธงชัยเหนือ",
@@ -18387,7 +18387,7 @@ export const data = [
       "district_code": 301417,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "นกออก",
@@ -18397,7 +18397,7 @@ export const data = [
       "district_code": 301406,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ่อปลาทอง",
@@ -18407,7 +18407,7 @@ export const data = [
       "district_code": 301420,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ภูหลวง",
@@ -18417,7 +18417,7 @@ export const data = [
       "district_code": 301416,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ลำนางแก้ว",
@@ -18427,7 +18427,7 @@ export const data = [
       "district_code": 301412,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สะแกราช",
@@ -18437,7 +18437,7 @@ export const data = [
       "district_code": 301411,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สำโรง",
@@ -18447,7 +18447,7 @@ export const data = [
       "district_code": 300904,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สุขเกษม",
@@ -18457,7 +18457,7 @@ export const data = [
       "district_code": 301418,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เกษมทรัพย์",
@@ -18467,7 +18467,7 @@ export const data = [
       "district_code": 301419,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เมืองปัก",
@@ -18477,7 +18477,7 @@ export const data = [
       "district_code": 301401,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โคกไทย",
@@ -18487,7 +18487,7 @@ export const data = [
       "district_code": 301403,
       "amphoe_code": 3014,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กลางดง",
@@ -18497,7 +18497,7 @@ export const data = [
       "district_code": 302102,
       "amphoe_code": 3021,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ขนงพระ",
@@ -18507,7 +18507,7 @@ export const data = [
       "district_code": 302107,
       "amphoe_code": 3021,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "คลองม่วง",
@@ -18517,7 +18517,7 @@ export const data = [
       "district_code": 302109,
       "amphoe_code": 3021,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "จันทึก",
@@ -18527,7 +18527,7 @@ export const data = [
       "district_code": 302103,
       "amphoe_code": 3021,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ปากช่อง",
@@ -18537,7 +18537,7 @@ export const data = [
       "district_code": 302101,
       "amphoe_code": 3021,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "พญาเย็น",
@@ -18547,7 +18547,7 @@ export const data = [
       "district_code": 302112,
       "amphoe_code": 3021,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "วังกะทะ",
@@ -18557,7 +18557,7 @@ export const data = [
       "district_code": 302104,
       "amphoe_code": 3021,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "วังไทร",
@@ -18567,7 +18567,7 @@ export const data = [
       "district_code": 302111,
       "amphoe_code": 3021,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองน้ำแดง",
@@ -18577,7 +18577,7 @@ export const data = [
       "district_code": 302110,
       "amphoe_code": 3021,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองสาหร่าย",
@@ -18587,7 +18587,7 @@ export const data = [
       "district_code": 302106,
       "amphoe_code": 3021,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หมูสี",
@@ -18597,7 +18597,7 @@ export const data = [
       "district_code": 302105,
       "amphoe_code": 3021,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โป่งตาลอง",
@@ -18607,7 +18607,7 @@ export const data = [
       "district_code": 302108,
       "amphoe_code": 3021,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ทัพรั้ง",
@@ -18617,7 +18617,7 @@ export const data = [
       "district_code": 300912,
       "amphoe_code": 3028,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "พังเทียม",
@@ -18627,7 +18627,7 @@ export const data = [
       "district_code": 300910,
       "amphoe_code": 3028,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "มาบกราด",
@@ -18637,7 +18637,7 @@ export const data = [
       "district_code": 300915,
       "amphoe_code": 3028,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สระพระ",
@@ -18647,7 +18647,7 @@ export const data = [
       "district_code": 300911,
       "amphoe_code": 3028,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองหอย",
@@ -18657,7 +18657,7 @@ export const data = [
       "district_code": 300913,
       "amphoe_code": 3028,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กระชอน",
@@ -18667,7 +18667,7 @@ export const data = [
       "district_code": 301509,
       "amphoe_code": 3015,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กระเบื้องใหญ่",
@@ -18677,7 +18677,7 @@ export const data = [
       "district_code": 301504,
       "amphoe_code": 3015,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ชีวาน",
@@ -18687,7 +18687,7 @@ export const data = [
       "district_code": 301507,
       "amphoe_code": 3015,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ดงใหญ่",
@@ -18697,7 +18697,7 @@ export const data = [
       "district_code": 301510,
       "amphoe_code": 3015,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ท่าหลวง",
@@ -18707,7 +18707,7 @@ export const data = [
       "district_code": 301505,
       "amphoe_code": 3015,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ธารละหลอด",
@@ -18717,7 +18717,7 @@ export const data = [
       "district_code": 301511,
       "amphoe_code": 3015,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "นิคมสร้างตนเอง",
@@ -18727,7 +18727,7 @@ export const data = [
       "district_code": 301508,
       "amphoe_code": 3015,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "รังกาใหญ่",
@@ -18737,7 +18737,7 @@ export const data = [
       "district_code": 301506,
       "amphoe_code": 3015,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สัมฤทธิ์",
@@ -18747,7 +18747,7 @@ export const data = [
       "district_code": 301502,
       "amphoe_code": 3015,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองระเวียง",
@@ -18757,7 +18757,7 @@ export const data = [
       "district_code": 300106,
       "amphoe_code": 3015,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โบสถ์",
@@ -18767,7 +18767,7 @@ export const data = [
       "district_code": 301503,
       "amphoe_code": 3015,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ในเมือง",
@@ -18777,7 +18777,7 @@ export const data = [
       "district_code": 300101,
       "amphoe_code": 3015,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ขุย",
@@ -18787,7 +18787,7 @@ export const data = [
       "district_code": 301707,
       "amphoe_code": 3029,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ช่องแมว",
@@ -18797,7 +18797,7 @@ export const data = [
       "district_code": 301706,
       "amphoe_code": 3029,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านยาง",
@@ -18807,7 +18807,7 @@ export const data = [
       "district_code": 301711,
       "amphoe_code": 3029,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ไพล",
@@ -18817,7 +18817,7 @@ export const data = [
       "district_code": 301715,
       "amphoe_code": 3029,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ระเริง",
@@ -18827,7 +18827,7 @@ export const data = [
       "district_code": 301414,
       "amphoe_code": 3025,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "วังน้ำเขียว",
@@ -18837,7 +18837,7 @@ export const data = [
       "district_code": 301408,
       "amphoe_code": 3025,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "วังหมี",
@@ -18847,7 +18847,7 @@ export const data = [
       "district_code": 301413,
       "amphoe_code": 3025,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "อุดมทรัพย์",
@@ -18857,7 +18857,7 @@ export const data = [
       "district_code": 301415,
       "amphoe_code": 3025,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ไทยสามัคคี",
@@ -18867,7 +18867,7 @@ export const data = [
       "district_code": 302505,
       "amphoe_code": 3025,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กฤษณา",
@@ -18877,7 +18877,7 @@ export const data = [
       "district_code": 302003,
       "amphoe_code": 3020,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กุดน้อย",
@@ -18887,7 +18887,7 @@ export const data = [
       "district_code": 302006,
       "amphoe_code": 3020,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "คลองไผ่",
@@ -18897,7 +18897,7 @@ export const data = [
       "district_code": 302010,
       "amphoe_code": 3020,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ดอนเมือง",
@@ -18907,7 +18907,7 @@ export const data = [
       "district_code": 302011,
       "amphoe_code": 3020,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านหัน",
@@ -18917,7 +18917,7 @@ export const data = [
       "district_code": 302002,
       "amphoe_code": 3020,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "มิตรภาพ",
@@ -18927,7 +18927,7 @@ export const data = [
       "district_code": 302009,
       "amphoe_code": 3020,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ลาดบัวขาว",
@@ -18937,7 +18937,7 @@ export const data = [
       "district_code": 302004,
       "amphoe_code": 3020,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "วังโรงใหญ่",
@@ -18947,7 +18947,7 @@ export const data = [
       "district_code": 302008,
       "amphoe_code": 3020,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สีคิ้ว",
@@ -18957,7 +18957,7 @@ export const data = [
       "district_code": 302001,
       "amphoe_code": 3020,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองน้ำใส",
@@ -18967,7 +18967,7 @@ export const data = [
       "district_code": 302007,
       "amphoe_code": 3020,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองบัวน้อย",
@@ -18977,7 +18977,7 @@ export const data = [
       "district_code": 302012,
       "amphoe_code": 3020,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองหญ้าขาว",
@@ -18987,7 +18987,7 @@ export const data = [
       "district_code": 302005,
       "amphoe_code": 3020,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สามเมือง",
@@ -18997,7 +18997,7 @@ export const data = [
       "district_code": 301218,
       "amphoe_code": 3031,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สีดา",
@@ -19007,7 +19007,7 @@ export const data = [
       "district_code": 301211,
       "amphoe_code": 3031,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองตาดใหญ่",
@@ -19017,7 +19017,7 @@ export const data = [
       "district_code": 301221,
       "amphoe_code": 3031,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนประดู่",
@@ -19027,7 +19027,7 @@ export const data = [
       "district_code": 301223,
       "amphoe_code": 3031,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โพนทอง",
@@ -19037,7 +19037,7 @@ export const data = [
       "district_code": 301212,
       "amphoe_code": 3031,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กุดจิก",
@@ -19047,7 +19047,7 @@ export const data = [
       "district_code": 301811,
       "amphoe_code": 3018,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "นากลาง",
@@ -19057,7 +19057,7 @@ export const data = [
       "district_code": 301809,
       "amphoe_code": 3018,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บุ่งขี้เหล็ก",
@@ -19067,7 +19067,7 @@ export const data = [
       "district_code": 301804,
       "amphoe_code": 3018,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "มะเกลือเก่า",
@@ -19077,7 +19077,7 @@ export const data = [
       "district_code": 301807,
       "amphoe_code": 3018,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "มะเกลือใหม่",
@@ -19087,7 +19087,7 @@ export const data = [
       "district_code": 301808,
       "amphoe_code": 3018,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สูงเนิน",
@@ -19097,7 +19097,7 @@ export const data = [
       "district_code": 301801,
       "amphoe_code": 3018,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองตะไก้",
@@ -19107,7 +19107,7 @@ export const data = [
       "district_code": 301810,
       "amphoe_code": 3018,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เสมา",
@@ -19117,7 +19117,7 @@ export const data = [
       "district_code": 301802,
       "amphoe_code": 3018,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โคราช",
@@ -19127,7 +19127,7 @@ export const data = [
       "district_code": 301803,
       "amphoe_code": 3018,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โค้งยาง",
@@ -19137,7 +19137,7 @@ export const data = [
       "district_code": 301806,
       "amphoe_code": 3018,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนค่า",
@@ -19147,7 +19147,7 @@ export const data = [
       "district_code": 301805,
       "amphoe_code": 3018,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านใหม่",
@@ -19157,7 +19157,7 @@ export const data = [
       "district_code": 300113,
       "amphoe_code": 3022,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ลุงเขว้า",
@@ -19167,7 +19167,7 @@ export const data = [
       "district_code": 302207,
       "amphoe_code": 3022,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สารภี",
@@ -19177,7 +19177,7 @@ export const data = [
       "district_code": 302202,
       "amphoe_code": 3022,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองตะไก้",
@@ -19187,7 +19187,7 @@ export const data = [
       "district_code": 301810,
       "amphoe_code": 3022,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองบุนนาก",
@@ -19197,7 +19197,7 @@ export const data = [
       "district_code": 302201,
       "amphoe_code": 3022,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองหัวแรต",
@@ -19207,7 +19207,7 @@ export const data = [
       "district_code": 302204,
       "amphoe_code": 3022,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองไม้ไผ่",
@@ -19217,7 +19217,7 @@ export const data = [
       "district_code": 302208,
       "amphoe_code": 3022,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "แหลมทอง",
@@ -19227,7 +19227,7 @@ export const data = [
       "district_code": 302205,
       "amphoe_code": 3022,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ไทยเจริญ",
@@ -19237,7 +19237,7 @@ export const data = [
       "district_code": 302203,
       "amphoe_code": 3022,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กงรถ",
@@ -19247,7 +19247,7 @@ export const data = [
       "district_code": 301607,
       "amphoe_code": 3016,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "งิ้ว",
@@ -19257,7 +19257,7 @@ export const data = [
       "district_code": 301410,
       "amphoe_code": 3016,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ตะโก",
@@ -19267,7 +19267,7 @@ export const data = [
       "district_code": 301609,
       "amphoe_code": 3016,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ทับสวาย",
@@ -19277,7 +19277,7 @@ export const data = [
       "district_code": 301602,
       "amphoe_code": 3016,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หลุ่งตะเคียน",
@@ -19287,7 +19287,7 @@ export const data = [
       "district_code": 301604,
       "amphoe_code": 3016,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หลุ่งประดู่",
@@ -19297,7 +19297,7 @@ export const data = [
       "district_code": 301608,
       "amphoe_code": 3016,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หินดาด",
@@ -19307,7 +19307,7 @@ export const data = [
       "district_code": 300813,
       "amphoe_code": 3016,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ห้วยแคน",
@@ -19317,7 +19317,7 @@ export const data = [
       "district_code": 301610,
       "amphoe_code": 3016,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ห้วยแถลง",
@@ -19327,7 +19327,7 @@ export const data = [
       "district_code": 301601,
       "amphoe_code": 3016,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เมืองพลับพลา",
@@ -19337,7 +19337,7 @@ export const data = [
       "district_code": 301603,
       "amphoe_code": 3016,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ช้างทอง",
@@ -19347,7 +19347,7 @@ export const data = [
       "district_code": 300612,
       "amphoe_code": 3032,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ท่าช้าง",
@@ -19357,7 +19357,7 @@ export const data = [
       "district_code": 300602,
       "amphoe_code": 3032,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "พระพุทธ",
@@ -19367,7 +19367,7 @@ export const data = [
       "district_code": 300609,
       "amphoe_code": 3032,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองงูเหลือม",
@@ -19377,7 +19377,7 @@ export const data = [
       "district_code": 300606,
       "amphoe_code": 3032,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองยาง",
@@ -19387,7 +19387,7 @@ export const data = [
       "district_code": 300608,
       "amphoe_code": 3032,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บึงปรือ",
@@ -19397,7 +19397,7 @@ export const data = [
       "district_code": 300819,
       "amphoe_code": 3026,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "วังยายทอง",
@@ -19407,7 +19407,7 @@ export const data = [
       "district_code": 302604,
       "amphoe_code": 3026,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สำนักตะคร้อ",
@@ -19417,7 +19417,7 @@ export const data = [
       "district_code": 300814,
       "amphoe_code": 3026,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองแวง",
@@ -19427,7 +19427,7 @@ export const data = [
       "district_code": 300816,
       "amphoe_code": 3026,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "จอหอ",
@@ -19437,7 +19437,7 @@ export const data = [
       "district_code": 300116,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ตลาด",
@@ -19447,7 +19447,7 @@ export const data = [
       "district_code": 300122,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านเกาะ",
@@ -19457,7 +19457,7 @@ export const data = [
       "district_code": 300112,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านโพธิ์",
@@ -19467,7 +19467,7 @@ export const data = [
       "district_code": 300115,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านใหม่",
@@ -19477,7 +19477,7 @@ export const data = [
       "district_code": 300113,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ปรุใหญ่",
@@ -19487,7 +19487,7 @@ export const data = [
       "district_code": 300107,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "พลกรัง",
@@ -19497,7 +19497,7 @@ export const data = [
       "district_code": 300109,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "พะเนา",
@@ -19507,7 +19507,7 @@ export const data = [
       "district_code": 300123,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "พุดซา",
@@ -19517,7 +19517,7 @@ export const data = [
       "district_code": 300114,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "มะเริง",
@@ -19527,7 +19527,7 @@ export const data = [
       "district_code": 300105,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สีมุม",
@@ -19537,7 +19537,7 @@ export const data = [
       "district_code": 300121,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สุรนารี",
@@ -19547,7 +19547,7 @@ export const data = [
       "district_code": 300120,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองกระทุ่ม",
@@ -19557,7 +19557,7 @@ export const data = [
       "district_code": 300124,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองจะบก",
@@ -19567,7 +19567,7 @@ export const data = [
       "district_code": 300103,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองบัวศาลา",
@@ -19577,7 +19577,7 @@ export const data = [
       "district_code": 300119,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองระเวียง",
@@ -19587,7 +19587,7 @@ export const data = [
       "district_code": 300106,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองไข่น้ำ",
@@ -19597,7 +19597,7 @@ export const data = [
       "district_code": 300125,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หนองไผ่ล้อม",
@@ -19607,7 +19607,7 @@ export const data = [
       "district_code": 300110,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หมื่นไวย",
@@ -19617,7 +19617,7 @@ export const data = [
       "district_code": 300108,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หัวทะเล",
@@ -19627,7 +19627,7 @@ export const data = [
       "district_code": 300111,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โคกกรวด",
@@ -19637,7 +19637,7 @@ export const data = [
       "district_code": 300117,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โคกสูง",
@@ -19647,7 +19647,7 @@ export const data = [
       "district_code": 300104,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โพธิ์กลาง",
@@ -19657,7 +19657,7 @@ export const data = [
       "district_code": 300102,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ในเมือง",
@@ -19667,7 +19667,7 @@ export const data = [
       "district_code": 300101,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ไชยมงคล",
@@ -19677,7 +19677,7 @@ export const data = [
       "district_code": 300118,
       "amphoe_code": 3001,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กระเบื้องนอก",
@@ -19687,7 +19687,7 @@ export const data = [
       "district_code": 301708,
       "amphoe_code": 3027,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ละหานปลาค้าว",
@@ -19697,7 +19697,7 @@ export const data = [
       "district_code": 301712,
       "amphoe_code": 3027,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เมืองยาง",
@@ -19707,7 +19707,7 @@ export const data = [
       "district_code": 301709,
       "amphoe_code": 3027,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนอุดม",
@@ -19717,7 +19717,7 @@ export const data = [
       "district_code": 301713,
       "amphoe_code": 3027,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กุดโบสถ์",
@@ -19727,7 +19727,7 @@ export const data = [
       "district_code": 300304,
       "amphoe_code": 3003,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านราษฎร์",
@@ -19737,7 +19737,7 @@ export const data = [
       "district_code": 300306,
       "amphoe_code": 3003,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สระตะเคียน",
@@ -19747,7 +19747,7 @@ export const data = [
       "district_code": 300302,
       "amphoe_code": 3003,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สุขไพบูลย์",
@@ -19757,7 +19757,7 @@ export const data = [
       "district_code": 300305,
       "amphoe_code": 3003,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เสิงสาง",
@@ -19767,7 +19767,7 @@ export const data = [
       "district_code": 300301,
       "amphoe_code": 3003,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนสมบูรณ์",
@@ -19777,7 +19777,7 @@ export const data = [
       "district_code": 300303,
       "amphoe_code": 3003,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บึงพะไล",
@@ -19787,7 +19787,7 @@ export const data = [
       "district_code": 301205,
       "amphoe_code": 3023,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บึงสำโรง",
@@ -19797,7 +19797,7 @@ export const data = [
       "district_code": 302305,
       "amphoe_code": 3023,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สีสุก",
@@ -19807,7 +19807,7 @@ export const data = [
       "district_code": 300604,
       "amphoe_code": 3023,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "แก้งสนามนาง",
@@ -19817,7 +19817,7 @@ export const data = [
       "district_code": 301213,
       "amphoe_code": 3023,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนสำราญ",
@@ -19827,7 +19827,7 @@ export const data = [
       "district_code": 301219,
       "amphoe_code": 3023,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กระโทก",
@@ -19837,7 +19837,7 @@ export const data = [
       "district_code": 300701,
       "amphoe_code": 3007,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ด่านเกวียน",
@@ -19847,7 +19847,7 @@ export const data = [
       "district_code": 300710,
       "amphoe_code": 3007,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ทุ่งอรุณ",
@@ -19857,7 +19857,7 @@ export const data = [
       "district_code": 300704,
       "amphoe_code": 3007,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ท่าจะหลุง",
@@ -19867,7 +19867,7 @@ export const data = [
       "district_code": 300706,
       "amphoe_code": 3007,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ท่าลาดขาว",
@@ -19877,7 +19877,7 @@ export const data = [
       "district_code": 300705,
       "amphoe_code": 3007,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ท่าอ่าง",
@@ -19887,7 +19887,7 @@ export const data = [
       "district_code": 300703,
       "amphoe_code": 3007,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ท่าเยี่ยม",
@@ -19897,7 +19897,7 @@ export const data = [
       "district_code": 300707,
       "amphoe_code": 3007,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "พลับพลา",
@@ -19907,7 +19907,7 @@ export const data = [
       "district_code": 300702,
       "amphoe_code": 3007,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ละลมใหม่พัฒนา",
@@ -19917,7 +19917,7 @@ export const data = [
       "district_code": 300709,
       "amphoe_code": 3007,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โชคชัย",
@@ -19927,7 +19927,7 @@ export const data = [
       "district_code": 300708,
       "amphoe_code": 3007,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ขามเฒ่า",
@@ -19937,7 +19937,7 @@ export const data = [
       "district_code": 301011,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "จันอัด",
@@ -19947,7 +19947,7 @@ export const data = [
       "district_code": 301010,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ดอนชมพู",
@@ -19957,7 +19957,7 @@ export const data = [
       "district_code": 301005,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ดอนหวาย",
@@ -19967,7 +19967,7 @@ export const data = [
       "district_code": 301015,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ด่านคล้า",
@@ -19977,7 +19977,7 @@ export const data = [
       "district_code": 301012,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ธารปราสาท",
@@ -19987,7 +19987,7 @@ export const data = [
       "district_code": 301006,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บิง",
@@ -19997,7 +19997,7 @@ export const data = [
       "district_code": 301004,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "พลสงคราม",
@@ -20007,7 +20007,7 @@ export const data = [
       "district_code": 301009,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "มะค่า",
@@ -20017,7 +20017,7 @@ export const data = [
       "district_code": 300914,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ลำคอหงษ์",
@@ -20027,7 +20027,7 @@ export const data = [
       "district_code": 301013,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ลำมูล",
@@ -20037,7 +20037,7 @@ export const data = [
       "district_code": 301016,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "หลุมข้าว",
@@ -20047,7 +20047,7 @@ export const data = [
       "district_code": 301007,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "เมืองปราสาท",
@@ -20057,7 +20057,7 @@ export const data = [
       "district_code": 301014,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โตนด",
@@ -20067,7 +20067,7 @@ export const data = [
       "district_code": 301003,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนสูง",
@@ -20077,7 +20077,7 @@ export const data = [
       "district_code": 301001,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ใหม่",
@@ -20087,7 +20087,7 @@ export const data = [
       "district_code": 301002,
       "amphoe_code": 3010,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ดอนยาวใหญ่",
@@ -20097,7 +20097,7 @@ export const data = [
       "district_code": 301316,
       "amphoe_code": 3024,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "วังหิน",
@@ -20107,7 +20107,7 @@ export const data = [
       "district_code": 301305,
       "amphoe_code": 3024,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สำพะเนียง",
@@ -20117,7 +20117,7 @@ export const data = [
       "district_code": 301312,
       "amphoe_code": 3024,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนตาเถร",
@@ -20127,7 +20127,7 @@ export const data = [
       "district_code": 301311,
       "amphoe_code": 3024,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนแดง",
@@ -20137,7 +20137,7 @@ export const data = [
       "district_code": 301302,
       "amphoe_code": 3024,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "กำปัง",
@@ -20147,7 +20147,7 @@ export const data = [
       "district_code": 300903,
       "amphoe_code": 3009,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ค้างพลู",
@@ -20157,7 +20157,7 @@ export const data = [
       "district_code": 300905,
       "amphoe_code": 3009,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ด่านจาก",
@@ -20167,7 +20167,7 @@ export const data = [
       "district_code": 300902,
       "amphoe_code": 3009,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ถนนโพธิ์",
@@ -20177,7 +20177,7 @@ export const data = [
       "district_code": 300909,
       "amphoe_code": 3009,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บัลลังก์",
@@ -20187,7 +20187,7 @@ export const data = [
       "district_code": 300907,
       "amphoe_code": 3009,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "บ้านวัง",
@@ -20197,7 +20197,7 @@ export const data = [
       "district_code": 300906,
       "amphoe_code": 3009,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "มะค่า",
@@ -20207,7 +20207,7 @@ export const data = [
       "district_code": 300914,
       "amphoe_code": 3009,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สายออ",
@@ -20217,7 +20217,7 @@ export const data = [
       "district_code": 300908,
       "amphoe_code": 3009,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "สำโรง",
@@ -20227,7 +20227,7 @@ export const data = [
       "district_code": 300904,
       "amphoe_code": 3009,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "โนนไทย",
@@ -20237,7 +20237,7 @@ export const data = [
       "district_code": 300901,
       "amphoe_code": 3009,
       "province_code": 30,
-      "type": "อีสานล่าง "
+      "type": "อีสานล่าง"
   },
   {
       "district": "ขนอม",
