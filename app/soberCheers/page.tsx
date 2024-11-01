@@ -104,17 +104,20 @@ export default function ListSoberCheers() {
   };
 
   const applyFiltersAndPagination = (soberCheers: SoberCheer[]) => {
-    const filtered = soberCheers.filter(cheer => 
-      (selectedType === '' || cheer.type === selectedType) &&
-      (search === '' || 
-        cheer.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        cheer.lastName.toLowerCase().includes(search.toLowerCase()) ||
-        cheer.addressLine1.toLowerCase().includes(search.toLowerCase()) ||
-        cheer.district.toLowerCase().includes(search.toLowerCase()) ||
-        cheer.amphoe.toLowerCase().includes(search.toLowerCase()) ||
-        cheer.province.toLowerCase().includes(search.toLowerCase())
-      )
+    const filtered = soberCheers.filter(cheer => {
+      if (selectedType === '') return true;
+      if (selectedType === 'NONE') return !cheer.type;
+      return cheer.type === selectedType;
+    }).filter(cheer =>
+      search === '' || 
+      cheer.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      cheer.lastName.toLowerCase().includes(search.toLowerCase()) ||
+      cheer.addressLine1.toLowerCase().includes(search.toLowerCase()) ||
+      cheer.district.toLowerCase().includes(search.toLowerCase()) ||
+      cheer.amphoe.toLowerCase().includes(search.toLowerCase()) ||
+      cheer.province.toLowerCase().includes(search.toLowerCase())
     );
+    
     setTotalItems(filtered.length);
     setFilteredSoberCheers(filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage));
   };
@@ -239,7 +242,7 @@ export default function ListSoberCheers() {
             }}
             className="px-4 py-2 border border-amber-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
           />
-          <select
+         <select
             value={selectedType}
             onChange={(e) => {
               setSelectedType(e.target.value);
@@ -248,6 +251,7 @@ export default function ListSoberCheers() {
             className="px-4 py-2 border border-amber-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
             <option value="">ทุกภาค</option>
+            <option value="NONE">ไม่ระบุภาค</option>
             {types.map((type) => (
               <option key={type} value={type}>
                 {type}
@@ -353,7 +357,7 @@ export default function ListSoberCheers() {
                       {soberCheer.zipcode}
                     </td>
                     <td className="px-3 py-2 whitespace-nowrap text-xxs text-gray-500">
-                      {soberCheer.type}
+                      {soberCheer.type || 'ไม่ระบุ'}
                     </td>
                     <td className="px-3 py-2 whitespace-nowrap text-xxs text-gray-500">
                       {soberCheer.alcoholConsumption}
