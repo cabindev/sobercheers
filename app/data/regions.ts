@@ -1,4 +1,6 @@
-export const data = [
+import { RegionData } from '@/types/form-return';
+
+export const data: RegionData[] = [
   {
       "district": "คลองท่อมเหนือ",
       "amphoe": "คลองท่อม",

@@ -1,674 +1,218 @@
-"use client";
-import { useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { Toaster, toast } from "react-hot-toast";
-import imageCompression from "browser-image-compression";
-import { data } from "@/app/data/regions";
-import { Progress } from "@/components/ui/progress";
-import FormEffect from "@/components/ui/formEffect";
-import StepIndicator from "@/components/ui/stepIndicator";
+// app/form_return/create/page.tsx
+'use client';
 
-const CreateFormReturn = () => {
-  const [step, setStep] = useState(1);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [organizationName, setOrganizationName] = useState("");
-  const [addressLine1, setAddressLine1] = useState("");
-  const [district, setDistrict] = useState("");
-  const [amphoe, setAmphoe] = useState("");
-  const [province, setProvince] = useState("");
-  const [zipcode, setZipcode] = useState("");
-  const [type, setType] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [numberOfSigners, setNumberOfSigners] = useState("");
-  const [image1, setImage1] = useState<File | null>(null);
-  const [imagePreview1, setImagePreview1] = useState<string | null>(null);
-  const [image2, setImage2] = useState<File | null>(null);
-  const [imagePreview2, setImagePreview2] = useState<string | null>(null);
-  const [suggestions, setSuggestions] = useState<any[]>([]);
-  const [isPhoneNumberDuplicate, setIsPhoneNumberDuplicate] = useState(false);
-  const [autoFilledFields, setAutoFilledFields] = useState<string[]>([]);
+import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { FormReturnData } from '@/types/form-return';
+import { createFormReturn } from '@/lib/actions/form-return/post';
+import PersonalInfoStep from '@/components/form-return/PersonalInfoStep';
+import AddressStep from '@/components/form-return/AddressStep';
+import ContactStep from '@/components/form-return/ContactStep';
+import ImageUploadStep from '@/components/form-return/ImageUploadStep';
+import ConfirmationStep from '@/components/form-return/ConfirmationStep';
+import StepIndicator from '@/components/ui/stepIndicator';
+import { toast } from 'react-hot-toast';
+
+const steps = [
+  { number: 1, title: 'ข้อมูลส่วนตัว', description: 'ชื่อ-นามสกุล และองค์กร' },
+  { number: 2, title: 'ที่อยู่', description: 'ข้อมูลที่อยู่ติดต่อ' },
+  { number: 3, title: 'ข้อมูลติดต่อ', description: 'เบอร์โทรและจำนวนผู้ลงนาม' },
+  { number: 4, title: 'รูปภาพ', description: 'แนบรูปภาพประกอบ' },
+  { number: 5, title: 'ยืนยัน', description: 'ตรวจสอบข้อมูลก่อนส่ง' }
+];
+
+export default function CreateFormReturn() {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState<Partial<FormReturnData>>({});
+  const [image1File, setImage1File] = useState<File | undefined>();
+  const [image2File, setImage2File] = useState<File | undefined>();
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  const allowedExtensions = [".jpg", ".jpeg", ".webp", ".svg", ".png"];
-
-  const handleImageChange = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    setImage: React.Dispatch<React.SetStateAction<File | null>>,
-    setImagePreview: React.Dispatch<React.SetStateAction<string | null>>
-  ) => {
-    const file = e.target.files?.[0] || null;
-    if (file) {
-      const fileExtension = file.name.split(".").pop()?.toLowerCase();
-      if (!allowedExtensions.includes(`.${fileExtension}`)) {
-        toast.error("Only image files are allowed.");
-        return;
-      }
-
-      try {
-        const options = {
-          maxSizeMB: 0.5,
-          maxWidthOrHeight: 1024,
-          useWebWorker: true,
-        };
-        const compressedFile = await imageCompression(file, options);
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setImagePreview(reader.result as string);
-        };
-        reader.readAsDataURL(compressedFile);
-        setImage(compressedFile);
-      } catch (error) {
-        console.error("Error compressing image", error);
-        toast.error("Error compressing image");
-      }
-    } else {
-      setImage(null);
-      setImagePreview(null);
-    }
+  const updateFormData = (newData: Partial<FormReturnData>) => {
+    setFormData(prev => ({ ...prev, ...newData }));
   };
 
-  const checkPhoneNumberExists = async (phoneNumber: string) => {
-    try {
-      const response = await axios.get(
-        `/api/form_return/check-phone?phoneNumber=${phoneNumber}`
-      );
-      return response.data.exists;
-    } catch (error) {
-      console.error("กรุณาตรวจสอบเบอร์โทรศัพท์", error);
-      return false;
-    }
+  const handleImageUpdate = (image1?: File, image2?: File) => {
+    if (image1) setImage1File(image1);
+    if (image2) setImage2File(image2);
   };
 
-  const validateStep = (currentStep: number) => {
-    switch (currentStep) {
+  const validateStep = (step: number): boolean => {
+    switch (step) {
       case 1:
-        return firstName && lastName && organizationName;
+        return !!(formData.firstName && formData.lastName && formData.organizationName);
       case 2:
-        return addressLine1 && district && amphoe && province && zipcode;
+        return !!(formData.addressLine1 && formData.district && formData.amphoe && 
+                 formData.province && formData.zipcode);
       case 3:
-        return (
-          phoneNumber &&
-          numberOfSigners &&
-          parseInt(numberOfSigners.replace(/,/g, ""), 10) > 1 &&
-          phoneNumber.length === 10
-        );
+        return !!(formData.phoneNumber && formData.numberOfSigners && 
+                 formData.phoneNumber.length === 10 && 
+                 formData.numberOfSigners > 1);
+      case 4:
+        return !!(image1File && image2File);
       default:
         return true;
     }
   };
 
-  const validateForm = () => {
-    if (
-      !firstName ||
-      !lastName ||
-      !organizationName ||
-      !addressLine1 ||
-      !district ||
-      !amphoe ||
-      !province ||
-      !zipcode ||
-      !phoneNumber ||
-      !numberOfSigners
-    ) {
-      toast.error("กรุณากรอกข้อมูลให้ครบ");
-      return false;
-    }
-    if (isPhoneNumberDuplicate) {
-      toast.error("เบอร์นี้ถูกใช้แล้ว");
-      return false;
-    }
-    if (phoneNumber.length !== 10) {
-      toast.error("หมายเลขโทรศัพท์ต้องมี 10 หลัก");
-      return false;
-    }
-    if (parseInt(numberOfSigners.replace(/,/g, ""), 10) <= 1) {
-      toast.error("จำนวนผู้ลงนามต้องมากกว่า 1 คน");
-      return false;
-    }
-    return true;
-  };
-
-  const handlePhoneNumberChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.target.value.replace(/\D/g, "");
-    if (value.length <= 10) {
-      setPhoneNumber(value);
-    }
-
-    if (value.length === 10) {
-      const phoneExists = await checkPhoneNumberExists(value);
-      setIsPhoneNumberDuplicate(phoneExists);
-    } else {
-      setIsPhoneNumberDuplicate(false);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
-    try {
-      const formData = new FormData();
-      formData.append("firstName", firstName);
-      formData.append("lastName", lastName);
-      formData.append("organizationName", organizationName);
-      formData.append("addressLine1", addressLine1);
-      formData.append("district", district);
-      formData.append("amphoe", amphoe);
-      formData.append("province", province);
-      formData.append("zipcode", zipcode);
-      formData.append("type", type);
-      formData.append("phoneNumber", phoneNumber);
-      formData.append("numberOfSigners", numberOfSigners.replace(/,/g, ""));
-      if (image1) formData.append("image1", image1);
-      if (image2) formData.append("image2", image2);
-
-      const response = await axios.post("/api/form_return", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      if (response.data.error) {
-        toast.error(response.data.error);
-      } else {
-        toast.success("ส่งคืนข้อมูลเข้าพรรษาสำเร็จ");
-        router.push("/form_return/orgs");
-      }
-    } catch (error) {
-      console.error("Error in form submission:", error);
-      toast.error("เกิดข้อผิดพลาดขณะส่งแบบฟอร์ม ตรวจสอบก่อนส่งอีกครั้ง");
-    }
-  };
-
-  const handleDistrictChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setDistrict(value);
-
-    if (value.length > 0) {
-      const filteredSuggestions = data.filter((region) =>
-        region.district.toLowerCase().startsWith(value.toLowerCase())
-      );
-      setSuggestions(filteredSuggestions);
-    } else {
-      setSuggestions([]);
-    }
-  };
-
-  const handleSuggestionClick = (suggestion: any) => {
-    setDistrict(suggestion.district);
-    setAmphoe(suggestion.amphoe);
-    setProvince(suggestion.province);
-    setZipcode(suggestion.zipcode.toString());
-    setType(suggestion.type);
-    setSuggestions([]);
-    setAutoFilledFields(["amphoe", "province", "zipcode"]);
-  };
-
-  const handleNumberOfSignersChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.target.value.replace(/[^0-9]/g, "");
-    if (value === "") {
-      setNumberOfSigners("");
-    } else {
-      const numValue = parseInt(value, 10);
-      setNumberOfSigners(numValue.toLocaleString());
-    }
-  };
-
   const nextStep = () => {
-    if (step === 4 && !image2) {
-      toast.error("กรุณาแนบรูปภาพที่ 2 ก่อนดำเนินการต่อ");
-      return;
-    }
-
-    if (validateStep(step)) {
-      setStep(step + 1);
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(prev + 1, steps.length));
     } else {
-      toast.error("กรุณากรอกข้อมูลให้ครบ");
+      toast.error('กรุณากรอกข้อมูลให้ครบถ้วน');
     }
   };
 
-  const prevStep = () => setStep(step - 1);
+  const prevStep = () => {
+    setCurrentStep(prev => Math.max(prev - 1, 1));
+  };
 
-  const progressValue = (step / 5) * 100;
+  const handleSubmit = async () => {
+    if (!validateStep(4)) {
+      toast.error('กรุณากรอกข้อมูลให้ครบถ้วน');
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        const submitFormData = new FormData();
+        
+        // Add form data
+        Object.entries(formData).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            submitFormData.append(key, value.toString());
+          }
+        });
+        
+        // Add images
+        if (image1File) submitFormData.append('image1', image1File);
+        if (image2File) submitFormData.append('image2', image2File);
+
+        const result = await createFormReturn(submitFormData);
+        
+        if (result.success) {
+          toast.success('ส่งข้อมูลสำเร็จ!');
+          // เปลี่ยนเป็นหน้าที่มีอยู่จริง
+          router.push('/form_return?success=true');
+          router.refresh();
+        } else {
+          toast.error(result.error || 'เกิดข้อผิดพลาด');
+        }
+      } catch (error) {
+        console.error('Submit error:', error);
+        toast.error('เกิดข้อผิดพลาดในการส่งข้อมูล');
+      }
+    });
+  };
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return <PersonalInfoStep data={formData} onUpdate={updateFormData} />;
+      case 2:
+        return <AddressStep data={formData} onUpdate={updateFormData} />;
+      case 3:
+        return <ContactStep data={formData} onUpdate={updateFormData} />;
+      case 4:
+        return <ImageUploadStep 
+          data={formData} 
+          onUpdate={updateFormData} 
+          onImageUpdate={handleImageUpdate}
+        />;
+      case 5:
+        return <ConfirmationStep 
+          data={formData} 
+          image1File={image1File}
+          image2File={image2File}
+        />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="bg-orange-100 max-w-4xl mx-auto mt-10 px-4 py-8">
-      <Toaster />
-      <FormEffect />
-      <h4 className="text-lg font-semibold mb-6 text-center text-gray-800">
-        ฟอร์มส่งคืนข้อมูล " งดเหล้าเข้าพรรษา ปี 2567 "
-      </h4>
-      <Progress value={progressValue} className="mb-4" />
-      <StepIndicator currentStep={step} totalSteps={5} />
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 bg-orange-200 p-8 rounded-lg shadow-md"
-      >
-        {step === 1 && (
-          <>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div>
-                <label
-                  htmlFor="firstName"
-                  className="block text-sm font-medium text-gray-700"
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-slate-900 mb-4">
+              ฟอร์มส่งคืนข้อมูล "งดเหล้าเข้าพรรษา ปี 2568"
+            </h1>
+            <p className="text-slate-600">
+              กรุณากรอกข้อมูลให้ครบถ้วนเพื่อส่งคืนข้อมูลการดำเนินงาน
+            </p>
+          </div>
+
+          {/* Step Indicator */}
+          <div className="mb-8">
+            <StepIndicator 
+              steps={steps} 
+              currentStep={currentStep} 
+            />
+          </div>
+
+          {/* Form Content */}
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold text-slate-900 mb-2">
+                {steps[currentStep - 1].title}
+              </h2>
+              <p className="text-slate-600">
+                {steps[currentStep - 1].description}
+              </p>
+            </div>
+
+            {renderStep()}
+
+            {/* Navigation Buttons */}
+            <div className="flex justify-between pt-8 border-t border-slate-200 mt-8">
+              <button
+                type="button"
+                onClick={prevStep}
+                disabled={currentStep === 1}
+                className={`px-6 py-3 rounded-lg font-medium transition-all ${
+                  currentStep === 1
+                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                    : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+                }`}
+              >
+                ย้อนกลับ
+              </button>
+
+              {currentStep < steps.length ? (
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all"
                 >
-                  ชื่อ
-                </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  id="firstName"
-                  required
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="lastName"
-                  className="block text-sm font-medium text-gray-700"
+                  ต่อไป
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={isPending}
+                  className="px-8 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                 >
-                  นามสกุล
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  id="lastName"
-                  required
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
-                />
-              </div>
-            </div>
-            <div>
-              <label
-                htmlFor="organizationName"
-                className="block text-sm font-medium text-gray-700"
-              >
-                ชื่อองค์กร
-              </label>
-              <input
-                type="text"
-                name="organizationName"
-                id="organizationName"
-                required
-                value={organizationName}
-                onChange={(e) => setOrganizationName(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
-              />
-            </div>
-            <div className="flex justify-between">
-              <button
-                type="button"
-                onClick={nextStep}
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-              >
-                ต่อไป
-              </button>
-            </div>
-          </>
-        )}
-
-        {step === 2 && (
-          <>
-            <div>
-              <label
-                htmlFor="addressLine1"
-                className="block text-sm font-medium text-gray-700"
-              >
-                ที่อยู่ (เลขที่/หมู่บ้าน)
-              </label>
-              <input
-                type="text"
-                name="addressLine1"
-                id="addressLine1"
-                required
-                value={addressLine1}
-                onChange={(e) => setAddressLine1(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="district"
-                className="block text-sm font-medium text-gray-700"
-              >
-                ตำบล/แขวง
-              </label>
-              <input
-                type="text"
-                name="district"
-                id="district"
-                required
-                value={district}
-                onChange={handleDistrictChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
-              />
-              {suggestions.length > 0 && (
-                <ul className="border border-gray-300 mt-1 max-h-60 overflow-auto rounded-md shadow-lg bg-white">
-                  {suggestions.map((suggestion, index) => (
-                    <li
-                      key={index}
-                      onClick={() => handleSuggestionClick(suggestion)}
-                      className="cursor-pointer p-2 hover:bg-gray-200 text-sm"
-                    >
-                      {suggestion.district} - {suggestion.amphoe},{" "}
-                      {suggestion.province}, {suggestion.zipcode}
-                    </li>
-                  ))}
-                </ul>
+                  {isPending ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      กำลังส่งข้อมูล...
+                    </>
+                  ) : (
+                    'ยืนยันและส่งข้อมูล'
+                  )}
+                </button>
               )}
             </div>
-            <div>
-              <label
-                htmlFor="amphoe"
-                className="block text-sm font-medium text-gray-700"
-              >
-                อำเภอ/เขต
-              </label>
-              <input
-                type="text"
-                name="amphoe"
-                id="amphoe"
-                required
-                value={amphoe}
-                onChange={(e) => setAmphoe(e.target.value)}
-                className={`mt-1 block w-full rounded-md shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm ${
-                  autoFilledFields.includes("amphoe")
-                    ? "bg-green-50 border-green-300"
-                    : "border-gray-300"
-                }`}
-              />
-              {autoFilledFields.includes("amphoe") && (
-                <p className="mt-1 text-xs text-green-600">
-                  ข้อมูลถูกกรอกอัตโนมัติ
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="province"
-                className="block text-sm font-medium text-gray-700"
-              >
-                จังหวัด
-              </label>
-              <input
-                type="text"
-                name="province"
-                id="province"
-                required
-                value={province}
-                onChange={(e) => setProvince(e.target.value)}
-                className={`mt-1 block w-full rounded-md shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm ${
-                  autoFilledFields.includes("province")
-                    ? "bg-green-50 border-green-300"
-                    : "border-gray-300"
-                }`}
-              />
-              {autoFilledFields.includes("province") && (
-                <p className="mt-1 text-xs text-green-600">
-                  ข้อมูลถูกกรอกอัตโนมัติ
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label
-                htmlFor="zipcode"
-                className="block text-sm font-medium text-gray-700"
-              >
-                รหัสไปรษณีย์
-              </label>
-              <input
-                type="text"
-                name="zipcode"
-                id="zipcode"
-                required
-                value={zipcode}
-                onChange={(e) => setZipcode(e.target.value)}
-                className={`mt-1 block w-full rounded-md shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm ${
-                  autoFilledFields.includes("zipcode")
-                    ? "bg-green-50 border-green-300"
-                    : "border-gray-300"
-                }`}
-              />
-              {autoFilledFields.includes("zipcode") && (
-                <p className="mt-1 text-xs text-green-600">
-                  ข้อมูลถูกกรอกอัตโนมัติ
-                </p>
-              )}
-            </div>
-            <div className="flex justify-between">
-              <button
-                type="button"
-                onClick={prevStep}
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-              >
-                ย้อนกลับ
-              </button>
-              <button
-                type="button"
-                onClick={nextStep}
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-              >
-                ต่อไป
-              </button>
-            </div>
-          </>
-        )}
-
-        {step === 3 && (
-          <>
-            <div>
-              <label
-                htmlFor="phoneNumber"
-                className="block text-sm font-medium text-gray-700"
-              >
-                หมายเลขโทรศัพท์
-              </label>
-              <input
-                type="text"
-                name="phoneNumber"
-                id="phoneNumber"
-                required
-                value={phoneNumber}
-                onBlur={async () => {
-                  const phoneExists = await checkPhoneNumberExists(phoneNumber);
-                  setIsPhoneNumberDuplicate(phoneExists);
-                  if (phoneExists) {
-                    toast.error("เบอร์นี้ถูกใช้ไปแล้ว");
-                  }
-                }}
-                onChange={handlePhoneNumberChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
-              />
-              <small className="text-gray-500">(08593877xx)</small>
-            </div>
-            <div className="form-control">
-              <label
-                htmlFor="numberOfSigners"
-                className="block text-sm font-medium text-gray-700"
-              >
-                จำนวนผู้ลงนาม
-              </label>
-              <input
-                type="text"
-                name="numberOfSigners"
-                id="numberOfSigners"
-                required
-                value={numberOfSigners}
-                onChange={handleNumberOfSignersChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
-              />
-              <span className="ml-2">คน</span>
-              <small className="text-gray-500">(กรอกเฉพาะตัวเลข)</small>
-            </div>
-            <div className="flex justify-between">
-              <button
-                type="button"
-                onClick={prevStep}
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-              >
-                ย้อนกลับ
-              </button>
-              <button
-                type="button"
-                onClick={nextStep}
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-              >
-                ต่อไป
-              </button>
-            </div>
-          </>
-        )}
-
-        {step === 4 && (
-          <>
-            <div>
-              <label
-                htmlFor="image1"
-                className="block text-sm font-medium text-gray-700"
-              >
-                รูปภาพ 1
-              </label>
-              <input
-                type="file"
-                name="image1"
-                id="image1"
-                onChange={(e) =>
-                  handleImageChange(e, setImage1, setImagePreview1)
-                }
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
-              />
-              {imagePreview1 && (
-                <div className="mt-4">
-                  <Image
-                    src={imagePreview1}
-                    alt="Image Preview 1"
-                    width={200}
-                    height={200}
-                    className="rounded-md"
-                  />
-                </div>
-              )}
-            </div>
-            <div>
-              <label
-                htmlFor="image2"
-                className="block text-sm font-medium text-gray-700"
-              >
-                รูปภาพ 2
-              </label>
-              <input
-                type="file"
-                name="image2"
-                id="image2"
-                onChange={(e) =>
-                  handleImageChange(e, setImage2, setImagePreview2)
-                }
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-600 focus:ring-yellow-600 sm:text-sm"
-              />
-              {imagePreview2 && (
-                <div className="mt-4">
-                  <Image
-                    src={imagePreview2}
-                    alt="Image Preview 2"
-                    width={200}
-                    height={200}
-                    className="rounded-md"
-                  />
-                </div>
-              )}
-            </div>
-            <div className="flex justify-between">
-              <button
-                type="button"
-                onClick={prevStep}
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-              >
-                ย้อนกลับ
-              </button>
-              <button
-                type="button"
-                onClick={nextStep}
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-              >
-                ต่อไป
-              </button>
-            </div>
-          </>
-        )}
-
-        {step === 5 && (
-          <>
-            <div>
-              <h4 className="text-lg font-semibold mb-6 text-center text-gray-800">
-                Preview and Confirm
-              </h4>
-              <div className="bg-gray-100 p-4 rounded-md mb-4">
-                <p>
-                  ชื่อ: {firstName} {lastName}
-                </p>
-                <p>ชื่อองค์กร: {organizationName}</p>
-                <p>
-                  ที่อยู่: {addressLine1}, {district}, {amphoe}, {province},{" "}
-                  {zipcode}
-                </p>
-                <p>หมายเลขโทรศัพท์: {phoneNumber}</p>
-                <p>จำนวนผู้ลงนาม: {numberOfSigners} คน</p>
-                {imagePreview1 && (
-                  <Image
-                    src={imagePreview1}
-                    alt="Image 1 Preview"
-                    width={200}
-                    height={200}
-                    className="rounded-md"
-                  />
-                )}
-                {imagePreview2 && (
-                  <Image
-                    src={imagePreview2}
-                    alt="Image 2 Preview"
-                    width={200}
-                    height={200}
-                    className="rounded-md"
-                  />
-                )}
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <button
-                type="button"
-                onClick={prevStep}
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-              >
-                ย้อนกลับ
-              </button>
-              <button
-                type="submit"
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-              >
-                ยืนยัน
-              </button>
-            </div>
-          </>
-        )}
-      </form>
+          </div>
+        </div>
+      </div>
     </div>
   );
-};
-
-export default CreateFormReturn;
+}

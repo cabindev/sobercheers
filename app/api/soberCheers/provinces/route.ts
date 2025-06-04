@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { revalidatePath } from 'next/cache';
+
+// เพิ่มบรรทัดนี้
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 const prisma = new PrismaClient();
 
@@ -22,9 +25,6 @@ export async function GET(req: NextRequest) {
       province: item.province,
       count: item._count.province
     }));
-
-    // เพิ่ม revalidatePath ตรงนี้
-    revalidatePath('/api/provinces'); // สมมติว่านี่คือเส้นทาง API ของคุณ
 
     return NextResponse.json({ provinces: formattedData });
   } catch (error) {

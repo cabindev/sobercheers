@@ -119,4 +119,8 @@ model Form_return {
   numberOfSigners  Int
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
+  
+  @@index([createdAt])
+  @@index([province, createdAt])
+  @@map("form_return")
 }

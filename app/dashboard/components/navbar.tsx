@@ -62,12 +62,12 @@ export default function Navbar() {
     items: [
       {
         key: 'viewFormReturn',
-        label: <Link href="/dashboard/formReturn" className="text-sm text-gray-700">ดูข้อมูล 3500 องค์กร</Link>,
+        label: <Link href="/dashboard/formReturn" className="text-sm text-gray-700">คืนข้อมูล งดเหล้าเข้าพรรษา</Link>,
         icon: <TeamOutlined />,
       },
       {
         key: 'createFormReturn',
-        label: <Link href="/form_return/create" className="text-sm text-gray-700">เพิ่มข้อมูลองค์กร</Link>,
+        label: <Link href="/form_return/create" className="text-sm text-gray-700">เพิ่มข้อมูล งดเหล้าเข้าพรรษา</Link>,
         icon: <PlusOutlined />,
       },
     ],
@@ -106,12 +106,12 @@ export default function Navbar() {
         },
         {
           key: 'formReturn',
-          label: '3500 องค์กร',
+          label: 'คืนข้อมูลงดเหล้าเข้าพรรษา',
           icon: <TeamOutlined />,
           children: [
             {
               key: 'viewFormReturn',
-              label: <Link href="/dashboard/formReturn">ดูข้อมูล 3500 องค์กร</Link>,
+              label: <Link href="/dashboard/formReturn">คืนข้อมูลงดเหล้าเข้าพรรษา</Link>,
             },
             {
               key: 'createFormReturn',
@@ -171,7 +171,7 @@ export default function Navbar() {
                   </Dropdown>
                   <Dropdown menu={formReturnMenu} placement="bottomLeft">
                     <Button type="text" className="text-gray-700 hover:text-amber-500 transition-colors">
-                      <TeamOutlined /> 3500 องค์กร
+                      <TeamOutlined />คืนข้อมูลงดเหล้าเข้าพรรษา
                     </Button>
                   </Dropdown>
                 </>
