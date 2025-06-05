@@ -1,14 +1,13 @@
+// app/form_return/actions/update.ts
 'use server';
 
-import { PrismaClient } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { writeFile } from 'fs/promises';
 import path from 'path';
 import fs from 'fs/promises';
+import prisma from '@/app/lib/db';
 
-const prisma = new PrismaClient();
-
-// ฟังก์ชันสำหรับบันทึกรูปภาพ (เหมือนกับใน post.ts)
+// ฟังก์ชันสำหรับบันทึกรูปภาพ
 async function saveImage(file: File, suffix: string): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
   const timestamp = new Date().getTime();
@@ -24,7 +23,7 @@ async function saveImage(file: File, suffix: string): Promise<string> {
   return `/images/${fileName}`;
 }
 
-// ฟังก์ชันสำหรับลบรูปภาพเก่า (optional)
+// ฟังก์ชันสำหรับลบรูปภาพเก่า
 async function deleteOldImage(imagePath: string): Promise<void> {
   if (!imagePath || !imagePath.startsWith('/images/')) return;
   
@@ -122,7 +121,7 @@ export async function updateFormReturn(formData: FormData): Promise<{
 
     // อัพเดทรูปภาพที่ 1 ถ้ามีการอัพโหลดใหม่
     if (image1File && image1File.size > 0) {
-      // ลบรูปเก่า (optional)
+      // ลบรูปเก่า
       if (existingForm.image1) {
         await deleteOldImage(existingForm.image1);
       }
@@ -134,7 +133,7 @@ export async function updateFormReturn(formData: FormData): Promise<{
 
     // อัพเดทรูปภาพที่ 2 ถ้ามีการอัพโหลดใหม่
     if (image2File && image2File.size > 0) {
-      // ลบรูปเก่า (optional)
+      // ลบรูปเก่า
       if (existingForm.image2) {
         await deleteOldImage(existingForm.image2);
       }
@@ -151,6 +150,7 @@ export async function updateFormReturn(formData: FormData): Promise<{
     });
 
     // รีโหลด cache
+    revalidatePath('/form_return');
     revalidatePath('/dashboard/formReturn');
     revalidatePath(`/dashboard/formReturn/${formId}`);
 

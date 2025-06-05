@@ -1,12 +1,10 @@
-// form_return/actions/form-return/delete.ts
+// app/form_return/actions/delete.ts
 'use server';
 
-import { PrismaClient } from '@prisma/client';
 import { unlink } from 'fs/promises';
 import path from 'path';
 import { revalidatePath } from 'next/cache';
-
-const prisma = new PrismaClient();
+import prisma from '@/app/lib/db';
 
 export async function deleteFormReturn(id: number): Promise<{
   success: boolean;
@@ -29,8 +27,12 @@ export async function deleteFormReturn(id: number): Promise<{
     // ลบรูปภาพที่เกี่ยวข้อง
     const deleteImage = async (imagePath: string | null) => {
       if (imagePath) {
-        const filePath = path.join(process.cwd(), 'public', imagePath);
-        await unlink(filePath).catch(err => console.error('Failed to delete image:', err));
+        try {
+          const filePath = path.join(process.cwd(), 'public', imagePath);
+          await unlink(filePath);
+        } catch (err) {
+          console.error('Failed to delete image:', err);
+        }
       }
     };
 
@@ -46,6 +48,7 @@ export async function deleteFormReturn(id: number): Promise<{
 
     // Revalidate cache
     revalidatePath('/form_return');
+    revalidatePath('/dashboard/formReturn');
 
     return { success: true };
   } catch (error) {
@@ -109,6 +112,7 @@ export async function softDeleteFormReturn(id: number): Promise<{
     // });
 
     revalidatePath('/form_return');
+    revalidatePath('/dashboard/formReturn');
 
     return { success: true };
   } catch (error) {

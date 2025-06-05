@@ -1,37 +1,110 @@
 // app/form_return/actions/get.ts
 'use server';
 
-import { PrismaClient } from '@prisma/client';
 import { FormReturnData } from '@/types/form-return';
 import { revalidateTag } from 'next/cache';
+import prisma from '@/app/lib/db';
 
-// ปรับ Prisma Client สำหรับ production
-const prisma = new PrismaClient({
- log: process.env.NODE_ENV === 'development' ? ['error'] : [],
- errorFormat: 'minimal',
-});
+export async function getFormReturns(params: {
+ search?: string;
+ page?: number;
+ limit?: number;
+ year?: number;
+} = {}): Promise<{
+ forms: FormReturnData[];
+ totalItems: number;
+ totalPages: number;
+ currentPage: number;
+ error?: string;
+}> {
+ const { 
+   search = '', 
+   page = 1, 
+   limit = 20, 
+   year 
+ } = params;
+ 
+ const validatedPage = Math.max(1, page);
+ const validatedLimit = Math.min(Math.max(1, limit), 100);
+ const skip = (validatedPage - 1) * validatedLimit;
 
-// Connection pool management
-let isConnected = false;
+ try {
+   // Build where condition
+   const whereCondition: any = {};
 
-async function ensureConnection() {
- if (!isConnected) {
-   try {
-     await prisma.$connect();
-     isConnected = true;
-   } catch (error) {
-     console.error('Database connection failed:', error);
-     throw new Error('ไม่สามารถเชื่อมต่อฐานข้อมูลได้');
+   if (search.trim()) {
+     whereCondition.OR = [
+       { firstName: { contains: search.trim() } },
+       { lastName: { contains: search.trim() } },
+       { organizationName: { contains: search.trim() } },
+       { phoneNumber: { contains: search.trim() } },
+       { district: { contains: search.trim() } },
+       { amphoe: { contains: search.trim() } },
+       { province: { contains: search.trim() } },
+     ];
    }
- }
-}
 
-// Graceful shutdown
-if (typeof process !== 'undefined') {
- process.on('beforeExit', async () => {
-   await prisma.$disconnect();
-   isConnected = false;
- });
+   if (year && year > 2000 && year < 3000) {
+     const startOfYear = new Date(`${year}-01-01T00:00:00.000Z`);
+     const endOfYear = new Date(`${year + 1}-01-01T00:00:00.000Z`);
+     
+     whereCondition.createdAt = {
+       gte: startOfYear,
+       lt: endOfYear
+     };
+   }
+
+   // Execute queries
+   const [forms, totalItems] = await Promise.all([
+     prisma.form_return.findMany({
+       where: whereCondition,
+       select: {
+         id: true,
+         firstName: true,
+         lastName: true,
+         organizationName: true,
+         addressLine1: true,
+         district: true,
+         amphoe: true,
+         province: true,
+         zipcode: true,
+         type: true,
+         phoneNumber: true,
+         numberOfSigners: true,
+         image1: true,
+         image2: true,
+         createdAt: true,
+         updatedAt: true,
+       },
+       orderBy: { createdAt: 'desc' },
+       skip,
+       take: validatedLimit,
+     }),
+     prisma.form_return.count({
+       where: whereCondition,
+     }),
+   ]);
+
+   const totalPages = Math.ceil(totalItems / validatedLimit);
+
+   return { 
+     forms: forms as FormReturnData[], 
+     totalItems, 
+     totalPages,
+     currentPage: validatedPage,
+   };
+
+ } catch (error) {
+   console.error('Error fetching forms:', error);
+   
+   return { 
+     forms: [], 
+     totalItems: 0, 
+     totalPages: 0,
+     currentPage: validatedPage,
+     error: error instanceof Error ? error.message : 'เกิดข้อผิดพลาดในการดึงข้อมูล'
+   };
+ }
 }
 
 export async function getFormReturnById(id: number): Promise<{
@@ -40,8 +113,6 @@ export async function getFormReturnById(id: number): Promise<{
  error?: string;
 }> {
  try {
-   await ensureConnection();
-
    const form = await prisma.form_return.findUnique({
      where: { id },
      select: {
@@ -78,130 +149,6 @@ export async function getFormReturnById(id: number): Promise<{
  }
 }
 
-export async function getFormReturns(params: {
- search?: string;
- page?: number;
- limit?: number;
- year?: number;
-} = {}): Promise<{
- forms: FormReturnData[];
- totalItems: number;
- totalPages: number;
- currentPage: number;
- error?: string;
-}> {
- const { 
-   search = '', 
-   page = 1, 
-   limit = 20, 
-   year 
- } = params;
- 
- // Validate parameters
- const validatedPage = Math.max(1, page);
- const validatedLimit = Math.min(Math.max(1, limit), 100);
- const skip = (validatedPage - 1) * validatedLimit;
-
- try {
-   await ensureConnection();
-
-   // Build where condition
-   const whereCondition: any = {};
-
-   if (search.trim()) {
-     whereCondition.OR = [
-       { firstName: { contains: search.trim() } },
-       { lastName: { contains: search.trim() } },
-       { organizationName: { contains: search.trim() } },
-       { phoneNumber: { contains: search.trim() } },
-       { district: { contains: search.trim() } },
-       { amphoe: { contains: search.trim() } },
-       { province: { contains: search.trim() } },
-     ];
-   }
-
-   if (year && year > 2000 && year < 3000) {
-     const startOfYear = new Date(`${year}-01-01T00:00:00.000Z`);
-     const endOfYear = new Date(`${year + 1}-01-01T00:00:00.000Z`);
-     
-     whereCondition.createdAt = {
-       gte: startOfYear,
-       lt: endOfYear
-     };
-   }
-
-   // Execute queries with timeout
-   const queryPromise = prisma.$transaction([
-     prisma.form_return.findMany({
-       where: whereCondition,
-       select: {
-         id: true,
-         firstName: true,
-         lastName: true,
-         organizationName: true,
-         addressLine1: true,
-         district: true,
-         amphoe: true,
-         province: true,
-         zipcode: true,
-         type: true,
-         phoneNumber: true,
-         numberOfSigners: true,
-         image1: true,
-         image2: true,
-         createdAt: true,
-         updatedAt: true,
-       },
-       orderBy: { createdAt: 'desc' },
-       skip,
-       take: validatedLimit,
-     }),
-     prisma.form_return.count({
-       where: whereCondition,
-     }),
-   ]);
-
-   const timeoutPromise = new Promise<never>((_, reject) => 
-     setTimeout(() => reject(new Error('Query timeout')), 15000)
-   );
-
-   const [forms, totalItems] = await Promise.race([
-     queryPromise,
-     timeoutPromise
-   ]);
-
-   const totalPages = Math.ceil(totalItems / validatedLimit);
-
-   return { 
-     forms: forms as FormReturnData[], 
-     totalItems, 
-     totalPages,
-     currentPage: validatedPage,
-   };
-
- } catch (error) {
-   console.error('Error fetching forms:', error);
-   
-   return { 
-     forms: [], 
-     totalItems: 0, 
-     totalPages: 0,
-     currentPage: validatedPage,
-     error: error instanceof Error ? error.message : 'เกิดข้อผิดพลาดในการดึงข้อมูล'
-   };
- }
-}
-
-// Real-time version (ใช้เป็น alias ของ getFormReturns)
-export async function getFormReturnsRealtime(searchParams: {
- search?: string;
- page?: number;
- limit?: number;
- year?: number;
-}) {
- return getFormReturns(searchParams);
-}
-
 export async function getFormReturnStats(): Promise<{
  totalForms: number;
  totalSigners: number;
@@ -211,9 +158,6 @@ export async function getFormReturnStats(): Promise<{
  error?: string;
 }> {
  try {
-   await ensureConnection();
-
-   // ใช้ปีปัจจุบันแทนการ hardcode
    const currentYear = new Date().getFullYear();
    const previousYear = currentYear - 1;
    
@@ -222,52 +166,9 @@ export async function getFormReturnStats(): Promise<{
    const previousYearStart = new Date(`${previousYear}-01-01T00:00:00.000Z`);
    const previousYearEnd = new Date(`${previousYear + 1}-01-01T00:00:00.000Z`);
 
-   // Current month for growth calculation
    const now = new Date();
    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
    const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-
-   const queryPromise = prisma.$transaction([
-     // Total forms
-     prisma.form_return.count(),
-     
-     // Total signers
-     prisma.form_return.aggregate({
-       _sum: { numberOfSigners: true }
-     }),
-     
-     // Current year count
-     prisma.form_return.count({
-       where: {
-         createdAt: { gte: currentYearStart, lt: currentYearEnd }
-       }
-     }),
-     
-     // Previous year count
-     prisma.form_return.count({
-       where: {
-         createdAt: { gte: previousYearStart, lt: previousYearEnd }
-       }
-     }),
-     
-     // Current month count
-     prisma.form_return.count({
-       where: {
-         createdAt: { gte: currentMonthStart }
-       }
-     }),
-     
-     // Previous month count
-     prisma.form_return.count({
-       where: {
-         createdAt: { gte: previousMonthStart, lt: currentMonthStart }
-       }
-     }),
-   ]);
-
-   const timeoutPromise = new Promise<never>((_, reject) => 
-     setTimeout(() => reject(new Error('Stats query timeout')), 10000)
-   );
 
    const [
      totalForms,
@@ -276,9 +177,33 @@ export async function getFormReturnStats(): Promise<{
      previousYearCount,
      currentMonthCount,
      previousMonthCount
-   ] = await Promise.race([queryPromise, timeoutPromise]);
+   ] = await Promise.all([
+     prisma.form_return.count(),
+     prisma.form_return.aggregate({
+       _sum: { numberOfSigners: true }
+     }),
+     prisma.form_return.count({
+       where: {
+         createdAt: { gte: currentYearStart, lt: currentYearEnd }
+       }
+     }),
+     prisma.form_return.count({
+       where: {
+         createdAt: { gte: previousYearStart, lt: previousYearEnd }
+       }
+     }),
+     prisma.form_return.count({
+       where: {
+         createdAt: { gte: currentMonthStart }
+       }
+     }),
+     prisma.form_return.count({
+       where: {
+         createdAt: { gte: previousMonthStart, lt: currentMonthStart }
+       }
+     }),
+   ]);
 
-   // Calculate monthly growth percentage
    const monthlyGrowth = previousMonthCount > 0 
      ? ((currentMonthCount - previousMonthCount) / previousMonthCount) * 100 
      : currentMonthCount > 0 ? 100 : 0;
@@ -310,8 +235,6 @@ export async function checkPhoneNumberExists(
  excludeId?: number
 ): Promise<boolean> {
  try {
-   await ensureConnection();
-
    if (!phoneNumber.trim()) return false;
 
    const form = await prisma.form_return.findFirst({
@@ -340,12 +263,10 @@ export async function revalidateFormReturns() {
  }
 }
 
-// Search suggestions (แก้ไขแล้วสำหรับ MySQL)
+// Search suggestions
 export async function getSearchSuggestions(query: string): Promise<string[]> {
  try {
    if (!query.trim() || query.length < 2) return [];
-
-   await ensureConnection();
 
    const suggestions = await prisma.form_return.findMany({
      where: {
@@ -363,7 +284,6 @@ export async function getSearchSuggestions(query: string): Promise<string[]> {
        province: true,
      },
      take: 10,
-     distinct: ['organizationName']
    });
 
    const uniqueSuggestions = new Set<string>();
@@ -390,8 +310,6 @@ export async function getSearchSuggestions(query: string): Promise<string[]> {
 // เพิ่มฟังก์ชันสำหรับ export data
 export async function getFormReturnsForExport(year?: number): Promise<FormReturnData[]> {
  try {
-   await ensureConnection();
-
    const whereCondition: any = {};
 
    if (year && year > 2000 && year < 3000) {
@@ -407,12 +325,117 @@ export async function getFormReturnsForExport(year?: number): Promise<FormReturn
    const forms = await prisma.form_return.findMany({
      where: whereCondition,
      orderBy: { createdAt: 'desc' },
-     // ไม่จำกัดจำนวนสำหรับ export
    });
 
    return forms as FormReturnData[];
  } catch (error) {
    console.error('Error fetching forms for export:', error);
    return [];
+ }
+}
+
+// Real-time version (alias ของ getFormReturns)
+export async function getFormReturnsRealtime(searchParams: {
+ search?: string;
+ page?: number;
+ limit?: number;
+ year?: number;
+}) {
+ return getFormReturns(searchParams);
+}
+
+// ฟังก์ชันสำหรับดึงข้อมูล summary ตามปี
+export async function getFormReturnsSummaryByYear(): Promise<{
+ success: boolean;
+ data?: {
+   year: number;
+   totalForms: number;
+   totalSigners: number;
+ }[];
+ error?: string;
+}> {
+ try {
+   const currentYear = new Date().getFullYear();
+   const years = [currentYear, currentYear - 1, currentYear - 2];
+   
+   const summaryPromises = years.map(async (year) => {
+     const startOfYear = new Date(`${year}-01-01T00:00:00.000Z`);
+     const endOfYear = new Date(`${year + 1}-01-01T00:00:00.000Z`);
+     
+     const [totalForms, totalSignersResult] = await Promise.all([
+       prisma.form_return.count({
+         where: {
+           createdAt: { gte: startOfYear, lt: endOfYear }
+         }
+       }),
+       prisma.form_return.aggregate({
+         where: {
+           createdAt: { gte: startOfYear, lt: endOfYear }
+         },
+         _sum: { numberOfSigners: true }
+       })
+     ]);
+     
+     return {
+       year,
+       totalForms,
+       totalSigners: totalSignersResult._sum.numberOfSigners || 0
+     };
+   });
+   
+   const data = await Promise.all(summaryPromises);
+   
+   return { success: true, data };
+ } catch (error) {
+   console.error('Error fetching summary by year:', error);
+   return { 
+     success: false, 
+     error: error instanceof Error ? error.message : 'เกิดข้อผิดพลาดในการดึงข้อมูลสรุป' 
+   };
+ }
+}
+
+// ฟังก์ชันสำหรับดึงข้อมูลตามจังหวัด
+export async function getFormReturnsByProvince(province?: string): Promise<{
+ success: boolean;
+ data?: {
+   province: string;
+   totalForms: number;
+   totalSigners: number;
+ }[];
+ error?: string;
+}> {
+ try {
+   const whereCondition = province ? { province } : {};
+   
+   const groupedData = await prisma.form_return.groupBy({
+     by: ['province'],
+     where: whereCondition,
+     _count: {
+       id: true
+     },
+     _sum: {
+       numberOfSigners: true
+     },
+     orderBy: {
+       _count: {
+         id: 'desc'
+       }
+     }
+   });
+   
+   const data = groupedData.map(item => ({
+     province: item.province,
+     totalForms: item._count.id,
+     totalSigners: item._sum.numberOfSigners || 0
+   }));
+   
+   return { success: true, data };
+ } catch (error) {
+   console.error('Error fetching by province:', error);
+   return { 
+     success: false, 
+     error: error instanceof Error ? error.message : 'เกิดข้อผิดพลาดในการดึงข้อมูลตามจังหวัด' 
+   };
  }
 }
