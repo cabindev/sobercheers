@@ -1,6 +1,6 @@
 // app/form_return/page.tsx
 import { Suspense } from 'react';
-import { getFormReturns } from '@/lib/actions/form-return/get';
+import { getFormReturns } from '@/app/form_return/actions/get';
 import SearchForm from '@/components/form-return/SearchForm';
 import StreamedFormReturnList from '@/components/form-return/StreamedFormReturnList';
 

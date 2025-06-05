@@ -1,4 +1,4 @@
-import { getFormReturnStats, getFormReturns } from '@/lib/actions/form-return/get';
+import { getFormReturnStats, getFormReturns } from '@/app/form_return/actions/get';
 import DashboardFormReturn from '@/components/form-return/DashboardFormReturn';
 
 // เพิ่มบรรทัดนี้

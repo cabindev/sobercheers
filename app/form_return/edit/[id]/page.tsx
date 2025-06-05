@@ -1,6 +1,6 @@
 // app/form_return/edit/[id]/page.tsx
 import { notFound } from 'next/navigation';
-import { getFormReturnById } from '@/lib/actions/form-return/get';
+import { getFormReturnById } from '@/app/form_return/actions/get';
 import EditFormReturn from '@/components/form-return/EditFormReturn';
 
 interface EditFormReturnPageProps {

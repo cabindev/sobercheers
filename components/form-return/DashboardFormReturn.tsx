@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
-import { getFormReturnsRealtime } from '@/lib/actions/form-return/get';
+import { getFormReturnsRealtime } from '@/app/form_return/actions/get';
 import { FormReturnData } from '@/types/form-return';
 import Pagination from '@/components/ui/Pagination';
 import InstagramCard from './InstagramCard';
