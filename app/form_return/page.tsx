@@ -1,6 +1,6 @@
 // app/form_return/page.tsx
 import { Suspense } from 'react';
-import { getFormReturns } from '@/app/form_return/actions/get';
+import { getFormReturns } from './actions/get';
 import SearchForm from '@/components/form-return/SearchForm';
 import StreamedFormReturnList from '@/components/form-return/StreamedFormReturnList';
 
@@ -10,6 +10,7 @@ interface PageProps {
     page?: string;
     limit?: string;
     success?: string;
+    year?: string;
   };
 }
 
@@ -17,8 +18,9 @@ async function getFormReturnData(searchParams: PageProps['searchParams']) {
   const search = searchParams.search || '';
   const page = parseInt(searchParams.page || '1');
   const limit = parseInt(searchParams.limit || '10');
+  const year = searchParams.year ? parseInt(searchParams.year) : undefined;
 
-  return await getFormReturns({ search, page, limit });
+  return await getFormReturns({ search, page, limit, year });
 }
 
 export default function FormReturnPage({ searchParams }: PageProps) {
@@ -88,3 +90,8 @@ function FormReturnListSkeleton() {
     </div>
   );
 }
+
+export const metadata = {
+  title: 'ข้อมูลส่งคืนแคมเปญงดเหล้าเข้าพรรษา',
+  description: 'รายการข้อมูลที่ได้รับการส่งคืนจากองค์กรต่างๆ สำหรับแคมเปญงดเหล้าเข้าพรรษา ปี 2568',
+};
