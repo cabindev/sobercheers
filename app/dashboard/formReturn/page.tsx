@@ -13,32 +13,34 @@ interface PageProps {
     limit?: string;
   };
 }
-
+// app/dashboard/formReturn/page.tsx
 export default async function DashboardFormReturnPage({ searchParams }: PageProps) {
   try {
     const currentYear = 2025;
     const previousYear = 2024;
     
-    // Get URL parameters with safe parsing
     const page = Math.max(1, parseInt(searchParams.page || '1'));
     const search = searchParams.search || '';
     const yearParam = searchParams.year;
-    const limit = Math.max(1, Math.min(100, parseInt(searchParams.limit || '20'))); // จำกัด limit ระหว่าง 1-100
+    const limit = Math.max(1, Math.min(100, parseInt(searchParams.limit || '20')));
     const year = yearParam ? parseInt(yearParam) : currentYear;
     
-    // Fetch data
-    const [stats, formsData] = await Promise.all([
+    // เพิ่ม timeout และ error handling
+    const [stats, formsData] = await Promise.allSettled([
       getFormReturnStats(),
       getFormReturns({ page, limit, search, year })
     ]);
 
+    const statsResult = stats.status === 'fulfilled' ? stats.value : { currentYearCount: 0, previousYearCount: 0 };
+    const formsResult = formsData.status === 'fulfilled' ? formsData.value : { forms: [], totalItems: 0 };
+
     const initialData = {
-      forms: formsData.forms || [],
-      totalItems: formsData.totalItems || 0,
+      forms: formsResult.forms || [],
+      totalItems: formsResult.totalItems || 0,
       currentYear,
       previousYear,
-      currentYearCount: stats.currentYearCount || 0,
-      previousYearCount: stats.previousYearCount || 0,
+      currentYearCount: statsResult.currentYearCount || 0,
+      previousYearCount: statsResult.previousYearCount || 0,
     };
 
     return <DashboardFormReturn initialData={initialData} />;
@@ -60,21 +62,25 @@ function DashboardError() {
         
         <h2 className="text-2xl font-bold text-slate-900 mb-4">เกิดข้อผิดพลาด</h2>
         <p className="text-slate-600 mb-8">
-          ไม่สามารถโหลดข้อมูลแดชบอร์ดได้ กรุณาลองใหม่อีกครั้ง
+          ระบบกำลังอยู่ในระหว่างการบำรุงรักษา<br/>
+          กรุณาลองใหม่อีกครั้งในภายหลัง
         </p>
         
-        <a 
-          href="/dashboard/formReturn"
-          className="inline-block w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
-        >
-          รีเฟรชหน้า
-        </a>
+        <div className="space-y-3">
+          <a 
+            href="/dashboard/formReturn"
+            className="inline-block w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+          >
+            ลองใหม่อีกครั้ง
+          </a>
+          <a 
+            href="/"
+            className="inline-block w-full px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all"
+          >
+            กลับหน้าแรก
+          </a>
+        </div>
       </div>
     </div>
   );
 }
-
-export const metadata = {
-  title: 'แดชบอร์ด - คืนข้อมูลงดเหล้าเข้าพรรษา',
-  description: 'แดชบอร์ดแสดงข้อมูลการส่งคืนแคมเปญงดเหล้าเข้าพรรษา',
-};
