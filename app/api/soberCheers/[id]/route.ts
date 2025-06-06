@@ -1,21 +1,33 @@
+//app/api/soberCheers/[id]/route.ts
 import { PrismaClient } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 
 const prisma = new PrismaClient();
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params; // เพิ่ม await ตรงนี้
   try {
     const soberCheers = await prisma.soberCheers.findUnique({
-      where: { id: Number(params.id) },
+      where: { id: Number(id) },
     });
     return NextResponse.json(soberCheers);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch soberCheers' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to fetch soberCheers' },
+      { status: 500 }
+    );
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params; // เพิ่ม await ตรงนี้
   const formData = await req.json();
 
   const {
@@ -39,15 +51,29 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     healthImpact,
   } = formData;
 
-  if (alcoholConsumption === 'ดื่ม (ย้อนหลังไป 1 ปี)' || alcoholConsumption === 'เลิกดื่มมาแล้วมากกว่า 1 ปี แต่ยังไม่ถึง 3 ปี') {
-    if (!drinkingFrequency || !intentPeriod || (monthlyExpense && isNaN(parseInt(monthlyExpense)))) {
-      return NextResponse.json({ error: 'Missing required fields for current drinkers or recent quitters' }, { status: 400 });
+  if (
+    alcoholConsumption === 'ดื่ม (ย้อนหลังไป 1 ปี)' ||
+    alcoholConsumption ===
+      'เลิกดื่มมาแล้วมากกว่า 1 ปี แต่ยังไม่ถึง 3 ปี'
+  ) {
+    if (
+      !drinkingFrequency ||
+      !intentPeriod ||
+      (monthlyExpense && isNaN(parseInt(monthlyExpense)))
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            'Missing required fields for current drinkers or recent quitters',
+        },
+        { status: 400 }
+      );
     }
   }
 
   try {
     const updatedSoberCheers = await prisma.soberCheers.update({
-      where: { id: Number(params.id) },
+      where: { id: Number(id) },
       data: {
         firstName,
         lastName,
@@ -62,15 +88,27 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         phone: phone || null,
         job,
         alcoholConsumption,
-        drinkingFrequency: ['ดื่ม (ย้อนหลังไป 1 ปี)', 'เลิกดื่มมาแล้วมากกว่า 1 ปี แต่ยังไม่ถึง 3 ปี'].includes(alcoholConsumption)
-          ? drinkingFrequency
-          : null,
-        intentPeriod: ['ดื่ม (ย้อนหลังไป 1 ปี)', 'เลิกดื่มมาแล้วมากกว่า 1 ปี แต่ยังไม่ถึง 3 ปี'].includes(alcoholConsumption)
-          ? intentPeriod
-          : null,
-        monthlyExpense: ['ดื่ม (ย้อนหลังไป 1 ปี)', 'เลิกดื่มมาแล้วมากกว่า 1 ปี แต่ยังไม่ถึง 3 ปี'].includes(alcoholConsumption)
-          ? parseInt(monthlyExpense.toString().replace(/,/g, '')) || 0
-          : null,
+        drinkingFrequency:
+          [
+            'ดื่ม (ย้อนหลังไป 1 ปี)',
+            'เลิกดื่มมาแล้วมากกว่า 1 ปี แต่ยังไม่ถึง 3 ปี',
+          ].includes(alcoholConsumption)
+            ? drinkingFrequency
+            : null,
+        intentPeriod:
+          [
+            'ดื่ม (ย้อนหลังไป 1 ปี)',
+            'เลิกดื่มมาแล้วมากกว่า 1 ปี แต่ยังไม่ถึง 3 ปี',
+          ].includes(alcoholConsumption)
+            ? intentPeriod
+            : null,
+        monthlyExpense:
+          [
+            'ดื่ม (ย้อนหลังไป 1 ปี)',
+            'เลิกดื่มมาแล้วมากกว่า 1 ปี แต่ยังไม่ถึง 3 ปี',
+          ].includes(alcoholConsumption)
+            ? parseInt(monthlyExpense.toString().replace(/,/g, '')) || 0
+            : null,
         motivations,
         healthImpact,
       },
@@ -80,37 +118,44 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
     return NextResponse.json(updatedSoberCheers);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to update soberCheers' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to update soberCheers' },
+      { status: 500 }
+    );
   }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-  const id = Number(params.id);
+export async function PATCH(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params; // เพิ่ม await ตรงนี้
   const data = await req.json();
 
   try {
-    // ตรวจสอบว่า id ถูกต้องและมีอยู่จริง
     const existingSoberCheer = await prisma.soberCheers.findUnique({
-      where: { id },
+      where: { id: Number(id) },
     });
 
     if (!existingSoberCheer) {
-      return NextResponse.json({ error: 'SoberCheer not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'SoberCheer not found' },
+        { status: 404 }
+      );
     }
 
-    // แปลงข้อมูลวันที่เกิดให้เป็น Date object
     if (data.birthday) {
       data.birthday = new Date(data.birthday);
     }
 
-    // แปลง monthlyExpense เป็นตัวเลข (ถ้ามี)
     if (data.monthlyExpense) {
-      data.monthlyExpense = parseInt(data.monthlyExpense.toString().replace(/,/g, ''));
+      data.monthlyExpense = parseInt(
+        data.monthlyExpense.toString().replace(/,/g, '')
+      );
     }
 
-    // อัปเดตข้อมูล
     const updatedSoberCheer = await prisma.soberCheers.update({
-      where: { id },
+      where: { id: Number(id) },
       data: {
         firstName: data.firstName,
         lastName: data.lastName,
@@ -130,20 +175,30 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json(updatedSoberCheer);
   } catch (error) {
     console.error('Error updating SoberCheer:', error);
-    return NextResponse.json({ error: 'Failed to update SoberCheer' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to update SoberCheer' },
+      { status: 500 }
+    );
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params; // เพิ่ม await ตรงนี้
   try {
     const deletedSoberCheers = await prisma.soberCheers.delete({
-      where: { id: Number(params.id) },
+      where: { id: Number(id) },
     });
 
     revalidatePath('/soberCheers');
 
     return NextResponse.json(deletedSoberCheers);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete soberCheers' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to delete soberCheers' },
+      { status: 500 }
+    );
   }
 }

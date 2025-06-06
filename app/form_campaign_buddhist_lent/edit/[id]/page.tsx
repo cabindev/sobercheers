@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent, use } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { data } from '@/app/data/regions';
@@ -26,7 +26,10 @@ interface CampaignFormData {
   healthImpact: string;
 }
 
-export default function EditCampaignBuddhistLent({ params }: { params: { id: string } })  {
+export default function EditCampaignBuddhistLent({ params }: { params: Promise<{ id: string }> }) {
+  // ใช้ use() hook สำหรับ Client Component
+  const { id } = use(params);
+  
   const [formData, setFormData] = useState<CampaignFormData>({
     firstName: '',
     lastName: '',
@@ -56,9 +59,9 @@ export default function EditCampaignBuddhistLent({ params }: { params: { id: str
 
   useEffect(() => {
     const fetchCampaign = async () => {
-        if (params.id) {
+        if (id) {
             try {
-                const res = await axios.get(`/api/campaign-buddhist-lent/${params.id}`);
+                const res = await axios.get(`/api/campaign-buddhist-lent/${id}`);
                 const campaign = res.data;
 
                 let motivationsArray = [];
@@ -92,7 +95,7 @@ export default function EditCampaignBuddhistLent({ params }: { params: { id: str
         }
     };
     fetchCampaign();
-}, [params.id]);
+}, [id]); // เปลี่ยนจาก params.id เป็น id
 
   
   
@@ -197,7 +200,7 @@ export default function EditCampaignBuddhistLent({ params }: { params: { id: str
             monthlyExpense: formData.monthlyExpense ? parseInt(formData.monthlyExpense.replace(/,/g, '')) : null,
             motivations: JSON.stringify(formData.motivations), // ส่งกลับเป็น JSON string
         };
-        await axios.put(`/api/campaign-buddhist-lent/${params.id}`, dataToSend);
+        await axios.put(`/api/campaign-buddhist-lent/${id}`, dataToSend); // เปลี่ยนจาก params.id เป็น id
         router.push('/profile');
     } catch (error: any) {
         console.error('Error updating campaign:', error);
@@ -205,13 +208,14 @@ export default function EditCampaignBuddhistLent({ params }: { params: { id: str
     }
 };
 
-
+  // ... ส่วน JSX ที่เหลือเหมือนเดิม
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+      {/* ส่วน JSX ที่เหลือเหมือนเดิมทุกอย่าง - ไม่ต้องเปลี่ยน */}
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">

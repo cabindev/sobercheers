@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent, use } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { data } from '@/app/data/regions';
@@ -26,7 +26,10 @@ interface SoberCheersFormData {
   healthImpact: string;
 }
 
-export default function EditSoberCheers({ params }: { params: { id: string } }) {
+export default function EditSoberCheers({ params }: { params: Promise<{ id: string }> }) {
+  // ใช้ use() hook สำหรับ Client Component
+  const { id } = use(params);
+  
   const [formData, setFormData] = useState<SoberCheersFormData>({
     firstName: '',
     lastName: '',
@@ -57,7 +60,7 @@ export default function EditSoberCheers({ params }: { params: { id: string } }) 
   useEffect(() => {
     const fetchSoberCheers = async () => {
       try {
-        const res = await axios.get(`/api/soberCheers/${params.id}`);
+        const res = await axios.get(`/api/soberCheers/${id}`); // เปลี่ยนจาก params.id เป็น id
         const data = res.data;
         setFormData({
           ...data,
@@ -78,7 +81,7 @@ export default function EditSoberCheers({ params }: { params: { id: string } }) 
       }
     };
     fetchSoberCheers();
-  }, [params.id]);
+  }, [id]); // เปลี่ยนจาก params.id เป็น id
 
   const calculateAge = (birthDate: string) => {
     const today = new Date();
@@ -181,7 +184,7 @@ export default function EditSoberCheers({ params }: { params: { id: string } }) 
     }
   
     try {
-      const res = await axios.put(`/api/soberCheers/${params.id}`, {
+      const res = await axios.put(`/api/soberCheers/${id}`, { // เปลี่ยนจาก params.id เป็น id
         ...formData,
         monthlyExpense: formData.monthlyExpense ? parseInt(formData.monthlyExpense.replace(/,/g, '')) : null,
         motivations: JSON.stringify(formData.motivations),
@@ -210,6 +213,8 @@ export default function EditSoberCheers({ params }: { params: { id: string } }) 
             <h1 className="text-2xl font-semibold mb-6 text-center text-amber-600">
               แก้ไขข้อมูล SOBER CHEERs
             </h1>
+            
+            {/* ส่วน JSX ที่เหลือเหมือนเดิมทุกอย่าง - ไม่ต้องเปลี่ยน */}
             <div className="flex space-x-4">
               <div className="w-1/2">
                 <label

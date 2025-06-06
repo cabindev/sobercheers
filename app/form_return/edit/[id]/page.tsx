@@ -4,13 +4,14 @@ import { getFormReturnById } from '@/app/form_return/actions/get';
 import EditFormReturn from '@/components/form-return/EditFormReturn';
 
 interface EditFormReturnPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EditFormReturnPage({ params }: EditFormReturnPageProps) {
-  const formId = parseInt(params.id);
+  const { id } = await params; // เพิ่ม await ตรงนี้
+  const formId = parseInt(id);
   
   if (isNaN(formId)) {
     notFound();
@@ -47,7 +48,8 @@ export default async function EditFormReturnPage({ params }: EditFormReturnPageP
 
 // เพิ่ม metadata สำหรับ SEO
 export async function generateMetadata({ params }: EditFormReturnPageProps) {
-  const formId = parseInt(params.id);
+  const { id } = await params; // เพิ่ม await ตรงนี้ด้วย
+  const formId = parseInt(id);
   
   if (isNaN(formId)) {
     return {

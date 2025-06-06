@@ -5,16 +5,22 @@ import SearchForm from '@/components/form-return/SearchForm';
 import StreamedFormReturnList from '@/components/form-return/StreamedFormReturnList';
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     search?: string;
     page?: string;
     limit?: string;
     success?: string;
     year?: string;
-  };
+  }>;
 }
 
-async function getFormReturnData(searchParams: PageProps['searchParams']) {
+async function getFormReturnData(searchParams: {
+  search?: string;
+  page?: string;
+  limit?: string;
+  success?: string;
+  year?: string;
+}) {
   const search = searchParams.search || '';
   const page = parseInt(searchParams.page || '1');
   const limit = parseInt(searchParams.limit || '10');
@@ -23,11 +29,13 @@ async function getFormReturnData(searchParams: PageProps['searchParams']) {
   return await getFormReturns({ search, page, limit, year });
 }
 
-export default function FormReturnPage({ searchParams }: PageProps) {
-  const formReturnPromise = getFormReturnData(searchParams);
+export default async function FormReturnPage({ searchParams }: PageProps) {
+  // await searchParams ก่อนใช้งาน
+  const params = await searchParams;
+  const formReturnPromise = getFormReturnData(params);
 
   // Success message handling
-  const showSuccess = searchParams.success === 'true';
+  const showSuccess = params.success === 'true';
 
   return (
     <div className="min-h-screen bg-slate-50">

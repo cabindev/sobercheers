@@ -5,9 +5,10 @@ const prisma = new PrismaClient();
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = parseInt(params.id);
+  const { id } = await params; // เพิ่ม await ตรงนี้
+  const userId = parseInt(id);
   const body = await request.json();
 
   if (!body.role || !['member', 'admin'].includes(body.role)) {
@@ -16,7 +17,7 @@ export async function PATCH(
 
   try {
     const updatedUser = await prisma.user.update({
-      where: { id },
+      where: { id: userId },
       data: { role: body.role },
       select: {
         id: true,

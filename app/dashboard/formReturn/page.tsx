@@ -2,20 +2,33 @@
 import { getFormReturnStats, getFormReturns } from '@/app/form_return/actions/get';
 import DashboardFormReturn from '@/components/form-return/DashboardFormReturn';
 import DashboardError from '@/components/dashboard/DashboardError';
-import { DashboardPageProps,DashboardInitialData } from '@/types/dashboard';
+import { DashboardInitialData } from '@/types/dashboard';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default async function DashboardFormReturnPage({ searchParams }: DashboardPageProps) {
+// เปลี่ยน type ของ searchParams
+type PageProps = {
+  searchParams: Promise<{
+    page?: string;
+    search?: string;
+    year?: string;
+    limit?: string;
+  }>;
+};
+
+export default async function DashboardFormReturnPage({ searchParams }: PageProps) {
   try {
+    // await searchParams ก่อนใช้งาน
+    const params = await searchParams;
+    
     const currentYear = 2025;
     const previousYear = 2024;
     
-    const page = Math.max(1, parseInt(searchParams.page || '1'));
-    const search = searchParams.search || '';
-    const yearParam = searchParams.year;
-    const limit = Math.max(1, Math.min(100, parseInt(searchParams.limit || '20')));
+    const page = Math.max(1, parseInt(params.page || '1'));
+    const search = params.search || '';
+    const yearParam = params.year;
+    const limit = Math.max(1, Math.min(100, parseInt(params.limit || '20')));
     const year = yearParam ? parseInt(yearParam) : currentYear;
     
     // เพิ่ม logging
@@ -81,6 +94,7 @@ export default async function DashboardFormReturnPage({ searchParams }: Dashboar
     return <DashboardError error={error} />;
   }
 }
+
 export const metadata = {
   title: 'Dashboard - ข้อมูลส่งคืนแคมเปญงดเหล้าเข้าพรรษา',
   description: 'แดชบอร์ดสำหรับจัดการข้อมูลส่งคืนแคมเปญงดเหล้าเข้าพรรษา',
