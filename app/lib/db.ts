@@ -3,11 +3,7 @@ import { PrismaClient } from '@prisma/client'
 
 const prismaClientSingleton = () => {
   return new PrismaClient({
-    // ✅ ปรับปรุง log configuration
-    log: process.env.NODE_ENV === 'development' 
-      ? ['error', 'warn'] // ลดจาก ['query', 'error', 'warn']
-      : ['error'], // production ให้ log เฉพาะ error
-    errorFormat: 'minimal',
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   })
 }
 
