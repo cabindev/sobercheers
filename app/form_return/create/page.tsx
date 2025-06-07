@@ -89,13 +89,20 @@ export default function CreateFormReturn() {
         if (image1File) submitFormData.append('image1', image1File);
         if (image2File) submitFormData.append('image2', image2File);
 
+        // ✅ เพิ่ม loading toast
+        const loadingToast = toast.loading('กำลังบันทึกข้อมูล...');
+
         const result = await createFormReturn(submitFormData);
+        
+        // ✅ ปิด loading toast
+        toast.dismiss(loadingToast);
         
         if (result.success) {
           toast.success('ส่งข้อมูลสำเร็จ!');
           
-          // ✅ Navigate และ refresh ทันที
-          router.push('/form_return?success=true');
+          // ✅ ส่ง ID ไปด้วยเพื่อแสดงข้อมูลที่เพิ่งสร้าง
+          const newId = result.data?.id;
+          router.push(`/form_return?success=true&newId=${newId}`);
           router.refresh();
           
           // ✅ รอสักครู่แล้ว refresh อีกครั้งเพื่อให้แน่ใจ
@@ -178,9 +185,9 @@ export default function CreateFormReturn() {
               <button
                 type="button"
                 onClick={prevStep}
-                disabled={currentStep === 1}
+                disabled={currentStep === 1 || isPending}
                 className={`px-6 py-3 rounded-lg font-medium transition-all ${
-                  currentStep === 1
+                  currentStep === 1 || isPending
                     ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
                     : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
                 }`}
@@ -192,7 +199,8 @@ export default function CreateFormReturn() {
                 <button
                   type="button"
                   onClick={nextStep}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all"
+                  disabled={isPending}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   ต่อไป
                 </button>
