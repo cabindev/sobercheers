@@ -93,9 +93,16 @@ export default function CreateFormReturn() {
         
         if (result.success) {
           toast.success('ส่งข้อมูลสำเร็จ!');
-          // เปลี่ยนเป็นหน้าที่มีอยู่จริง
+          
+          // ✅ Navigate และ refresh ทันที
           router.push('/form_return?success=true');
           router.refresh();
+          
+          // ✅ รอสักครู่แล้ว refresh อีกครั้งเพื่อให้แน่ใจ
+          setTimeout(() => {
+            router.refresh();
+          }, 1000);
+          
         } else {
           toast.error(result.error || 'เกิดข้อผิดพลาด');
         }

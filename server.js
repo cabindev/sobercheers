@@ -10,10 +10,15 @@ app.prepare().then(() => {
     const server = express();
 
     // ตั้งค่าเสิร์ฟไฟล์ static จากโฟลเดอร์ public/images
-    server.use('/images', express.static(path.join(__dirname, 'public/images')));
+    server.use('/images', express.static(path.join(__dirname, 'public/images'), {
+        // ไม่ cache ใน development เพื่อให้เห็นรูปใหม่ทันที
+        maxAge: dev ? 0 : '1h'
+    }));
     
-    // ตั้งค่าเสิร์ฟไฟล์ static จากโฟลเดอร์ public/userImages
-    server.use('/img', express.static(path.join(__dirname, 'public/img')));
+    // ตั้งค่าเสิร์ฟไฟล์ static จากโฟลเดอร์ public/img
+    server.use('/img', express.static(path.join(__dirname, 'public/img'), {
+        maxAge: dev ? 0 : '1h'
+    }));
 
     server.all('*', (req, res) => {
         return handle(req, res);
