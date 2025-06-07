@@ -9,7 +9,7 @@ export interface FormReturnData {
   amphoe: string;
   province: string;
   zipcode: string;
-  type?: string;
+  type: string; // ✅ เปลี่ยนจาก optional เป็น required ตาม schema
   phoneNumber: string;
   numberOfSigners: number;
   image1?: string;
@@ -22,8 +22,6 @@ export interface FormReturnCreateData extends Omit<FormReturnData, 'id' | 'creat
   image1File?: File;
   image2File?: File;
 }
-
-
 
 export interface FormStep {
   step: number;
@@ -42,3 +40,15 @@ export interface RegionData {
   type: string;
 }
 
+// ✅ เพิ่ม interface สำหรับ API Response
+export interface FormReturnResponse {
+  success: boolean;
+  data?: FormReturnData;
+  error?: string;
+}
+
+// ✅ เพิ่ม interface สำหรับ validation
+export interface ValidationResult {
+  isValid: boolean;
+  errors: string[];
+}
