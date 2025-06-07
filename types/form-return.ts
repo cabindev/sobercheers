@@ -1,6 +1,6 @@
 // types/form-return.ts
 export interface FormReturnData {
-  id: string;
+  id: number; // ✅ เปลี่ยนจาก string เป็น number
   firstName: string;
   lastName: string;
   organizationName: string;
@@ -14,10 +14,9 @@ export interface FormReturnData {
   numberOfSigners: number;
   image1: string;
   image2: string;
-  createdAt: Date | string; // ✅ เพิ่มบรรทัดนี้
-  updatedAt?: Date | string; // ✅ optional
+  createdAt: Date;
+  updatedAt: Date;
 }
-
 export interface FormReturnCreateData extends Omit<FormReturnData, 'id' | 'createdAt' | 'updatedAt'> {
   image1File?: File;
   image2File?: File;
