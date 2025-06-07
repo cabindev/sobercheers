@@ -3,11 +3,12 @@ import { getFormReturnStats, getFormReturns } from '@/app/form_return/actions/ge
 import DashboardFormReturn from '@/components/form-return/DashboardFormReturn';
 import DashboardError from '@/components/dashboard/DashboardError';
 import { DashboardInitialData } from '@/types/dashboard';
+import { unstable_cache } from 'next/cache';
 
+// ✅ ปรับ dynamic และ revalidate
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-// เปลี่ยน type ของ searchParams
 type PageProps = {
   searchParams: Promise<{
     page?: string;
@@ -19,7 +20,6 @@ type PageProps = {
 
 export default async function DashboardFormReturnPage({ searchParams }: PageProps) {
   try {
-    // await searchParams ก่อนใช้งาน
     const params = await searchParams;
     
     const currentYear = 2025;
@@ -31,18 +31,20 @@ export default async function DashboardFormReturnPage({ searchParams }: PageProp
     const limit = Math.max(1, Math.min(100, parseInt(params.limit || '20')));
     const year = yearParam ? parseInt(yearParam) : currentYear;
     
-    // เพิ่ม logging
-    console.log('Dashboard params:', { page, search, year, limit });
-    
-    // เพิ่ม timeout และ error handling
+    // ✅ ใช้ cache สำหรับ stats
+    const getCachedStats = unstable_cache(
+      async () => getFormReturnStats(),
+      ['dashboard-stats'],
+      {
+        tags: ['form-stats'],
+        revalidate: 60, // cache 1 นาที
+      }
+    );
+
     const [stats, formsData] = await Promise.allSettled([
-      getFormReturnStats(),
+      getCachedStats(),
       getFormReturns({ page, limit, search, year })
     ]);
-
-    // Log results
-    console.log('Stats result:', stats);
-    console.log('Forms result:', formsData);
 
     const statsResult = stats.status === 'fulfilled' ? stats.value : {
       totalForms: 0,
@@ -60,19 +62,6 @@ export default async function DashboardFormReturnPage({ searchParams }: PageProp
       currentPage: page,
       error: formsData.status === 'rejected' ? formsData.reason : undefined
     };
-
-    // Log final data
-    console.log('Stats data:', statsResult);
-    console.log('Forms count:', formsResult.forms.length);
-    console.log('Total items:', formsResult.totalItems);
-
-    // ตรวจสอบ error
-    if (statsResult.error || formsResult.error) {
-      console.error('Dashboard errors:', {
-        stats: statsResult.error,
-        forms: formsResult.error
-      });
-    }
 
     const initialData: DashboardInitialData = {
       forms: formsResult.forms || [],
@@ -94,8 +83,3 @@ export default async function DashboardFormReturnPage({ searchParams }: PageProp
     return <DashboardError error={error} />;
   }
 }
-
-export const metadata = {
-  title: 'Dashboard - ข้อมูลส่งคืนแคมเปญงดเหล้าเข้าพรรษา',
-  description: 'แดชบอร์ดสำหรับจัดการข้อมูลส่งคืนแคมเปญงดเหล้าเข้าพรรษา',
-};

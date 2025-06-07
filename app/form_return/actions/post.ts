@@ -117,18 +117,14 @@ export async function createFormReturn(formData: FormData): Promise<{
       },
     });
 
-    // ✅ Revalidate หลายหน้าที่เกี่ยวข้อง
+    // ✅ เฉพาะ revalidatePath เมื่อมีข้อมูลใหม่
     revalidatePath('/form_return');
-    revalidatePath('/form_return/create');
     revalidatePath('/dashboard/formReturn');
-    revalidatePath('/dashboard');
     
-    // ✅ Log สำเร็จ
     if (process.env.NODE_ENV === 'development') {
       console.log('Form return created successfully:', newFormReturn.id);
     }
     
-    // ✅ Return ข้อมูลที่สร้างสำเร็จ รวมทั้ง ID
     return { success: true, data: newFormReturn };
 
   } catch (error) {
@@ -152,7 +148,7 @@ export async function createFormReturn(formData: FormData): Promise<{
   }
 }
 
-// ✅ ปรับปรุง saveImage function - เก็บใน public/images โดยตรง
+// ✅ Enhanced saveImage function with cache busting timestamp
 async function saveImage(file: File, prefix: string): Promise<string> {
   if (!file || file.size === 0) {
     throw new Error('ไฟล์รูปภาพไม่ถูกต้อง');
@@ -171,27 +167,34 @@ async function saveImage(file: File, prefix: string): Promise<string> {
     }
     
     const fileName = `${prefix}-${timestamp}-${randomString}${fileExtension}`;
-    // เก็บใน public/images โดยตรง
     const uploadsDir = path.join(process.cwd(), 'public', 'images');
     const filePath = path.join(uploadsDir, fileName);
     
-    // สร้างโฟลเดอร์ถ้ายังไม่มี
+    // Create directory if it doesn't exist
     await fs.mkdir(uploadsDir, { recursive: true });
     
-    // ตรวจสอบว่าไฟล์ที่จะสร้างไม่ซ้ำ
-    try {
-      await fs.access(filePath);
-      // ถ้าไฟล์มีอยู่แล้ว ให้สร้างชื่อใหม่
-      const newRandomString = Math.random().toString(36).substring(2, 8);
-      const newFileName = `${prefix}-${timestamp}-${newRandomString}${fileExtension}`;
-      const newFilePath = path.join(uploadsDir, newFileName);
-      await writeFile(newFilePath, buffer);
-      return `/images/${newFileName}`;
-    } catch {
-      // ถ้าไฟล์ไม่มีอยู่ ให้สร้างปกติ
-      await writeFile(filePath, buffer);
-      return `/images/${fileName}`;
+    // Check if file already exists and create unique name if needed
+    let finalFilePath = filePath;
+    let finalFileName = fileName;
+    let counter = 1;
+    
+    while (await fileExists(finalFilePath)) {
+      const nameWithoutExt = `${prefix}-${timestamp}-${randomString}-${counter}`;
+      finalFileName = `${nameWithoutExt}${fileExtension}`;
+      finalFilePath = path.join(uploadsDir, finalFileName);
+      counter++;
     }
+    
+    await writeFile(finalFilePath, buffer);
+    
+    // Return path without cache busting - ให้ component จัดการเอง
+    const imageUrl = `/images/${finalFileName}`;
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log('✅ Image saved:', imageUrl);
+    }
+    
+    return imageUrl;
     
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
@@ -215,19 +218,194 @@ async function saveImage(file: File, prefix: string): Promise<string> {
   }
 }
 
-// ✅ ปรับปรุง deleteFile function
+// Helper function to check if file exists
+async function fileExists(filePath: string): Promise<boolean> {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Enhanced deleteFile function
 async function deleteFile(filePath: string): Promise<void> {
   try {
-    const fullPath = path.join(process.cwd(), 'public', filePath);
-    await fs.unlink(fullPath);
+    const cleanPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
+    const fullPath = path.join(process.cwd(), 'public', cleanPath);
     
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Deleted file:', filePath);
+    if (await fileExists(fullPath)) {
+      await fs.unlink(fullPath);
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ File deleted:', filePath);
+      }
     }
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.warn('Failed to delete file:', filePath, error);
+      console.warn('⚠️ Failed to delete file:', filePath, error);
     }
+  }
+}
+
+// ✅ Function to update form return
+export async function updateFormReturn(
+  id: number,
+  formData: FormData
+): Promise<{
+  success: boolean;
+  data?: FormReturnData;
+  error?: string;
+}> {
+  try {
+    const existingForm = await prisma.form_return.findUnique({
+      where: { id }
+    });
+
+    if (!existingForm) {
+      return { success: false, error: 'ไม่พบข้อมูลที่ต้องการแก้ไข' };
+    }
+
+    // Extract and validate form data (same as create)
+    const firstName = formData.get('firstName') as string;
+    const lastName = formData.get('lastName') as string;
+    const organizationName = formData.get('organizationName') as string;
+    const addressLine1 = formData.get('addressLine1') as string;
+    const district = formData.get('district') as string;
+    const amphoe = formData.get('amphoe') as string;
+    const province = formData.get('province') as string;
+    const zipcode = formData.get('zipcode') as string;
+    const type = formData.get('type') as string;
+    const phoneNumber = formData.get('phoneNumber') as string;
+    const numberOfSigners = parseInt(formData.get('numberOfSigners') as string);
+    const image1 = formData.get('image1') as File | null;
+    const image2 = formData.get('image2') as File | null;
+
+    // Validation
+    if (!firstName?.trim() || !lastName?.trim() || !organizationName?.trim() || 
+        !addressLine1?.trim() || !district?.trim() || !amphoe?.trim() || 
+        !province?.trim() || !zipcode?.trim() || !type?.trim() || 
+        !phoneNumber?.trim() || !numberOfSigners) {
+      return { success: false, error: 'กรุณากรอกข้อมูลให้ครบถ้วน' };
+    }
+
+    // Check phone number uniqueness (excluding current record)
+    const existingPhone = await prisma.form_return.findFirst({
+      where: {
+        phoneNumber: phoneNumber.trim(),
+        NOT: { id }
+      }
+    });
+
+    if (existingPhone) {
+      return { success: false, error: 'เบอร์โทรศัพท์นี้ถูกใช้แล้ว' };
+    }
+
+    // Prepare update data
+    const updateData: any = {
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      organizationName: organizationName.trim(),
+      addressLine1: addressLine1.trim(),
+      district: district.trim(),
+      amphoe: amphoe.trim(),
+      province: province.trim(),
+      zipcode: zipcode.trim(),
+      type: type.trim(),
+      phoneNumber: phoneNumber.trim(),
+      numberOfSigners,
+      updatedAt: new Date(),
+    };
+
+    // Handle image updates
+    if (image1 && image1.size > 0) {
+      try {
+        if (existingForm.image1) {
+          await deleteFile(existingForm.image1);
+        }
+        updateData.image1 = await saveImage(image1, 'img1');
+      } catch (imageError) {
+        return { 
+          success: false, 
+          error: `ไม่สามารถบันทึกรูปภาพที่ 1 ได้: ${imageError instanceof Error ? imageError.message : 'ข้อผิดพลาดที่ไม่ทราบสาเหตุ'}` 
+        };
+      }
+    }
+
+    if (image2 && image2.size > 0) {
+      try {
+        if (existingForm.image2) {
+          await deleteFile(existingForm.image2);
+        }
+        updateData.image2 = await saveImage(image2, 'img2');
+      } catch (imageError) {
+        return { 
+          success: false, 
+          error: `ไม่สามารถบันทึกรูปภาพที่ 2 ได้: ${imageError instanceof Error ? imageError.message : 'ข้อผิดพลาดที่ไม่ทราบสาเหตุ'}` 
+        };
+      }
+    }
+
+    // Update form return
+    const updatedFormReturn = await prisma.form_return.update({
+      where: { id },
+      data: updateData,
+    });
+
+    // ✅ Revalidate เฉพาะเมื่อมีการแก้ไข
+    revalidatePath('/form_return');
+    revalidatePath('/dashboard/formReturn');
+
+    return { success: true, data: updatedFormReturn };
+
+  } catch (error) {
+    console.error('Error updating form return:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล' 
+    };
+  }
+}
+
+// ✅ Function to delete form return
+export async function deleteFormReturn(id: number): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  try {
+    const existingForm = await prisma.form_return.findUnique({
+      where: { id }
+    });
+
+    if (!existingForm) {
+      return { success: false, error: 'ไม่พบข้อมูลที่ต้องการลบ' };
+    }
+
+    // Delete images
+    if (existingForm.image1) {
+      await deleteFile(existingForm.image1);
+    }
+    if (existingForm.image2) {
+      await deleteFile(existingForm.image2);
+    }
+
+    // Delete from database
+    await prisma.form_return.delete({
+      where: { id }
+    });
+
+    // ✅ Revalidate เฉพาะเมื่อมีการลบ
+    revalidatePath('/form_return');
+    revalidatePath('/dashboard/formReturn');
+
+    return { success: true };
+
+  } catch (error) {
+    console.error('Error deleting form return:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'เกิดข้อผิดพลาดในการลบข้อมูล' 
+    };
   }
 }
 
