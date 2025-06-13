@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { getDrinkingFrequencyChartData } from '../../actions/GetChartData';
 import LoadingSkeleton from '../ui/DashboardLoading';
+import DashboardLoading from '../ui/DashboardLoading';
 
 interface DrinkingFrequencyData {
   name: string;
@@ -35,7 +36,7 @@ const DrinkingFrequencyChart: React.FC = () => {
   if (loading) {
     return (
       <div className="h-96 flex flex-col items-center justify-center">
-        <LoadingSkeleton lines={4} className="w-full max-w-sm" />
+        <DashboardLoading/>
         <span className="mt-4 text-gray-600">กำลังโหลดข้อมูลความถี่การดื่ม...</span>
       </div>
     );

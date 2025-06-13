@@ -5,6 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { getRegionChartData } from '../../actions/GetChartData';
 import LoadingSkeleton from '../ui/DashboardLoading';
 import { FaEllipsisV, FaDownload } from 'react-icons/fa';
+import DashboardLoading from '../ui/DashboardLoading';
 
 interface RegionData {
   name: string;
@@ -180,7 +181,7 @@ const RegionChart: React.FC = () => {
   if (loading) {
     return (
       <div className="h-96 flex flex-col items-center justify-center">
-        <LoadingSkeleton lines={6} className="w-full max-w-sm" />
+        <DashboardLoading />
         <span className="mt-4 text-gray-600">กำลังโหลดข้อมูลภูมิภาค...</span>
       </div>
     );

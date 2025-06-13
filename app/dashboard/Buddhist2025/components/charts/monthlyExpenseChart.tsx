@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { getMonthlyExpenseChartData } from '../../actions/GetChartData';
 import LoadingSkeleton from '../ui/DashboardLoading';
+import DashboardLoading from '../ui/DashboardLoading';
 
 interface MonthlyExpenseData {
   range: string;
@@ -38,7 +39,7 @@ const MonthlyExpenseChart: React.FC = () => {
   if (loading) {
     return (
       <div className="h-96 flex flex-col items-center justify-center">
-        <LoadingSkeleton lines={6} className="w-full max-w-sm" />
+        <DashboardLoading />
         <span className="mt-4 text-gray-600">กำลังโหลดข้อมูลรายจ่าย...</span>
       </div>
     );
