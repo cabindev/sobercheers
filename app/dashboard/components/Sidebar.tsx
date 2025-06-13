@@ -56,15 +56,6 @@ export default function Sidebar({ user }: SidebarProps) {
    }
  }, [pathname]);
 
- const mainMenuItems = [
-   {
-     name: 'Profile',
-     href: '/dashboard/profile',
-     icon: User,
-     description: 'ข้อมูลส่วนตัว'
-   }
- ];
-
  // Buddhist Lent 2025 menu (ย้ายขึ้นมาบนสุด)
  const buddhistLentMenu = {
    name: 'Buddhist Lent 2025',
@@ -81,14 +72,14 @@ export default function Sidebar({ user }: SidebarProps) {
      },
      {
        name: 'ข้อมูลผู้เข้าร่วมเข้าพรรษา',
-       href: '/dashboard/Buddhist2025/components/tables/buddhistTable',
+       href: '/dashboard/Buddhist2025/tables',
        icon: Database,
        requireAdmin: true,
        description: 'ตารางข้อมูลผู้เข้าร่วม'
      },
      {
        name: 'เพิ่มข้อมูลผู้เข้าร่วม',
-       href: '/dashboard/Buddhist2025/create',
+       href: '/Buddhist2025/create',
        icon: PlusCircle,
        requireAdmin: false,
        description: 'เพิ่มข้อมูลผู้เข้าร่วมใหม่'
@@ -165,7 +156,7 @@ export default function Sidebar({ user }: SidebarProps) {
      {/* Overlay สำหรับกดปิด sidebar บนมือถือ */}
      {isMobileSidebarOpen && (
        <div
-         className="fixed inset-0 bg-black/50 z-10 lg:hidden backdrop-blur-sm"
+         className="fixed inset-0 bg-slate-900/80 z-10 lg:hidden backdrop-blur-sm"
          onClick={() => toggleMobileSidebar(false)}
          aria-hidden="true"
        />
@@ -173,26 +164,26 @@ export default function Sidebar({ user }: SidebarProps) {
 
      <aside
        className={cn(
-         "fixed inset-y-0 left-0 z-40 flex flex-col bg-gradient-to-b from-amber-600 to-amber-700 text-white transition-all duration-300 shadow-xl",
+         "fixed inset-y-0 left-0 z-40 flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 transition-all duration-300 shadow-2xl border-r border-slate-700/50",
          sidebarCollapsed ? "w-20" : "w-72",
          "lg:translate-x-0",
          isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
        )}
      >
        {/* Sidebar header */}
-       <div className="flex h-16 items-center justify-between border-b border-white/10 px-4">
+       <div className="flex h-16 items-center justify-between border-b border-slate-700/50 px-4 bg-slate-800/50 backdrop-blur-sm">
          {!sidebarCollapsed ? (
            <div className="flex items-center">
              <Link href="/dashboard/Buddhist2025">
                <img
-                 src="/x-left.png"
+                 src="/x-right.png"
                  alt="SoberCheers Logo"
-                 className="h-9 w-auto"
+                 className="h-9 w-auto drop-shadow-lg"
                />
              </Link>
              <Link href="/" className="ml-3">
-               <span className="text-white font-bold text-lg bg-gradient-to-r from-white to-amber-100 text-transparent bg-clip-text">
-                 SOBER CHEERs
+               <span className="text-slate-100 font-bold text-lg bg-gradient-to-r from-blue-400 to-emerald-400 text-transparent bg-clip-text">
+                 BUDDHIST LENT 
                </span>
              </Link>
            </div>
@@ -201,7 +192,7 @@ export default function Sidebar({ user }: SidebarProps) {
              <img
                src="/x-left.png"
                alt="SoberCheers Logo"
-               className="h-10 w-auto"
+               className="h-10 w-auto drop-shadow-lg"
              />
            </Link>
          )}
@@ -209,7 +200,7 @@ export default function Sidebar({ user }: SidebarProps) {
          {/* ปุ่มปิดบนมือถือ */}
          <button
            onClick={() => toggleMobileSidebar(false)}
-           className="p-1.5 rounded-md text-white/80 hover:text-white hover:bg-white/10 lg:hidden"
+           className="p-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 lg:hidden transition-all duration-200"
            aria-label="ปิดเมนู"
          >
            <X className="h-5 w-5" />
@@ -218,7 +209,7 @@ export default function Sidebar({ user }: SidebarProps) {
          {/* ปุ่มย่อ/ขยายบนจอใหญ่ */}
          <button
            onClick={toggleSidebar}
-           className="p-1.5 rounded-md text-white/80 hover:text-white hover:bg-white/10 hidden lg:block"
+           className="p-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 hidden lg:block transition-all duration-200"
            aria-label={sidebarCollapsed ? "ขยายเมนู" : "ย่อเมนู"}
          >
            {sidebarCollapsed ? (
@@ -230,16 +221,16 @@ export default function Sidebar({ user }: SidebarProps) {
        </div>
 
        {/* Sidebar menu */}
-       <div className="flex-1 overflow-y-auto py-5">
+       <div className="flex-1 overflow-y-auto py-6">
          {/* Buddhist Lent 2025 menu - ย้ายขึ้นมาบนสุด */}
-         <div className="px-3 mb-3">
+         <div className="px-4 mb-4">
            <button
              onClick={() => setIsBuddhistLentMenuOpen(!isBuddhistLentMenuOpen)}
              className={cn(
-               "group flex items-center w-full p-3 rounded-lg transition-all duration-200",
+               "group flex items-center w-full p-3 rounded-xl transition-all duration-300 border border-transparent",
                pathname?.startsWith("/dashboard/Buddhist2025")
-                 ? "bg-white/20 text-white shadow-lg backdrop-blur-sm"
-                 : "hover:bg-white/10 text-white/80 hover:text-white",
+                 ? "bg-gradient-to-r from-emerald-600 to-emerald-700 text-white shadow-lg border-emerald-500/20"
+                 : "hover:bg-slate-700/50 text-slate-300 hover:text-slate-100 hover:border-slate-600/30",
                sidebarCollapsed && "justify-center"
              )}
              title={sidebarCollapsed ? "Buddhist Lent 2025" : ""}
@@ -255,8 +246,8 @@ export default function Sidebar({ user }: SidebarProps) {
              {!sidebarCollapsed && (
                <div className="flex items-center justify-between w-full ml-3">
                  <div>
-                   <span className="font-medium">{buddhistLentMenu.name}</span>
-                   <p className="text-xs text-white/70 mt-0.5">
+                   <span className="font-semibold">{buddhistLentMenu.name}</span>
+                   <p className="text-xs text-slate-400 mt-0.5">
                      {buddhistLentMenu.description}
                    </p>
                  </div>
@@ -273,8 +264,8 @@ export default function Sidebar({ user }: SidebarProps) {
            {(isBuddhistLentMenuOpen ||
              pathname?.startsWith("/dashboard/Buddhist2025")) &&
              !sidebarCollapsed && (
-               <div className="animate-fadeDown mt-1">
-                 <ul className="bg-white/5 rounded-lg ml-2 mr-2 overflow-hidden backdrop-blur-sm">
+               <div className="animate-fadeDown mt-2">
+                 <ul className="bg-slate-800/30 rounded-xl ml-3 mr-1 overflow-hidden backdrop-blur-sm border border-slate-700/30">
                    {buddhistLentMenu.subMenus.map((subMenu) => {
                      if (subMenu.requireAdmin && !isAdmin) {
                        return null;
@@ -291,14 +282,14 @@ export default function Sidebar({ user }: SidebarProps) {
                            href={subMenu.href}
                            className={`flex items-center p-3 transition-all duration-200 ${
                              isSubActive
-                               ? "bg-amber-400/20 text-amber-100"
-                               : "text-white/80 hover:bg-white/10 hover:text-white"
+                               ? "bg-emerald-500/20 text-emerald-100 border-l-4 border-emerald-400"
+                               : "text-slate-300 hover:bg-slate-700/40 hover:text-slate-100"
                            }`}
                          >
                            <Icon className="w-4 h-4 mr-3" />
                            <div>
-                             <span className="text-sm">{subMenu.name}</span>
-                             <p className="text-xs text-white/60 mt-0.5">
+                             <span className="text-sm font-medium">{subMenu.name}</span>
+                             <p className="text-xs text-slate-400 mt-0.5">
                                {subMenu.description}
                              </p>
                            </div>
@@ -313,65 +304,21 @@ export default function Sidebar({ user }: SidebarProps) {
 
          <div className="mt-8">
            {!sidebarCollapsed && (
-             <h3 className="px-4 text-xs font-semibold uppercase tracking-wider text-white/50 mb-3">
+             <h3 className="px-4 text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">
                ระบบจัดการ
              </h3>
            )}
 
-           {/* Profile menu */}
-           <nav className="space-y-1 px-3 mb-6">
-             {mainMenuItems.map((item) => {
-               const Icon = item.icon;
-               const isActive =
-                 pathname === item.href ||
-                 (item.href !== "/dashboard" && pathname?.startsWith(item.href));
-
-               return (
-                 <Link
-                   key={item.href}
-                   href={item.href}
-                   className={cn(
-                     "group flex items-center p-3 rounded-lg transition-all duration-200",
-                     isActive
-                       ? "bg-white/20 text-white shadow-lg backdrop-blur-sm"
-                       : "hover:bg-white/10 text-white/80 hover:text-white",
-                     sidebarCollapsed ? "justify-center" : "space-x-3"
-                   )}
-                   title={sidebarCollapsed ? item.name : ""}
-                 >
-                   <div
-                     className={cn(
-                       "flex items-center justify-center",
-                       sidebarCollapsed ? "h-10 w-10" : "h-5 w-5"
-                     )}
-                   >
-                     <Icon
-                       className={sidebarCollapsed ? "w-6 h-6" : "w-5 h-5"}
-                     />
-                   </div>
-                   {!sidebarCollapsed && (
-                     <div>
-                       <span className="font-medium">{item.name}</span>
-                       <p className="text-xs text-white/70 mt-0.5">
-                         {item.description}
-                       </p>
-                     </div>
-                   )}
-                 </Link>
-               );
-             })}
-           </nav>
-
            {/* SoberCheers 2024 menu */}
-           <div className="px-3 mb-3">
+           <div className="px-4 mb-4">
              <button
                onClick={() => setIsSoberMenuOpen(!isSoberMenuOpen)}
                className={cn(
-                 "group flex items-center w-full p-3 rounded-lg transition-all duration-200",
+                 "group flex items-center w-full p-3 rounded-xl transition-all duration-300 border border-transparent",
                  pathname?.startsWith("/dashboard/soberCheers") ||
                    pathname?.startsWith("/soberCheers")
-                   ? "bg-white/20 text-white shadow-lg backdrop-blur-sm"
-                   : "hover:bg-white/10 text-white/80 hover:text-white",
+                   ? "bg-gradient-to-r from-violet-600 to-violet-700 text-white shadow-lg border-violet-500/20"
+                   : "hover:bg-slate-700/50 text-slate-300 hover:text-slate-100 hover:border-slate-600/30",
                  sidebarCollapsed && "justify-center"
                )}
                title={sidebarCollapsed ? "SOBER CHEERs 2024" : ""}
@@ -387,8 +334,8 @@ export default function Sidebar({ user }: SidebarProps) {
                {!sidebarCollapsed && (
                  <div className="flex items-center justify-between w-full ml-3">
                    <div>
-                     <span className="font-medium">{soberCheersMenu.name}</span>
-                     <p className="text-xs text-white/70 mt-0.5">
+                     <span className="font-semibold">{soberCheersMenu.name}</span>
+                     <p className="text-xs text-slate-400 mt-0.5">
                        {soberCheersMenu.description}
                      </p>
                    </div>
@@ -406,8 +353,8 @@ export default function Sidebar({ user }: SidebarProps) {
                pathname?.startsWith("/dashboard/soberCheers") ||
                pathname?.startsWith("/soberCheers")) &&
                !sidebarCollapsed && (
-                 <div className="animate-fadeDown mt-1">
-                   <ul className="bg-white/5 rounded-lg ml-2 mr-2 overflow-hidden backdrop-blur-sm">
+                 <div className="animate-fadeDown mt-2">
+                   <ul className="bg-slate-800/30 rounded-xl ml-3 mr-1 overflow-hidden backdrop-blur-sm border border-slate-700/30">
                      {soberCheersMenu.subMenus.map((subMenu) => {
                        if (subMenu.requireAdmin && !isAdmin) {
                          return null;
@@ -424,14 +371,14 @@ export default function Sidebar({ user }: SidebarProps) {
                              href={subMenu.href}
                              className={`flex items-center p-3 transition-all duration-200 ${
                                isSubActive
-                                 ? "bg-amber-400/20 text-amber-100"
-                                 : "text-white/80 hover:bg-white/10 hover:text-white"
+                                 ? "bg-violet-500/20 text-violet-100 border-l-4 border-violet-400"
+                                 : "text-slate-300 hover:bg-slate-700/40 hover:text-slate-100"
                              }`}
                            >
                              <Icon className="w-4 h-4 mr-3" />
                              <div>
-                               <span className="text-sm">{subMenu.name}</span>
-                               <p className="text-xs text-white/60 mt-0.5">
+                               <span className="text-sm font-medium">{subMenu.name}</span>
+                               <p className="text-xs text-slate-400 mt-0.5">
                                  {subMenu.description}
                                </p>
                              </div>
@@ -445,15 +392,15 @@ export default function Sidebar({ user }: SidebarProps) {
            </div>
 
            {/* Form Return menu */}
-           <div className="px-3 mb-3">
+           <div className="px-4 mb-4">
              <button
                onClick={() => setIsFormReturnMenuOpen(!isFormReturnMenuOpen)}
                className={cn(
-                 "group flex items-center w-full p-3 rounded-lg transition-all duration-200",
+                 "group flex items-center w-full p-3 rounded-xl transition-all duration-300 border border-transparent",
                  pathname?.startsWith("/dashboard/formReturn") ||
                    pathname?.startsWith("/form_return")
-                   ? "bg-white/20 text-white shadow-lg backdrop-blur-sm"
-                   : "hover:bg-white/10 text-white/80 hover:text-white",
+                   ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg border-blue-500/20"
+                   : "hover:bg-slate-700/50 text-slate-300 hover:text-slate-100 hover:border-slate-600/30",
                  sidebarCollapsed && "justify-center"
                )}
                title={sidebarCollapsed ? "Form Return Management" : ""}
@@ -469,8 +416,8 @@ export default function Sidebar({ user }: SidebarProps) {
                {!sidebarCollapsed && (
                  <div className="flex items-center justify-between w-full ml-3">
                    <div>
-                     <span className="font-medium">{formReturnMenu.name}</span>
-                     <p className="text-xs text-white/70 mt-0.5">
+                     <span className="font-semibold">{formReturnMenu.name}</span>
+                     <p className="text-xs text-slate-400 mt-0.5">
                        {formReturnMenu.description}
                      </p>
                    </div>
@@ -488,8 +435,8 @@ export default function Sidebar({ user }: SidebarProps) {
                pathname?.startsWith("/dashboard/formReturn") ||
                pathname?.startsWith("/form_return")) &&
                !sidebarCollapsed && (
-                 <div className="animate-fadeDown mt-1">
-                   <ul className="bg-white/5 rounded-lg ml-2 mr-2 overflow-hidden backdrop-blur-sm">
+                 <div className="animate-fadeDown mt-2">
+                   <ul className="bg-slate-800/30 rounded-xl ml-3 mr-1 overflow-hidden backdrop-blur-sm border border-slate-700/30">
                      {formReturnMenu.subMenus.map((subMenu) => {
                        if (subMenu.requireAdmin && !isAdmin) {
                          return null;
@@ -506,14 +453,14 @@ export default function Sidebar({ user }: SidebarProps) {
                              href={subMenu.href}
                              className={`flex items-center p-3 transition-all duration-200 ${
                                isSubActive
-                                 ? "bg-amber-400/20 text-amber-100"
-                                 : "text-white/80 hover:bg-white/10 hover:text-white"
+                                 ? "bg-blue-500/20 text-blue-100 border-l-4 border-blue-400"
+                                 : "text-slate-300 hover:bg-slate-700/40 hover:text-slate-100"
                              }`}
                            >
                              <Icon className="w-4 h-4 mr-3" />
                              <div>
-                               <span className="text-sm">{subMenu.name}</span>
-                               <p className="text-xs text-white/60 mt-0.5">
+                               <span className="text-sm font-medium">{subMenu.name}</span>
+                               <p className="text-xs text-slate-400 mt-0.5">
                                  {subMenu.description}
                                </p>
                              </div>
@@ -529,15 +476,15 @@ export default function Sidebar({ user }: SidebarProps) {
        </div>
 
        {/* User info & logout */}
-       <div className="border-t border-white/10 p-4">
+       <div className="border-t border-slate-700/50 p-4 bg-slate-800/30 backdrop-blur-sm">
          <div
            className={cn(
-             "flex items-center bg-white/5 p-3 rounded-lg backdrop-blur-sm",
+             "flex items-center bg-slate-700/30 p-3 rounded-xl backdrop-blur-sm border border-slate-600/20",
              sidebarCollapsed && "justify-center"
            )}
          >
            <div className="flex-shrink-0">
-             <div className="h-10 w-10 rounded-full bg-amber-500 flex items-center justify-center shadow-lg">
+             <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-emerald-500 flex items-center justify-center shadow-lg ring-2 ring-slate-600/30">
                {user?.image ? (
                  <img
                    src={user.image}
@@ -545,7 +492,7 @@ export default function Sidebar({ user }: SidebarProps) {
                    className="w-full h-full rounded-full object-cover"
                  />
                ) : (
-                 <span className="text-sm font-medium text-white">
+                 <span className="text-sm font-semibold text-white">
                    {user?.firstName?.charAt(0) || user?.name?.charAt(0) || "U"}
                  </span>
                )}
@@ -553,11 +500,11 @@ export default function Sidebar({ user }: SidebarProps) {
            </div>
            {!sidebarCollapsed && (
              <div className="ml-3">
-               <p className="text-sm font-medium text-white">
+               <p className="text-sm font-semibold text-slate-100">
                  {user?.firstName || user?.name || ""} {user?.lastName || ""}
                </p>
-               <p className="text-xs text-white/70">{user?.email || ""}</p>
-               <p className="text-xs mt-1 bg-amber-400/20 text-amber-100 inline-block px-2 py-0.5 rounded-full">
+               <p className="text-xs text-slate-400">{user?.email || ""}</p>
+               <p className="text-xs mt-1.5 bg-gradient-to-r from-blue-500/20 to-emerald-500/20 text-blue-100 inline-block px-3 py-1 rounded-full border border-blue-400/20">
                  {user?.role === "admin" ? "ผู้ดูแลระบบ" : "ผู้ใช้งาน"}
                </p>
              </div>
@@ -566,7 +513,7 @@ export default function Sidebar({ user }: SidebarProps) {
          <button
            onClick={() => signOut({ callbackUrl: "/" })}
            className={cn(
-             "mt-4 flex items-center p-3 rounded-lg w-full text-white/80 hover:bg-red-500/20 hover:text-red-100 transition-all duration-200",
+             "mt-4 flex items-center p-3 rounded-xl w-full text-slate-300 hover:bg-red-500/20 hover:text-red-100 hover:border-red-400/30 border border-transparent transition-all duration-200",
              sidebarCollapsed && "justify-center"
            )}
            aria-label="ออกจากระบบ"

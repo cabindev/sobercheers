@@ -90,7 +90,7 @@ export default function Navbar() {
           <div className="flex items-center">
             <img className="h-12 w-12" src="/x-left.png" alt="Logo" />
             <span className="mx-2 text-lg font-bold text-center bg-gradient-to-r from-amber-500 to-amber-700 text-transparent bg-clip-text">
-              SOBER CHEERs
+              BUDDHIST LENT
             </span>
             <Link
               href="https://sdnthailand.com/"

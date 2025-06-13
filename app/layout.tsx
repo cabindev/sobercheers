@@ -9,7 +9,7 @@ import Navbar from "@/components/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
- title: "SOBER CHEERs",
+ title: "BUDDHIST LENT",
  description: "3 เดือนเปลี่ยนคุณเป็นคนใหม่",
 };
 

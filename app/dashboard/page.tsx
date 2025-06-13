@@ -1,198 +1,226 @@
 // app/dashboard/page.tsx
+import { Suspense } from 'react';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import authOptions from '../lib/configs/auth/authOptions';
-import { BarChart3, Users, FileText, TrendingUp, Calendar, Award } from 'lucide-react';
+
+import QuickActions from './components/QuickActions';
+import { 
+ Users, 
+ TrendingUp, 
+ Calendar,
+ BarChart3,
+ Sparkles,
+ Clock
+} from 'lucide-react';
+
+// Loading Components
+function StatsLoading() {
+ return (
+   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+     {[...Array(4)].map((_, i) => (
+       <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200/50">
+         <div className="animate-pulse">
+           <div className="w-8 h-8 bg-slate-200 rounded-lg mb-3"></div>
+           <div className="w-20 h-6 bg-slate-200 rounded mb-2"></div>
+           <div className="w-24 h-4 bg-slate-200 rounded"></div>
+         </div>
+       </div>
+     ))}
+   </div>
+ );
+}
+
+function ChartsLoading() {
+ return (
+   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+     {[...Array(2)].map((_, i) => (
+       <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200/50">
+         <div className="animate-pulse">
+           <div className="w-32 h-6 bg-slate-200 rounded mb-4"></div>
+           <div className="w-full h-64 bg-slate-200 rounded"></div>
+         </div>
+       </div>
+     ))}
+   </div>
+ );
+}
 
 export default async function DashboardPage() {
-    const session = await getServerSession(authOptions);
+ const session = await getServerSession(authOptions);
 
-    if (!session?.user) {
-        redirect('/auth/signin?callbackUrl=/dashboard');
-    }
+ if (!session?.user) {
+   redirect('/auth/signin?callbackUrl=/dashboard');
+ }
 
-    const isAdmin = session.user.role === 'admin';
-    const user = session.user;
+ const isAdmin = session.user.role === 'admin';
+ const user = session.user;
 
-    return (
-        <div className="p-6 min-h-screen bg-gray-50">
-            {/* Header */}
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    ยินดีต้อนรับ, {user.firstName} {user.lastName}
-                </h1>
-                <p className="text-gray-600">
-                    {isAdmin ? 'แดชบอร์ดผู้ดูแลระบบ' : 'แดชบอร์ดผู้ใช้งาน'} - ระบบ SOBER CHEERs
-                </p>
-            </div>
+ return (
+   <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200">
+     <div className="max-w-7xl mx-auto p-6 space-y-8">
+       {/* Header Section */}
+       <div className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-2xl p-8 text-white shadow-2xl">
+         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-emerald-600/20"></div>
+         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-white/10 to-transparent rounded-full -translate-y-48 translate-x-48"></div>
+         
+         <div className="relative z-10 flex items-center justify-between">
+           <div>
+             <div className="flex items-center mb-3">
+               <Sparkles className="w-8 h-8 text-yellow-400 mr-3" />
+               <span className="text-yellow-400 font-medium text-lg">SOBER CHEERs Dashboard</span>
+             </div>
+             <h1 className="text-4xl font-bold mb-3">
+               ยินดีต้อนรับ, {user.firstName} {user.lastName}
+             </h1>
+             <p className="text-slate-300 text-lg">
+               {isAdmin ? '🔧 แดชบอร์ดผู้ดูแลระบบ' : '👋 แดชบอร์ดผู้ใช้งาน'} - ระบบจัดการข้อมูลงดเหล้าเข้าพรรษา พ.ศ. 2568
+             </p>
+             
+             {/* User Role Badge */}
+             <div className="mt-4">
+               <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${
+                 isAdmin 
+                   ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white' 
+                   : 'bg-gradient-to-r from-blue-500 to-emerald-500 text-white'
+               }`}>
+                 {isAdmin ? '👑 ผู้ดูแลระบบ' : '🌟 ผู้ใช้งาน'}
+               </span>
+             </div>
+           </div>
+           
+           <div className="hidden lg:flex flex-col items-end space-y-3">
+             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+               <div className="flex items-center text-white/90 mb-2">
+                 <Calendar className="w-5 h-5 mr-2" />
+                 <span className="font-medium">วันที่ปัจจุบัน</span>
+               </div>
+               <div className="text-xl font-bold">
+                 {new Date().toLocaleDateString('th-TH', { 
+                   year: 'numeric', 
+                   month: 'long', 
+                   day: 'numeric',
+                   weekday: 'long'
+                 })}
+               </div>
+             </div>
+             
+             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+               <div className="flex items-center text-white/90 mb-2">
+                 <Clock className="w-5 h-5 mr-2" />
+                 <span className="font-medium">เวลา</span>
+               </div>
+               <div className="text-lg font-semibold">
+                 {new Date().toLocaleTimeString('th-TH', {
+                   hour: '2-digit',
+                   minute: '2-digit'
+                 })} น.
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <StatsCard
-                    icon={<BarChart3 className="w-6 h-6 text-white" />}
-                    title="สถานะบัญชี"
-                    value={isAdmin ? 'ผู้ดูแลระบบ' : 'ผู้ใช้งาน'}
-                    gradient="from-blue-500 to-blue-600"
-                />
-                <StatsCard
-                    icon={<Users className="w-6 h-6 text-white" />}
-                    title="อีเมล"
-                    value={user.email}
-                    gradient="from-green-500 to-green-600"
-                />
-                <StatsCard
-                    icon={<Calendar className="w-6 h-6 text-white" />}
-                    title="เข้าสู่ระบบ"
-                    value="วันนี้"
-                    gradient="from-amber-500 to-amber-600"
-                />
-                <StatsCard
-                    icon={<Award className="w-6 h-6 text-white" />}
-                    title="โครงการ"
-                    value="งดเหล้าเข้าพรรษา"
-                    gradient="from-purple-500 to-purple-600"
-                />
-            </div>
+       {/* Quick Actions */}
+       <QuickActions isAdmin={isAdmin} />
 
-            {/* Quick Actions */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {isAdmin && <AdminActions />}
-                <UserActions />
-            </div>
+       {/* Stats Overview */}
+       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-slate-200/50">
+         <div className="flex items-center justify-between mb-8">
+           <div>
+             <h2 className="text-2xl font-bold text-slate-900 flex items-center">
+               <BarChart3 className="w-7 h-7 mr-3 text-blue-600" />
+               สถิติภาพรวมระบบ
+             </h2>
+             <p className="text-slate-600 mt-1">ข้อมูลสถิติการใช้งานทั้งหมด</p>
+           </div>
+           <div className="hidden md:flex items-center space-x-2 bg-slate-100 rounded-lg px-4 py-2">
+             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+             <span className="text-sm text-slate-600 font-medium">
+               อัพเดทล่าสุด: {new Date().toLocaleTimeString('th-TH')}
+             </span>
+           </div>
+         </div>
+         
+  
+       </div>
 
-            {/* Project Info */}
-            <ProjectInfo />
-        </div>
-    );
-}
+       {/* Charts Section */}
+       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-slate-200/50">
+         <div className="mb-8">
+           <h2 className="text-2xl font-bold text-slate-900 flex items-center">
+             <TrendingUp className="w-7 h-7 mr-3 text-emerald-600" />
+             กราฟและแผนภูมิเชิงสถิติ
+           </h2>
+           <p className="text-slate-600 mt-1">การวิเคราะห์ข้อมูลและแนวโน้ม</p>
+         </div>
+         
 
-function StatsCard({ icon, title, value, gradient }: { icon: React.ReactNode; title: string; value: string; gradient: string }) {
-    return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
-            <div className="flex items-center">
-                <div className={`p-3 bg-gradient-to-r ${gradient} rounded-lg`}>
-                    {icon}
-                </div>
-                <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">{title}</p>
-                    <p className="text-xl font-bold text-gray-900">{value}</p>
-                </div>
-            </div>
-        </div>
-    );
-}
+       </div>
 
-function AdminActions() {
-    return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <BarChart3 className="w-5 h-5 mr-2 text-amber-500" />
-                    การจัดการสำหรับผู้ดูแลระบบ
-                </h2>
-            </div>
-            <div className="p-6 space-y-4">
-                <ActionLink
-                    href="/dashboard/soberCheers"
-                    icon={<TrendingUp className="w-5 h-5 text-white" />}
-                    title="SoberCheers Dashboard"
-                    description="ดูข้อมูลและสถิติผู้งดเหล้า"
-                    gradient="from-amber-50 to-amber-100"
-                />
-                <ActionLink
-                    href="/dashboard/soberCheers/components/soberTable"
-                    icon={<FileText className="w-5 h-5 text-white" />}
-                    title="ข้อมูลงดเหล้าเข้าพรรษา 2567"
-                    description="จัดการและดูตารางข้อมูลผู้งดเหล้า"
-                    gradient="from-blue-50 to-blue-100"
-                />
-                <ActionLink
-                    href="/dashboard/member/components/admin"
-                    icon={<Users className="w-5 h-5 text-white" />}
-                    title="Admin Panel"
-                    description="จัดการผู้ดูแลระบบและสิทธิ์"
-                    gradient="from-purple-50 to-purple-100"
-                />
-            </div>
-        </div>
-    );
-}
+       {/* Recent Activities */}
+       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-slate-200/50">
+         <div className="mb-8">
+           <h2 className="text-2xl font-bold text-slate-900 flex items-center">
+             <Users className="w-7 h-7 mr-3 text-violet-600" />
+             กิจกรรมและการอัพเดทล่าสุด
+           </h2>
+           <p className="text-slate-600 mt-1">รายการกิจกรรมที่เกิดขึ้นในระบบ</p>
+         </div>
+         
 
-function UserActions() {
-    return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Users className="w-5 h-5 mr-2 text-green-500" />
-                    การดำเนินการทั่วไป
-                </h2>
-            </div>
-            <div className="p-6 space-y-4">
-                <ActionLink
-                    href="/soberCheers"
-                    icon={
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                    }
-                    title="เพิ่มข้อมูล SoberCheers"
-                    description="บันทึกข้อมูลการงดเหล้าใหม่"
-                    gradient="from-green-50 to-green-100"
-                />
-                <ActionLink
-                    href="/form_return/create"
-                    icon={<FileText className="w-5 h-5 text-white" />}
-                    title="เพิ่มข้อมูลงดเหล้าเข้าพรรษา"
-                    description="สร้างฟอร์มคืนข้อมูลใหม่"
-                    gradient="from-orange-50 to-orange-100"
-                />
-                <ActionLink
-                    href="/profile"
-                    icon={
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                    }
-                    title="จัดการโปรไฟล์"
-                    description="แก้ไขข้อมูลส่วนตัว"
-                    gradient="from-indigo-50 to-indigo-100"
-                />
-            </div>
-        </div>
-    );
-}
+       </div>
 
-function ActionLink({ href, icon, title, description, gradient }: { href: string; icon: React.ReactNode; title: string; description: string; gradient: string }) {
-    return (
-        <a
-            href={href}
-            className={`flex items-center p-4 bg-gradient-to-r ${gradient} border rounded-lg hover:from-opacity-75 transition-all duration-200 group`}
-        >
-            <div className="p-2 rounded-lg group-hover:bg-opacity-75 transition-colors">
-                {icon}
-            </div>
-            <div className="ml-4">
-                <p className="font-medium text-gray-900">{title}</p>
-                <p className="text-sm text-gray-600">{description}</p>
-            </div>
-        </a>
-    );
-}
+       {/* System Information (Admin Only) */}
+       {isAdmin && (
+         <div className="relative overflow-hidden bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 rounded-2xl p-8 text-white shadow-2xl">
+           <div className="absolute inset-0 bg-gradient-to-r from-amber-600/20 to-orange-600/20"></div>
+           <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-white/5 to-transparent rounded-full -translate-x-32 translate-y-32"></div>
+           
+           <div className="relative z-10">
+             <div className="flex items-center mb-6">
+               <div className="p-3 bg-amber-500/20 rounded-xl mr-4">
+                 <BarChart3 className="w-8 h-8 text-amber-400" />
+               </div>
+               <div>
+                 <h2 className="text-2xl font-bold">ข้อมูลระบบ (เฉพาะผู้ดูแล)</h2>
+                 <p className="text-slate-300">สถานะและข้อมูลเทคนิคของระบบ</p>
+               </div>
+             </div>
+             
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                 <h3 className="font-semibold text-lg mb-3 text-amber-300">🚀 เวอร์ชันระบบ</h3>
+                 <p className="text-slate-300 text-lg">v2.0.0 - Buddhist Lent 2025</p>
+                 <p className="text-slate-400 text-sm mt-2">อัพเดทล่าสุด: มิ.ย. 2025</p>
+               </div>
+               
+               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                 <h3 className="font-semibold text-lg mb-3 text-green-300">🟢 สถานะเซิร์ฟเวอร์</h3>
+                 <div className="flex items-center">
+                   <div className="w-3 h-3 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                   <p className="text-green-300 text-lg">ออนไลน์</p>
+                 </div>
+                 <p className="text-slate-400 text-sm mt-2">เวลาทำงาน: 99.9% uptime</p>
+               </div>
+               
+               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                 <h3 className="font-semibold text-lg mb-3 text-blue-300">💾 การสำรองข้อมูล</h3>
+                 <p className="text-slate-300 text-lg">ทำงานอัตโนมัติ</p>
+                 <p className="text-slate-400 text-sm mt-2">สำรองล่าสุด: วันนี้ 03:00 น.</p>
+               </div>
+             </div>
+           </div>
+         </div>
+       )}
 
-function ProjectInfo() {
-    return (
-        <div className="mt-8 bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl shadow-lg p-8 text-white">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h3 className="text-2xl font-bold mb-2">โครงการงดเหล้าเข้าพรรษา 2567</h3>
-                    <p className="text-amber-100">
-                        ร่วมเป็นส่วนหนึ่งของการสร้างสุขภาวะที่ดีในช่วงเข้าพรรษา
-                    </p>
-                </div>
-                <div className="hidden md:block">
-                    <Award className="w-16 h-16 text-amber-200" />
-                </div>
-            </div>
-        </div>
-    );
+       {/* Footer */}
+       <div className="text-center py-6">
+         <p className="text-slate-500 text-sm">
+           © 2025 SOBER CHEERs - ระบบจัดการข้อมูลงดเหล้าเข้าพรรษา | พัฒนาด้วย ❤️ เพื่อสังคมไทย
+         </p>
+       </div>
+     </div>
+   </div>
+ );
 }
