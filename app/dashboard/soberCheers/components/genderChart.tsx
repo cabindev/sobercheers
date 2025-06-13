@@ -1,17 +1,9 @@
+// app/dashboard/soberCheers/components/genderChart.tsx
 'use client';
-import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { Pie } from 'react-chartjs-2';
+import React, { useEffect, useState, useMemo } from 'react';
+import ReactECharts from 'echarts-for-react';
 import axios from 'axios';
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  ChartOptions,
-} from 'chart.js';
-import { FaEllipsisV, FaDownload } from 'react-icons/fa';
-
-ChartJS.register(ArcElement, Tooltip, Legend);
+import { FaEllipsisV, FaDownload, FaMale, FaFemale, FaTransgender } from 'react-icons/fa';
 
 interface SoberCheersData {
   gender: string;
@@ -21,16 +13,19 @@ const GenderChart: React.FC = () => {
   const [soberCheersData, setSoberCheersData] = useState<SoberCheersData[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
-  const chartRef = useRef<ChartJS<'pie', number[], string>>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const response = await axios.get<{ soberCheers: SoberCheersData[] }>('/api/soberCheersCharts');
         setSoberCheersData(response.data.soberCheers);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('Failed to load data. Please try again later.');
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -42,127 +37,213 @@ const GenderChart: React.FC = () => {
       return acc;
     }, {} as Record<string, number>);
 
-    return {
-      labels: Object.keys(genderData),
-      datasets: [
-        {
-          data: Object.values(genderData),
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.8)',  // Pink for หญิง
-            'rgba(54, 162, 235, 0.8)',  // Blue for ชาย
-            'rgba(75, 192, 192, 0.8)',  // Teal for LGBTQ
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(75, 192, 192, 1)',
-          ],
-          borderWidth: 1,
-        },
-      ],
-    };
+    return genderData;
   }, [soberCheersData]);
 
-  const options: ChartOptions<'pie'> = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'bottom' as const,
-      },
-      tooltip: {
-        callbacks: {
-          label: (context) => {
-            const label = context.label || '';
-            const value = context.parsed;
-            const total = context.dataset.data.reduce((acc: number, data: number) => acc + data, 0);
-            const percentage = ((value / total) * 100).toFixed(1);
-            return `${label}: ${value} (${percentage}%)`;
-          },
-        },
-      },
-    },
-    animation: {
-      animateScale: true,
-      animateRotate: true
+  const getGenderIcon = (gender: string) => {
+    switch (gender) {
+      case 'ชาย':
+        return <FaMale className="text-blue-500" />;
+      case 'หญิง':
+        return <FaFemale className="text-pink-500" />;
+      default:
+        return <FaTransgender className="text-purple-500" />;
     }
   };
 
-  const downloadChart = (format: 'png' | 'jpeg') => {
-    if (chartRef.current) {
-      const url = chartRef.current.toBase64Image(format);
-      const link = document.createElement('a');
-      link.download = `gender-distribution-chart.${format}`;
-      link.href = url;
-      link.click();
+  const getGenderColor = (gender: string) => {
+    switch (gender) {
+      case 'ชาย':
+        return 'rgba(54, 162, 235, 0.2)';
+      case 'หญิง':
+        return 'rgba(255, 99, 132, 0.2)';
+      default:
+        return 'rgba(75, 192, 192, 0.2)';
     }
+  };
+
+  const option = {
+    title: {
+      text: '',
+      left: 'center',
+      textStyle: {
+        fontSize: 18,
+        fontWeight: 'bold'
+      }
+    },
+    tooltip: {
+      trigger: 'item',
+      formatter: (params: any) => {
+        const total = soberCheersData.length;
+        const percentage = ((params.value / total) * 100).toFixed(1);
+        return `${params.name}: ${params.value.toLocaleString()} คน (${percentage}%)`;
+      }
+    },
+    legend: {
+      orient: 'horizontal',
+      bottom: 20,
+      textStyle: {
+        fontSize: 12
+      }
+    },
+    series: [
+      {
+        name: 'เพศ',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        center: ['50%', '45%'],
+        data: Object.entries(chartData).map(([name, value]) => ({
+          name,
+          value
+        })),
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
+        },
+        itemStyle: {
+          borderRadius: 8,
+          borderColor: '#fff',
+          borderWidth: 3
+        },
+        label: {
+          show: true,
+          formatter: '{b}: {c} คน\n({d}%)',
+          fontSize: 12
+        }
+      }
+    ],
+    color: [
+      '#36A2EB', // Blue for ชาย
+      '#FF6384', // Pink for หญิง  
+      '#4BC0C0', // Teal for LGBTQ+
+      '#9966FF', // Purple for others
+    ]
+  };
+
+  const downloadChart = () => {
+    console.log('Download chart feature');
     setShowDownloadMenu(false);
   };
 
+  if (loading) {
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-amber-500"></div>
+          <span className="ml-2 text-gray-600">กำลังโหลด...</span>
+        </div>
+      </div>
+    );
+  }
+
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="text-center text-red-500 py-8">{error}</div>
+      </div>
+    );
   }
 
   if (soberCheersData.length === 0) {
-    return <div>Loading...</div>;
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="text-center text-gray-500 py-8">ไม่มีข้อมูล</div>
+      </div>
+    );
   }
-
-  const genderData = soberCheersData.reduce((acc, item) => {
-    acc[item.gender] = (acc[item.gender] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md relative">
-      <div className="absolute top-2 right-2">
+      {/* Download Menu */}
+      <div className="absolute top-4 right-4 z-10">
         <button
           onClick={() => setShowDownloadMenu(!showDownloadMenu)}
-          className="text-gray-500 hover:text-gray-700 focus:outline-none"
+          className="text-gray-500 hover:text-gray-700 focus:outline-none p-2 rounded-full hover:bg-gray-100"
         >
           <FaEllipsisV />
         </button>
         {showDownloadMenu && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-20">
             <button
-              onClick={() => downloadChart('png')}
+              onClick={downloadChart}
               className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
-              <FaDownload className="inline mr-2" /> Download PNG
-            </button>
-            <button
-              onClick={() => downloadChart('jpeg')}
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              <FaDownload className="inline mr-2" /> Download JPEG
+              <FaDownload className="inline mr-2" /> ดาวน์โหลดกราฟ
             </button>
           </div>
         )}
       </div>
-      <h3 className="text-xl font-semibold mb-4 text-center">การบริโภคแอลกอฮอล์ตามเพศ</h3>
-      <div className="flex justify-center items-center mb-4">
-        <div className="w-3/4">
-          <Pie
-            ref={chartRef}
-            options={options}
-            data={chartData}
-          />
+
+      {/* Chart */}
+      <div className="mb-6">
+        <ReactECharts
+          option={option}
+          style={{ height: '300px', width: '100%' }}
+        />
+      </div>
+
+      {/* Gender Statistics Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Object.entries(chartData).map(([gender, count]) => {
+          const percentage = ((count / soberCheersData.length) * 100).toFixed(1);
+          
+          return (
+            <div 
+              key={gender} 
+              className="text-center p-4 rounded-lg border-l-4 transition-all duration-200 hover:shadow-md"
+              style={{
+                backgroundColor: getGenderColor(gender),
+                borderLeftColor: gender === 'ชาย' ? '#36A2EB' : 
+                                 gender === 'หญิง' ? '#FF6384' : '#4BC0C0'
+              }}
+            >
+              <div className="flex items-center justify-center mb-2">
+                <div className="text-2xl mr-2">
+                  {getGenderIcon(gender)}
+                </div>
+                <span className="text-lg font-bold text-gray-800">{gender}</span>
+              </div>
+              
+              <div className="space-y-1">
+                <div className="text-2xl font-semibold text-gray-900">
+                  {count.toLocaleString()} คน
+                </div>
+                <div className="text-sm text-gray-600">
+                  {percentage}% ของผู้เข้าร่วม
+                </div>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="mt-3 bg-white bg-opacity-50 rounded-full h-2">
+                <div 
+                  className="h-2 rounded-full transition-all duration-500"
+                  style={{
+                    width: `${percentage}%`,
+                    backgroundColor: gender === 'ชาย' ? '#36A2EB' : 
+                                   gender === 'หญิง' ? '#FF6384' : '#4BC0C0'
+                  }}
+                ></div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Summary */}
+      <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+        <div className="text-center">
+          <h4 className="text-sm font-medium text-gray-700 mb-2">สรุปข้อมูล</h4>
+          <div className="text-lg font-semibold text-gray-900">
+            ผู้เข้าร่วมทั้งหมด: {soberCheersData.length.toLocaleString()} คน
+          </div>
+          <div className="text-sm text-gray-600 mt-1">
+            แบ่งตามเพศ {Object.keys(chartData).length} ประเภท
+          </div>
         </div>
       </div>
-   <div className="grid grid-cols-2 gap-4 mt-4">
-  {Object.entries(genderData).map(([gender, count]) => (
-    <div key={gender} className="text-center p-3 rounded-lg" style={{
-      backgroundColor: 
-        gender === 'ชาย' ? 'rgba(54, 162, 235, 0.2)' : 
-        gender === 'หญิง' ? 'rgba(255, 99, 132, 0.2)' :
-        'rgba(75, 192, 192, 0.2)'  // For LGBTQ
-    }}>
-      <span className="text-lg font-bold">{gender}</span>
-      <span className="block text-2xl font-semibold">{count} คน</span>
-      <span className="text-sm">
-        ({((count / soberCheersData.length) * 100).toFixed(1)}%)
-      </span>
-    </div>
-  ))}
-</div>
     </div>
   );
 };

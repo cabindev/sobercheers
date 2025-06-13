@@ -31,31 +31,6 @@ model SoberCheers {
   updatedAt         DateTime  @updatedAt
 }
 
-// model SoberCheers {
-//   id                Int       @id @default(autoincrement())
-//   gender            String?
-//   firstName         String
-//   lastName          String?   
-//   birthday          DateTime?  
-//   addressLine1      String?   
-//   district          String?   
-//   amphoe            String?   
-//   province          String?   
-//   zipcode           String?   
-//   type              String?
-//   phone             String?    
-//   job               String?   
-//   alcoholConsumption String?  
-//   drinkingFrequency String?
-//   intentPeriod      String?
-//   monthlyExpense    Int?
-//   motivations       Json?     
-//   healthImpact      String?   
-//   createdAt         DateTime  @default(now())
-//   updatedAt         DateTime  @updatedAt
-// }
-
-
 model CampaignBuddhistLent {
   id                Int       @id @default(autoincrement())
   gender            String
@@ -81,6 +56,7 @@ model CampaignBuddhistLent {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 }
+
 model User {
   id                Int                     @id @default(autoincrement())
   firstName         String
@@ -99,9 +75,48 @@ model User {
   campaignBuddhistLent CampaignBuddhistLent[]
 }
 
-enum Role {
-  member
-  admin
+// โมเดลสำหรับหมวดหมู่กลุ่ม (ชุมชน/โรงงาน/หน่วยงาน/ท้องถิ่น)
+model GroupCategory {
+  id              Int                      @id @default(autoincrement())
+  name            String                   // ชื่อหมวดหมู่ เช่น "ชุมชน", "โรงงาน", "หน่วยงานราชการ", "องค์กรปกครองส่วนท้องถิ่น"
+  description     String?                  // คำอธิบายหมวดหมู่
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+  
+  // ความสัมพันธ์
+  buddhist2025    Buddhist2025[]
+  
+  @@index([createdAt])
+}
+
+model Buddhist2025 {
+  id                    Int             @id @default(autoincrement())
+  gender                String?
+  firstName             String
+  lastName              String
+  age                   Int?             
+  addressLine1          String
+  district              String
+  amphoe                String
+  province              String
+  zipcode               String
+  type                  String?
+  phone                 String?    
+  alcoholConsumption    String
+  drinkingFrequency     String?
+  intentPeriod          String?
+  monthlyExpense        Int?
+  motivations           Json
+  healthImpact          String
+  
+  groupCategoryId       Int
+  groupCategory         GroupCategory   @relation(fields: [groupCategoryId], references: [id])
+  
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  
+  @@index([groupCategoryId, createdAt])
+  @@index([province, createdAt])
 }
 
 model Form_return {
@@ -124,4 +139,9 @@ model Form_return {
   
   @@index([createdAt])
   @@index([province, createdAt])
+}
+
+enum Role {
+  member
+  admin
 }

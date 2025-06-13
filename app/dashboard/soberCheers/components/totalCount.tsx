@@ -1,47 +1,52 @@
-// app/soberCheersCharts/totalCount/page.tsx
+// TotalCount.tsx
 'use client'
 import React, { useEffect, useState } from 'react';
-import { Typography, Row, Col, Card } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { FaUser } from 'react-icons/fa';
 import axios from 'axios';
-
-const { Title } = Typography;
 
 const TotalCount: React.FC = () => {
   const [totalRegistered, setTotalRegistered] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const fetchTotalRegistered = async () => {
     try {
+      setLoading(true);
       const response = await axios.get('/api/soberCheersCharts/totalCount');
       setTotalRegistered(response.data.totalCount);
     } catch (error) {
       console.error('Error fetching total registered:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchTotalRegistered();
-
-    // Set up an interval to fetch data every minute (adjust as needed)
     const intervalId = setInterval(fetchTotalRegistered, 60000);
-
-    // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <div style={{ padding: '20px' }}>
-      <Row gutter={[16, 16]} justify="center">
-        <Col xs={24} sm={12} md={8}>
-          <Card bordered={false} style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold', backgroundColor: '#E2F3E4', borderRadius: '8px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <UserOutlined style={{ fontSize: '48px', color: '#f58220', marginBottom: '16px' }} />
-              <div style={{ fontSize: '20px', color: '#595959' }}>จำนวนผู้ลงทะเบียน</div>
-              <div style={{ fontSize: '36px', color: '#000' }}>{totalRegistered}</div>
+    <div className="p-5">
+      <div className="max-w-sm mx-auto">
+        <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl shadow-lg border border-green-200">
+          <div className="flex flex-col items-center text-center">
+            <div className="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center mb-4 shadow-lg">
+              <FaUser className="text-white text-2xl" />
             </div>
-          </Card>
-        </Col>
-      </Row>
+            <div className="text-green-700 font-medium text-lg mb-2">
+              จำนวนผู้ลงทะเบียน
+            </div>
+            <div className="text-3xl font-bold text-gray-900">
+              {loading ? (
+                <div className="animate-pulse bg-gray-200 h-10 w-24 rounded"></div>
+              ) : (
+                totalRegistered.toLocaleString()
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

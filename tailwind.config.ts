@@ -37,6 +37,7 @@ const config: Config = {
   plugins: [
     require("tailwindcss-animate"),
     require("daisyui"), 
+    require('@headlessui/tailwindcss'),
   ],
 }
 

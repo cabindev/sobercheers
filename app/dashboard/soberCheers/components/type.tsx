@@ -1,186 +1,154 @@
 'use client'
-import React, { useEffect, useState, useRef } from 'react';
-import { Bar } from 'react-chartjs-2';
-import { 
-  Chart as ChartJS, 
-  CategoryScale, 
-  LinearScale, 
-  BarElement, 
-  Title, 
-  Tooltip, 
-  Legend,
-  ChartData,
-  ChartOptions
-} from 'chart.js';
+import React, { useEffect, useState } from 'react';
+import ReactECharts from 'echarts-for-react';
 import axios from 'axios';
 import { FaEllipsisV, FaDownload } from 'react-icons/fa';
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
-type ChartDataType = ChartData<'bar', number[], string>;
-type ChartOptionsType = ChartOptions<'bar'>;
 
 interface TypeCount {
   [key: string]: number;
 }
 
 const TypeChart: React.FC = () => {
-  const [chartData, setChartData] = useState<ChartDataType | null>(null);
+  const [chartData, setChartData] = useState<any>(null);
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
-  const chartRef = useRef<ChartJS>(null);
-
-  const options: ChartOptionsType = {
-    indexAxis: 'y', // ใช้แกน y เป็นแกนหลัก (แสดงแนวนอน)
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: 'ภูมิภาคที่เข้าร่วม',
-        font: {
-          size: 20,
-          weight: 'bold',
-        },
-        padding: {
-          top: 10,
-          bottom: 30
-        }
-      },
-      tooltip: {
-        callbacks: {
-          label: (context) => `จำนวน: ${context.parsed.x}`, // เปลี่ยนจาก y เป็น x
-        },
-      },
-    },
-    scales: {
-      x: { // เปลี่ยนจาก y เป็น x
-        beginAtZero: true,
-        ticks: {
-          stepSize: 1,
-          font: {
-            size: 14
-          }
-        },
-        title: {
-          display: true,
-          text: 'จำนวนคน',
-          font: {
-            size: 16,
-            weight: 'bold'
-          }
-        },
-      },
-      y: { // เปลี่ยนจาก x เป็น y
-        ticks: {
-          font: {
-            size: 14,
-          },
-          autoSkip: false,
-          maxRotation: 0,
-          minRotation: 0,
-        },
-        title: {
-          display: true,
-          text: 'ภูมิภาค',
-          font: {
-            size: 16,
-            weight: 'bold'
-          }
-        },
-      },
-    },
-  };
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const response = await axios.get<{ typeCounts: TypeCount }>('/api/soberCheersCharts');
         const { typeCounts } = response.data;
 
         const sortedData = Object.entries(typeCounts)
           .sort((a, b) => b[1] - a[1]);
         
-        const labels = sortedData.map(([label, count]) => `${label} (${count})`);
+        const labels = sortedData.map(([label, count]) => label);
         const data = sortedData.map(([, count]) => count);
 
-        const colors = [
-          'rgba(255, 99, 132, 0.8)',
-          'rgba(54, 162, 235, 0.8)',
-          'rgba(255, 206, 86, 0.8)',
-          'rgba(75, 192, 192, 0.8)',
-          'rgba(153, 102, 255, 0.8)',
-          'rgba(255, 159, 64, 0.8)',
-          'rgba(201, 203, 207, 0.8)'
-        ];
-
-        setChartData({
-          labels,
-          datasets: [
-            {
-              label: "จำนวนคน",
-              data,
-              backgroundColor: colors,
-              borderColor: colors.map(color => color.replace('0.8', '1')),
-              borderWidth: 1,
-            },
-          ],
-        });
+        setChartData({ labels, data });
       } catch (error) {
         console.error('Error fetching chart data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
-  const downloadChart = (format: 'png' | 'jpeg') => {
-    if (chartRef.current) {
-      const url = chartRef.current.toBase64Image(format);
-      const link = document.createElement('a');
-      link.download = `type-chart.${format}`;
-      link.href = url;
-      link.click();
-    }
+  const option = {
+    title: {
+      text: 'ภูมิภาคที่เข้าร่วม',
+      left: 'center',
+      textStyle: {
+        fontSize: 18,
+        fontWeight: 'bold'
+      }
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      },
+      formatter: (params: any) => {
+        const param = params[0];
+        return `${param.name}: ${param.value.toLocaleString()} คน`;
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'value',
+      name: 'จำนวนคน',
+      nameLocation: 'middle',
+      nameGap: 30,
+      nameTextStyle: {
+        fontSize: 14,
+        fontWeight: 'bold'
+      }
+    },
+    yAxis: {
+      type: 'category',
+      data: chartData?.labels || [],
+      name: 'ภูมิภาค',
+      nameLocation: 'middle',
+      nameGap: 50,
+      nameTextStyle: {
+        fontSize: 14,
+        fontWeight: 'bold'
+      },
+      axisLabel: {
+        fontSize: 12
+      }
+    },
+    series: [
+      {
+        name: 'จำนวนคน',
+        type: 'bar',
+        data: chartData?.data || [],
+        itemStyle: {
+          color: (params: any) => {
+            const colors = [
+              '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+              '#9966FF', '#FF9F40', '#FF6384'
+            ];
+            return colors[params.dataIndex % colors.length];
+          },
+          borderRadius: [0, 4, 4, 0]
+        },
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowColor: 'rgba(0, 0, 0, 0.3)'
+          }
+        }
+      }
+    ]
+  };
+
+  const downloadChart = () => {
+    console.log('Download chart feature');
     setShowDownloadMenu(false);
   };
 
-  if (!chartData) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="h-96 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-amber-500"></div>
+        <span className="ml-2 text-gray-600">กำลังโหลด...</span>
+      </div>
+    );
   }
 
   return (
-    <div className="relative bg-white p-6 rounded-lg shadow-md" style={{ height: '80vh', width: '100%' }}>
+    <div className="relative h-96">
       <div className="absolute top-2 right-2 z-10">
         <button
           onClick={() => setShowDownloadMenu(!showDownloadMenu)}
-          className="text-gray-500 hover:text-gray-700 focus:outline-none"
+          className="text-gray-500 hover:text-gray-700 focus:outline-none p-2 rounded-full hover:bg-gray-100"
         >
           <FaEllipsisV />
         </button>
         {showDownloadMenu && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-20">
             <button
-              onClick={() => downloadChart('png')}
+              onClick={downloadChart}
               className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
-              <FaDownload className="inline mr-2" /> ดาวน์โหลด PNG
-            </button>
-            <button
-              onClick={() => downloadChart('jpeg')}
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              <FaDownload className="inline mr-2" /> ดาวน์โหลด JPEG
+              <FaDownload className="inline mr-2" /> ดาวน์โหลดกราฟ
             </button>
           </div>
         )}
       </div>
-      <Bar 
-        ref={chartRef as React.RefObject<ChartJS<'bar', number[], string>>}
-        data={chartData}
-        options={options}
+      
+      <ReactECharts
+        option={option}
+        style={{ height: '100%', width: '100%' }}
       />
     </div>
   );

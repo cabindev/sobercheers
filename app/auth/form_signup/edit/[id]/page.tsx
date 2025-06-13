@@ -95,7 +95,7 @@ const EditUserPage: React.FC = () => {
           duration: 4000,
           style: { background: '#4ade80', color: '#ffffff' },
         });
-        setTimeout(() => router.push('/profile'), 2000);
+        setTimeout(() => router.push('/dashboard/profile'), 2000);
       } else {
         toast.error(response.data.error || 'Something went wrong', {
           style: { background: '#f87171', color: '#ffffff' },

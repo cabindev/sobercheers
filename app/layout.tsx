@@ -4,30 +4,30 @@ import "./globals.css";
 import SessionProvider from "./components/SessionProvider";
 import { getServerSession } from "next-auth/next";
 import authOptions from "./lib/configs/auth/authOptions";
-import Navbar from "./dashboard/components/navbar";
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SOBER CHEERs",
-  description: "3 เดือนเปลี่ยนคุณเป็นคนใหม่",
+ title: "SOBER CHEERs",
+ description: "3 เดือนเปลี่ยนคุณเป็นคนใหม่",
 };
 
 export default async function RootLayout({
-  children,
+ children,
 }: {
-  children: React.ReactNode;
+ children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+ const session = await getServerSession(authOptions);
 
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-        <SessionProvider session={session}>
-          <Navbar />
-          {children}
-        </SessionProvider>
-      </body>
-    </html>
-  );
+ return (
+   <html lang="th">
+     <body className={inter.className}>
+       <SessionProvider session={session}>
+         <Navbar />
+         {children}
+       </SessionProvider>
+     </body>
+   </html>
+ );
 }
