@@ -21,8 +21,6 @@ interface StatsData {
   avgAge: number;
 }
 
-type ChangeType = 'increase' | 'decrease' | 'stable';
-
 export default function DashboardStats({ isAdmin }: DashboardStatsProps) {
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -52,13 +50,13 @@ export default function DashboardStats({ isAdmin }: DashboardStatsProps) {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200/50">
+          <div key={i} className="bg-white rounded-lg p-4 border border-gray-200">
             <div className="animate-pulse">
-              <div className="w-8 h-8 bg-slate-200 rounded-lg mb-3"></div>
-              <div className="w-20 h-6 bg-slate-200 rounded mb-2"></div>
-              <div className="w-24 h-4 bg-slate-200 rounded"></div>
+              <div className="w-6 h-6 bg-gray-200 rounded mb-2"></div>
+              <div className="w-16 h-4 bg-gray-200 rounded mb-1"></div>
+              <div className="w-20 h-3 bg-gray-200 rounded"></div>
             </div>
           </div>
         ))}
@@ -68,12 +66,12 @@ export default function DashboardStats({ isAdmin }: DashboardStatsProps) {
 
   if (error || !stats) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="col-span-full bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <p className="text-red-600">ไม่สามารถโหลดข้อมูลสถิติได้: {error}</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="col-span-full bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+          <p className="text-red-600 text-sm">ไม่สามารถโหลดข้อมูลสถิติได้: {error}</p>
           <button 
             onClick={loadStats}
-            className="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            className="mt-2 px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors"
           >
             ลองใหม่
           </button>
@@ -87,89 +85,61 @@ export default function DashboardStats({ isAdmin }: DashboardStatsProps) {
       title: 'ผู้เข้าร่วมทั้งหมด',
       value: stats.totalParticipants.toLocaleString(),
       icon: Users,
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-blue-50',
-      textColor: 'text-blue-600',
-      description: 'ผู้ลงทะเบียนเข้าร่วม',
-      change: '+12%',
-      changeType: 'increase' as ChangeType
+      bgColor: 'bg-gray-50',
+      textColor: 'text-gray-600',
+      description: 'ผู้ลงทะเบียนเข้าร่วม'
     },
     {
       title: 'จังหวัดที่เข้าร่วม',
       value: stats.totalProvinces.toString(),
       icon: MapPin,
-      color: 'from-emerald-500 to-emerald-600',
-      bgColor: 'bg-emerald-50',
-      textColor: 'text-emerald-600',
-      description: 'จังหวัดทั่วประเทศ',
-      change: '+3',
-      changeType: 'increase' as ChangeType
+      bgColor: 'bg-gray-50',
+      textColor: 'text-gray-600',
+      description: 'จังหวัดทั่วประเทศ'
     },
     {
       title: 'หมวดหมู่องค์กร',
       value: stats.totalGroupCategories.toString(),
       icon: Building2,
-      color: 'from-violet-500 to-violet-600',
-      bgColor: 'bg-violet-50',
-      textColor: 'text-violet-600',
-      description: 'ประเภทองค์กร',
-      change: '0',
-      changeType: 'stable' as ChangeType
+      bgColor: 'bg-gray-50',
+      textColor: 'text-gray-600',
+      description: 'ประเภทองค์กร'
     },
     {
       title: 'อายุเฉลี่ย',
       value: `${stats.avgAge} ปี`,
       icon: TrendingUp,
-      color: 'from-amber-500 to-amber-600',
-      bgColor: 'bg-amber-50',
-      textColor: 'text-amber-600',
-      description: 'อายุเฉลี่ยผู้เข้าร่วม',
-      change: '+1.2',
-      changeType: 'increase' as ChangeType
+      bgColor: 'bg-gray-50',
+      textColor: 'text-gray-600',
+      description: 'อายุเฉลี่ยผู้เข้าร่วม'
     }
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {statsConfig.map((stat, index) => {
         const Icon = stat.icon;
         return (
           <div 
             key={index}
-            className="bg-white rounded-xl p-6 shadow-sm border border-slate-200/50 hover:shadow-md transition-all duration-300 group"
+            className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow"
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className={`p-3 rounded-xl ${stat.bgColor} group-hover:scale-110 transition-transform duration-300`}>
-                <Icon className={`w-6 h-6 ${stat.textColor}`} />
-              </div>
-              <div className={`text-sm font-medium px-2 py-1 rounded-full ${
-                stat.changeType === 'increase' ? 'text-green-600 bg-green-50' :
-                stat.changeType === 'decrease' ? 'text-red-600 bg-red-50' :
-                'text-slate-600 bg-slate-50'
-              }`}>
-                {stat.change}
+            <div className="flex items-center justify-between mb-3">
+              <div className={`p-2 rounded ${stat.bgColor}`}>
+                <Icon className={`w-5 h-5 ${stat.textColor}`} />
               </div>
             </div>
             
             <div className="space-y-1">
-              <h3 className="text-2xl font-bold text-slate-900">
+              <h3 className="text-xl font-semibold text-gray-900">
                 {stat.value}
               </h3>
-              <p className="text-sm font-medium text-slate-700">
+              <p className="text-sm font-medium text-gray-700">
                 {stat.title}
               </p>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-gray-500">
                 {stat.description}
               </p>
-            </div>
-
-            <div className="mt-4">
-              <div className="w-full bg-slate-100 rounded-full h-1.5">
-                <div 
-                  className={`bg-gradient-to-r ${stat.color} h-1.5 rounded-full transition-all duration-1000 ease-out`}
-                  style={{ width: `${Math.min((index + 1) * 25, 100)}%` }}
-                ></div>
-              </div>
             </div>
           </div>
         );

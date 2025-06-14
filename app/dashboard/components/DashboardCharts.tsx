@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import {
   getGenderChartData,
-  getProvinceChartData,
-  getMotivationChartData,
+  getTop10ProvincesChartData,
+  getAgeGroupChartData,
   getParticipationChartData
 } from '../Buddhist2025/actions/GetChartData';
 
@@ -16,9 +16,9 @@ interface DashboardChartsProps {
 
 export default function DashboardCharts({ isAdmin }: DashboardChartsProps) {
   const [genderData, setGenderData] = useState<any[]>([]);
-  const [participationData, setParticipationData] = useState<any[]>([]);
-  const [motivationData, setMotivationData] = useState<any[]>([]);
   const [provinceData, setProvinceData] = useState<any[]>([]);
+  const [ageGroupData, setAgeGroupData] = useState<any[]>([]);
+  const [participationData, setParticipationData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,17 +28,17 @@ export default function DashboardCharts({ isAdmin }: DashboardChartsProps) {
   const loadChartsData = async () => {
     try {
       setLoading(true);
-      const [genderResult, participationResult, motivationResult, provinceResult] = await Promise.all([
+      const [genderResult, provinceResult, ageGroupResult, participationResult] = await Promise.all([
         getGenderChartData(),
-        getParticipationChartData(),
-        getMotivationChartData(),
-        getProvinceChartData()
+        getTop10ProvincesChartData(),
+        getAgeGroupChartData(),
+        getParticipationChartData()
       ]);
 
       if (genderResult.success) setGenderData(genderResult.data || []);
+      if (provinceResult.success) setProvinceData(provinceResult.data || []);
+      if (ageGroupResult.success) setAgeGroupData(ageGroupResult.data || []);
       if (participationResult.success) setParticipationData(participationResult.data || []);
-      if (motivationResult.success) setMotivationData(motivationResult.data || []);
-      if (provinceResult.success) setProvinceData((provinceResult.data || []).slice(0, 10)); // Top 10
     } catch (error) {
       console.error('Error loading charts data:', error);
     } finally {
@@ -52,53 +52,202 @@ export default function DashboardCharts({ isAdmin }: DashboardChartsProps) {
       text: 'การกระจายตามเพศ',
       left: 'center',
       textStyle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#1e293b'
+        fontSize: 14,
+        fontWeight: 'normal',
+        color: '#374151'
       }
     },
     tooltip: {
       trigger: 'item',
-      formatter: '{a} <br/>{b}: {c} ({d}%)'
+      formatter: '{b}: {c} คน ({d}%)',
+      backgroundColor: 'white',
+      borderColor: '#E5E7EB',
+      borderWidth: 1,
+      textStyle: {
+        color: '#374151',
+        fontSize: 12
+      }
     },
     legend: {
       orient: 'horizontal',
       bottom: '5%',
-      left: 'center'
+      left: 'center',
+      textStyle: {
+        fontSize: 11,
+        color: '#6B7280'
+      }
     },
     series: [
       {
-        name: 'เพศ',
         type: 'pie',
-        radius: ['30%', '70%'],
+        radius: ['40%', '65%'],
         center: ['50%', '45%'],
-        avoidLabelOverlap: false,
         itemStyle: {
-          borderRadius: 8,
+          borderRadius: 4,
           borderColor: '#fff',
           borderWidth: 2
         },
         label: {
-          show: false,
-          position: 'center'
-        },
-        emphasis: {
-          label: {
-            show: true,
-            fontSize: 20,
-            fontWeight: 'bold'
-          },
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
-          }
-        },
-        labelLine: {
           show: false
         },
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 6,
+            shadowColor: 'rgba(0, 0, 0, 0.1)'
+          }
+        },
         data: genderData,
-        color: ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B']
+        color: ['#6B7280', '#9CA3AF', '#D1D5DB']
+      }
+    ]
+  };
+
+  // Top 10 Provinces Chart Options
+  const provinceChartOptions = {
+    title: {
+      text: 'จังหวัดที่มีผู้เข้าร่วมมากที่สุด',
+      left: 'center',
+      textStyle: {
+        fontSize: 14,
+        fontWeight: 'normal',
+        color: '#374151'
+      }
+    },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'white',
+      borderColor: '#E5E7EB',
+      borderWidth: 1,
+      textStyle: {
+        color: '#374151',
+        fontSize: 12
+      }
+    },
+    grid: {
+      left: '5%',
+      right: '5%',
+      bottom: '25%',
+      top: '15%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: provinceData.map(item => item.name),
+      axisLabel: {
+        rotate: 45,
+        fontSize: 10,
+        color: '#6B7280',
+        interval: 0
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#E5E7EB'
+        }
+      }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        fontSize: 10,
+        color: '#6B7280'
+      },
+      axisLine: {
+        show: false
+      },
+      splitLine: {
+        lineStyle: {
+          color: '#F3F4F6'
+        }
+      }
+    },
+    series: [
+      {
+        type: 'bar',
+        data: provinceData.map(item => item.value),
+        itemStyle: {
+          color: '#6B7280',
+          borderRadius: [2, 2, 0, 0]
+        },
+        emphasis: {
+          itemStyle: {
+            color: '#4B5563'
+          }
+        }
+      }
+    ]
+  };
+
+  // Age Group Chart Options
+  const ageGroupChartOptions = {
+    title: {
+      text: 'การแบ่งตามกลุ่มอายุ',
+      left: 'center',
+      textStyle: {
+        fontSize: 14,
+        fontWeight: 'normal',
+        color: '#374151'
+      }
+    },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'white',
+      borderColor: '#E5E7EB',
+      borderWidth: 1,
+      textStyle: {
+        color: '#374151',
+        fontSize: 12
+      }
+    },
+    grid: {
+      left: '5%',
+      right: '5%',
+      bottom: '20%',
+      top: '15%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: ageGroupData.map(item => item.name),
+      axisLabel: {
+        rotate: 30,
+        fontSize: 10,
+        color: '#6B7280',
+        interval: 0
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#E5E7EB'
+        }
+      }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        fontSize: 10,
+        color: '#6B7280'
+      },
+      axisLine: {
+        show: false
+      },
+      splitLine: {
+        lineStyle: {
+          color: '#F3F4F6'
+        }
+      }
+    },
+    series: [
+      {
+        type: 'bar',
+        data: ageGroupData.map(item => item.value),
+        itemStyle: {
+          color: '#9CA3AF',
+          borderRadius: [2, 2, 0, 0]
+        },
+        emphasis: {
+          itemStyle: {
+            color: '#6B7280'
+          }
+        }
       }
     ]
   };
@@ -109,171 +258,69 @@ export default function DashboardCharts({ isAdmin }: DashboardChartsProps) {
       text: 'การเข้าร่วมตามประเภทองค์กร',
       left: 'center',
       textStyle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#1e293b'
+        fontSize: 14,
+        fontWeight: 'normal',
+        color: '#374151'
       }
     },
     tooltip: {
       trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'
+      backgroundColor: 'white',
+      borderColor: '#E5E7EB',
+      borderWidth: 1,
+      textStyle: {
+        color: '#374151',
+        fontSize: 12
       }
     },
     grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '15%',
+      left: '5%',
+      right: '5%',
+      bottom: '25%',
+      top: '15%',
       containLabel: true
     },
     xAxis: {
       type: 'category',
-      data: participationData.slice(0, 8).map(item => item.name),
+      data: participationData.slice(0, 6).map(item => item.name),
       axisLabel: {
         rotate: 45,
         fontSize: 10,
+        color: '#6B7280',
         interval: 0
-      }
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [
-      {
-        name: 'จำนวนผู้เข้าร่วม',
-        type: 'bar',
-        data: participationData.slice(0, 8).map(item => item.value),
-        itemStyle: {
-          color: new (window as any).echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: '#60A5FA' },
-            { offset: 1, color: '#3B82F6' }
-          ]),
-          borderRadius: [4, 4, 0, 0]
-        },
-        emphasis: {
-          itemStyle: {
-            color: new (window as any).echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: '#93C5FD' },
-              { offset: 1, color: '#60A5FA' }
-            ])
-          }
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#E5E7EB'
         }
       }
-    ]
-  };
-
-  // Motivation Chart Options
-  const motivationChartOptions = {
-    title: {
-      text: 'แรงจูงใจในการเข้าร่วม',
-      left: 'center',
-      textStyle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#1e293b'
-      }
-    },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'
-      }
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '15%',
-      containLabel: true
-    },
-    xAxis: {
-      type: 'category',
-      data: motivationData.slice(0, 6).map(item => item.name),
-      axisLabel: {
-        rotate: 45,
-        fontSize: 10,
-        interval: 0
-      }
     },
     yAxis: {
-      type: 'value'
-    },
-    series: [
-      {
-        name: 'จำนวน',
-        type: 'bar',
-        data: motivationData.slice(0, 6).map(item => item.value),
-        itemStyle: {
-          color: new (window as any).echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: '#34D399' },
-            { offset: 1, color: '#10B981' }
-          ]),
-          borderRadius: [4, 4, 0, 0]
-        },
-        emphasis: {
-          itemStyle: {
-            color: new (window as any).echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: '#6EE7B7' },
-              { offset: 1, color: '#34D399' }
-            ])
-          }
+      type: 'value',
+      axisLabel: {
+        fontSize: 10,
+        color: '#6B7280'
+      },
+      axisLine: {
+        show: false
+      },
+      splitLine: {
+        lineStyle: {
+          color: '#F3F4F6'
         }
       }
-    ]
-  };
-
-  // Province Chart Options
-  const provinceChartOptions = {
-    title: {
-      text: 'จังหวัดที่มีผู้เข้าร่วมมากที่สุด (Top 10)',
-      left: 'center',
-      textStyle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#1e293b'
-      }
-    },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'
-      }
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '15%',
-      containLabel: true
-    },
-    xAxis: {
-      type: 'category',
-      data: provinceData.map(item => item.name),
-      axisLabel: {
-        rotate: 45,
-        fontSize: 10,
-        interval: 0
-      }
-    },
-    yAxis: {
-      type: 'value'
     },
     series: [
       {
-        name: 'จำนวนผู้เข้าร่วม',
         type: 'bar',
-        data: provinceData.map(item => item.value),
+        data: participationData.slice(0, 6).map(item => item.value),
         itemStyle: {
-          color: new (window as any).echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: '#A78BFA' },
-            { offset: 1, color: '#8B5CF6' }
-          ]),
-          borderRadius: [4, 4, 0, 0]
+          color: '#D1D5DB',
+          borderRadius: [2, 2, 0, 0]
         },
         emphasis: {
           itemStyle: {
-            color: new (window as any).echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: '#C4B5FD' },
-              { offset: 1, color: '#A78BFA' }
-            ])
+            color: '#9CA3AF'
           }
         }
       }
@@ -282,12 +329,12 @@ export default function DashboardCharts({ isAdmin }: DashboardChartsProps) {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200/50">
+          <div key={i} className="bg-white rounded-lg p-4 border border-gray-200">
             <div className="animate-pulse">
-              <div className="w-32 h-6 bg-slate-200 rounded mb-4"></div>
-              <div className="w-full h-64 bg-slate-200 rounded"></div>
+              <div className="w-24 h-4 bg-gray-200 rounded mb-3"></div>
+              <div className="w-full h-48 bg-gray-200 rounded"></div>
             </div>
           </div>
         ))}
@@ -296,39 +343,39 @@ export default function DashboardCharts({ isAdmin }: DashboardChartsProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       {/* Gender Chart */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200/50 hover:shadow-md transition-shadow">
+      <div className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
         <ReactECharts 
           option={genderChartOptions} 
-          style={{ height: '300px' }}
+          style={{ height: '240px' }}
+          opts={{ renderer: 'svg' }}
+        />
+      </div>
+
+      {/* Top 10 Provinces Chart */}
+      <div className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
+        <ReactECharts 
+          option={provinceChartOptions} 
+          style={{ height: '240px' }}
+          opts={{ renderer: 'svg' }}
+        />
+      </div>
+
+      {/* Age Group Chart */}
+      <div className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
+        <ReactECharts 
+          option={ageGroupChartOptions} 
+          style={{ height: '240px' }}
           opts={{ renderer: 'svg' }}
         />
       </div>
 
       {/* Participation Chart */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200/50 hover:shadow-md transition-shadow">
+      <div className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
         <ReactECharts 
           option={participationChartOptions} 
-          style={{ height: '300px' }}
-          opts={{ renderer: 'svg' }}
-        />
-      </div>
-
-      {/* Motivation Chart */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200/50 hover:shadow-md transition-shadow">
-        <ReactECharts 
-          option={motivationChartOptions} 
-          style={{ height: '300px' }}
-          opts={{ renderer: 'svg' }}
-        />
-      </div>
-
-      {/* Province Chart */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200/50 hover:shadow-md transition-shadow">
-        <ReactECharts 
-          option={provinceChartOptions} 
-          style={{ height: '300px' }}
+          style={{ height: '240px' }}
           opts={{ renderer: 'svg' }}
         />
       </div>

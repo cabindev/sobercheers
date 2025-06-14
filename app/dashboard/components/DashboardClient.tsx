@@ -21,14 +21,14 @@ export default function DashboardClient({ children, user }: DashboardClientProps
       {/* Main content area */}
       <div 
         className={cn(
-          "transition-all duration-300 ease-in-out",
-          sidebarCollapsed ? "lg:ml-20" : "lg:ml-72"
+          "transition-all duration-200",
+          sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"
         )}
       >
         <TopNav user={user} />
         
         {/* Page content */}
-        <main className="flex-1">
+        <main className="pt-2">
           {children}
         </main>
       </div>

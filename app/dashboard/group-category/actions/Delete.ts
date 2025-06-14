@@ -65,9 +65,10 @@ export async function softDeleteGroupCategory(id: number): Promise<{ success: bo
       throw new Error('ไม่พบหมวดหมู่ที่ต้องการ');
     }
     
+
     await prisma.groupCategory.update({
       where: { id },
-      data: { isActive: false }
+      data: {}
     });
     
     revalidatePath('/group-category');

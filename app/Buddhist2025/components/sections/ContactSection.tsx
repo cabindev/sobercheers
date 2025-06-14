@@ -11,20 +11,18 @@ interface ContactSectionProps {
   disabled: boolean;
 }
 
-// app/Buddhist2025/components/sections/ContactSection.tsx - เพิ่ม safety checks
 export default function ContactSection({ 
   formData, 
   validationErrors, 
   onChange, 
   disabled 
 }: ContactSectionProps) {
-  // ✅ เพิ่ม safety check
   if (!formData) {
     return (
-      <FormSection title="ข้อมูลติดต่อ" icon={<Phone className="h-5 w-5" />}>
+      <FormSection title="ข้อมูลติดต่อ" icon={<Phone className="h-4 w-4" />}>
         <div className="animate-pulse">
           <div className="max-w-sm">
-            <div className="h-12 bg-gray-200 rounded-lg"></div>
+            <div className="h-10 bg-gray-200 rounded-lg"></div>
           </div>
         </div>
       </FormSection>
@@ -32,14 +30,13 @@ export default function ContactSection({
   }
 
   const handlePhoneChange = (value: string) => {
-    // Remove non-numeric characters and limit to 10 digits
     const numericValue = value.replace(/[^0-9]/g, '').slice(0, 10);
     onChange('phone', numericValue || undefined);
   };
 
   return (
-    <FormSection title="ข้อมูลติดต่อ" icon={<Phone className="h-5 w-5" />}>
-      <div className="max-w-sm">
+    <FormSection title="ข้อมูลติดต่อ" icon={<Phone className="h-4 w-4" />}>
+      <div className="max-w-md">
         <FormField label="เบอร์โทรศัพท์ (ไม่บังคับ)" error={validationErrors?.phone}>
           <Input
             id="phone"
@@ -52,7 +49,7 @@ export default function ContactSection({
             icon={<Phone className="h-4 w-4" />}
             maxLength={10}
           />
-          <div className="mt-1 text-xs text-gray-500">
+          <div className="mt-2 text-xs text-gray-500 bg-gray-50 p-2 rounded">
             ตัวอย่าง: 0812345678
           </div>
         </FormField>

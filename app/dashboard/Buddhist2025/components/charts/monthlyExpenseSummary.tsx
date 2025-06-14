@@ -2,254 +2,240 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { getMonthlyExpenseSummaryData } from '../../actions/GetChartData';
-import { 
- FaMoneyBillWave, 
- FaChartLine, 
- FaUsers, 
- FaPiggyBank,
- FaCalendarAlt,
- FaStar,
- FaArrowUp,
- FaLeaf
-} from 'react-icons/fa';
 
 interface ExpenseSummary {
- total: number;
- average: number;
- participantCount: number;
+  total: number;
+  average: number;
+  participantCount: number;
 }
 
 const MonthlyExpenseSummary: React.FC = () => {
- const [summary, setSummary] = useState<ExpenseSummary | null>(null);
- const [loading, setLoading] = useState(true);
+  const [summary, setSummary] = useState<ExpenseSummary | null>(null);
+  const [loading, setLoading] = useState(true);
 
- useEffect(() => {
-   const fetchData = async () => {
-     try {
-       setLoading(true);
-       const result = await getMonthlyExpenseSummaryData();
-       if (result.success && result.data) {
-         setSummary(result.data);
-       }
-     } catch (error) {
-       console.error('Error fetching monthly expense summary:', error);
-     } finally {
-       setLoading(false);
-     }
-   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const result = await getMonthlyExpenseSummaryData();
+        if (result.success && result.data) {
+          setSummary(result.data);
+        }
+      } catch (error) {
+        console.error('Error fetching monthly expense summary:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-   fetchData();
- }, []);
+    fetchData();
+  }, []);
 
- if (loading) {
-   return (
-     <div className="max-w-5xl mx-auto space-y-6">
-       {/* Elegant skeleton */}
-       <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 animate-pulse">
-         <div className="h-8 bg-gray-200 rounded-2xl w-80 mx-auto mb-8"></div>
-         
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-           {[...Array(3)].map((_, index) => (
-             <div key={index} className="bg-gray-100 rounded-2xl p-6">
-               <div className="h-6 bg-gray-200 rounded-xl mb-4"></div>
-               <div className="h-10 bg-gray-200 rounded-xl mb-2"></div>
-               <div className="h-4 bg-gray-200 rounded-xl w-20"></div>
-             </div>
-           ))}
-         </div>
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg border border-gray-200 p-8">
+        <div className="animate-pulse space-y-6">
+          <div className="h-6 bg-gray-200 rounded w-2/3 mx-auto"></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-20 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="h-24 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-           {[...Array(2)].map((_, index) => (
-             <div key={index} className="bg-gray-100 rounded-2xl p-6">
-               <div className="h-24 bg-gray-200 rounded-xl"></div>
-             </div>
-           ))}
-         </div>
-       </div>
-     </div>
-   );
- }
+  if (!summary) {
+    return (
+      <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
+        <div className="text-sm text-gray-500">ไม่พบข้อมูลค่าใช้จ่ายรายเดือน | No monthly expense data found</div>
+      </div>
+    );
+  }
 
- if (!summary) {
-   return (
-     <div className="max-w-5xl mx-auto">
-       <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center">
-         <div className="text-red-500 font-medium">ไม่พบข้อมูลค่าใช้จ่ายรายเดือน</div>
-       </div>
-     </div>
-   );
- }
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('th-TH', { 
+      style: 'currency', 
+      currency: 'THB',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
+  };
 
- const formatCurrency = (amount: number) => {
-   return new Intl.NumberFormat('th-TH', { 
-     style: 'currency', 
-     currency: 'THB',
-     minimumFractionDigits: 0,
-     maximumFractionDigits: 0
-   }).format(amount);
- };
+  const campaignSavings = summary.total * 3;
+  const annualSavings = summary.total * 12;
 
- const campaignSavings = summary.total * 3;
- const annualSavings = summary.total * 12;
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+      {/* Header Section */}
 
- return (
-   <div className="max-w-5xl mx-auto">
-     <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
-       {/* Header */}
-       <div className="bg-gradient-to-r from-slate-50 to-gray-50 px-8 py-6 border-b border-gray-100">
-         <div className="flex items-center justify-center">
-           <div className="bg-emerald-100 p-3 rounded-2xl mr-4">
-             <FaMoneyBillWave className="text-emerald-600 text-xl" />
-           </div>
-           <div className="text-center">
-             <h2 className="text-2xl font-bold text-gray-800">ภาพรวมค่าใช้จ่าย</h2>
-             <p className="text-gray-600 text-sm mt-1">การวิเคราะห์รายจ่ายเหล้ารายเดือน</p>
-           </div>
-         </div>
-       </div>
 
-       <div className="p-8">
-         {/* Main Stats */}
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-           {/* Total Amount */}
-           <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200">
-             <div className="flex items-center justify-between mb-4">
-               <div className="bg-purple-500 p-3 rounded-xl">
-                 <FaMoneyBillWave className="text-white text-lg" />
-               </div>
-               <div className="text-purple-600 text-xs font-semibold bg-purple-200 px-3 py-1 rounded-full">
-                 รวม
-               </div>
-             </div>
-             <div className="text-2xl font-bold text-purple-900 mb-1">
-               {formatCurrency(summary.total)}
-             </div>
-             <div className="text-purple-600 text-sm font-medium">ต่อเดือน</div>
-           </div>
+      <div className="p-6">
+        {/* Key Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div className="text-center">
+              <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+                รวมต่อเดือน | Total Monthly
+              </div>
+              <div className="text-2xl font-bold text-gray-900 mb-1">
+                {formatCurrency(summary.total)}
+              </div>
+              <div className="text-xs text-gray-600">
+                รายจ่ายรวมทั้งหมด | Total Expenses
+              </div>
+            </div>
+          </div>
 
-           {/* Average */}
-           <div className="bg-gradient-to-br from-blue-50 to-cyan-100 rounded-2xl p-6 border border-cyan-200">
-             <div className="flex items-center justify-between mb-4">
-               <div className="bg-cyan-500 p-3 rounded-xl">
-                 <FaChartLine className="text-white text-lg" />
-               </div>
-               <div className="text-cyan-600 text-xs font-semibold bg-cyan-200 px-3 py-1 rounded-full">
-                 เฉลี่ย
-               </div>
-             </div>
-             <div className="text-2xl font-bold text-cyan-900 mb-1">
-               {formatCurrency(summary.average)}
-             </div>
-             <div className="text-cyan-600 text-sm font-medium">ต่อคน/เดือน</div>
-           </div>
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div className="text-center">
+              <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+                เฉลี่ยต่อคน | Average Per Person
+              </div>
+              <div className="text-2xl font-bold text-gray-900 mb-1">
+                {formatCurrency(summary.average)}
+              </div>
+              <div className="text-xs text-gray-600">
+                ค่าใช้จ่ายเฉลี่ย | Average Expense
+              </div>
+            </div>
+          </div>
 
-           {/* Participants */}
-           <div className="bg-gradient-to-br from-emerald-50 to-green-100 rounded-2xl p-6 border border-emerald-200">
-             <div className="flex items-center justify-between mb-4">
-               <div className="bg-emerald-500 p-3 rounded-xl">
-                 <FaUsers className="text-white text-lg" />
-               </div>
-               <div className="text-emerald-600 text-xs font-semibold bg-emerald-200 px-3 py-1 rounded-full">
-                 คน
-               </div>
-             </div>
-             <div className="text-2xl font-bold text-emerald-900 mb-1">
-               {summary.participantCount.toLocaleString()}
-             </div>
-             <div className="text-emerald-600 text-sm font-medium">ผู้ให้ข้อมูล</div>
-           </div>
-         </div>
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div className="text-center">
+              <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+                ผู้ให้ข้อมูล | Participants
+              </div>
+              <div className="text-2xl font-bold text-gray-900 mb-1">
+                {summary.participantCount.toLocaleString()}
+              </div>
+              <div className="text-xs text-gray-600">
+                คน | People
+              </div>
+            </div>
+          </div>
+        </div>
 
-         {/* Savings Projection */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-           {/* 3 Months */}
-           <div className="bg-gradient-to-br from-amber-50 to-orange-100 rounded-2xl p-6 border border-orange-200 relative overflow-hidden">
-             <div className="absolute top-0 right-0 w-20 h-20 bg-orange-200 rounded-full opacity-20 -translate-y-6 translate-x-6"></div>
-             <div className="relative">
-               <div className="flex items-center mb-4">
-                 <div className="bg-orange-500 p-3 rounded-xl mr-4">
-                   <FaCalendarAlt className="text-white text-lg" />
-                 </div>
-                 <div>
-                   <h3 className="font-bold text-orange-900">ช่วงเข้าพรรษา</h3>
-                   <p className="text-orange-700 text-sm">3 เดือน</p>
-                 </div>
-               </div>
-               <div className="bg-white rounded-xl p-4 border border-orange-200">
-                 <div className="text-center">
-                   <div className="text-2xl font-bold text-orange-600 mb-1">
-                     {formatCurrency(campaignSavings)}
-                   </div>
-                   <div className="text-orange-700 text-sm flex items-center justify-center">
-                     <FaArrowUp className="mr-1" />
-                     ประหยัดได้
-                   </div>
-                 </div>
-               </div>
-             </div>
-           </div>
+        {/* Savings Projection */}
+        <div className="mb-8">
+          <div className="text-center mb-6">
+            <h3 className="text-base font-semibold text-gray-800 mb-2">
+              การประหยัดที่คาดหวัง | Projected Savings
+            </h3>
+            <p className="text-sm text-gray-600">
+              จำนวนเงินที่อาจประหยัดได้จากการงดแอลกอฮอล์ | Potential savings from alcohol abstinence
+            </p>
+          </div>
 
-           {/* 12 Months */}
-           <div className="bg-gradient-to-br from-emerald-50 to-green-100 rounded-2xl p-6 border border-emerald-200 relative overflow-hidden">
-             <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-200 rounded-full opacity-20 -translate-y-6 translate-x-6"></div>
-             <div className="relative">
-               <div className="flex items-center mb-4">
-                 <div className="bg-emerald-500 p-3 rounded-xl mr-4">
-                   <FaStar className="text-white text-lg" />
-                 </div>
-                 <div>
-                   <h3 className="font-bold text-emerald-900">ตลอดปี</h3>
-                   <p className="text-emerald-700 text-sm">12 เดือน</p>
-                 </div>
-               </div>
-               <div className="bg-white rounded-xl p-4 border border-emerald-200">
-                 <div className="text-center">
-                   <div className="text-2xl font-bold text-emerald-600 mb-1">
-                     {formatCurrency(annualSavings)}
-                   </div>
-                   <div className="text-emerald-700 text-sm flex items-center justify-center">
-                     <FaArrowUp className="mr-1" />
-                     ประหยัดได้
-                   </div>
-                 </div>
-               </div>
-             </div>
-           </div>
-         </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-orange-50 rounded-lg p-6 border border-orange-200">
+              <div className="text-center">
+                <div className="text-sm font-medium text-orange-700 mb-3">
+                  ช่วงเข้าพรรษา | Buddhist Lent Period
+                </div>
+                <div className="text-xs text-orange-600 mb-4">
+                  3 เดือน | 3 Months
+                </div>
+                <div className="bg-white rounded-lg p-4 border border-orange-200">
+                  <div className="text-3xl font-bold text-orange-600 mb-2">
+                    {formatCurrency(campaignSavings)}
+                  </div>
+                  <div className="text-sm text-orange-700">
+                    ประหยัดได้ | Potential Savings
+                  </div>
+                </div>
+              </div>
+            </div>
 
-         {/* Benefits */}
-         <div className="mt-8 bg-gradient-to-r from-slate-50 to-gray-50 rounded-2xl p-6 border border-gray-200">
-           <div className="flex items-center mb-4">
-             <div className="bg-indigo-500 p-3 rounded-xl mr-4">
-               <FaLeaf className="text-white text-lg" />
-             </div>
-             <h3 className="font-bold text-gray-800">ประโยชน์เพิ่มเติม</h3>
-           </div>
-           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-             {[
-               { icon: "🏥", text: "สุขภาพดีขึ้น" },
-               { icon: "👨‍👩‍👧‍👦", text: "ครอบครัวอบอุ่น" },
-               { icon: "🧠", text: "จิตใจแจ่มใส" },
-               { icon: "💼", text: "ทำงานมีประสิทธิภาพ" }
-             ].map((benefit, index) => (
-               <div key={index} className="bg-white rounded-xl p-4 text-center border border-gray-200 hover:shadow-sm transition-shadow">
-                 <div className="text-2xl mb-2">{benefit.icon}</div>
-                 <div className="text-gray-700 text-sm font-medium">{benefit.text}</div>
-               </div>
-             ))}
-           </div>
-         </div>
-       </div>
+            <div className="bg-green-50 rounded-lg p-6 border border-green-200">
+              <div className="text-center">
+                <div className="text-sm font-medium text-green-700 mb-3">
+                  ตลอดปี | Annual Period
+                </div>
+                <div className="text-xs text-green-600 mb-4">
+                  12 เดือน | 12 Months
+                </div>
+                <div className="bg-white rounded-lg p-4 border border-green-200">
+                  <div className="text-3xl font-bold text-green-600 mb-2">
+                    {formatCurrency(annualSavings)}
+                  </div>
+                  <div className="text-sm text-green-700">
+                    ประหยัดได้ | Annual Savings
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-       {/* Footer */}
-       <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-8 py-4">
-         <div className="text-center text-white">
-           <p className="font-semibold">🙏 เริ่มต้นเปลี่ยนแปลงชีวิตวันนี้</p>
-         </div>
-       </div>
-     </div>
-   </div>
- );
+        {/* Benefits Analysis */}
+        <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+          <div className="text-center mb-6">
+            <h3 className="text-base font-semibold text-gray-800 mb-2">
+              ประโยชน์เพิ่มเติม | Additional Benefits
+            </h3>
+            <p className="text-sm text-gray-600">
+              ผลประโยชน์นอกเหนือจากการประหยัดเงิน | Benefits beyond monetary savings
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { 
+                title: "สุขภาพ | Health",
+                description: "ปรับปรุงสุขภาพกายและใจ | Physical & mental health improvement"
+              },
+              { 
+                title: "ครอบครัว | Family",
+                description: "ความสัมพันธ์ที่ดีขึ้น | Improved relationships"
+              },
+              { 
+                title: "การทำงาน | Work",
+                description: "ประสิทธิภาพที่เพิ่มขึ้น | Enhanced productivity"
+              },
+              { 
+                title: "สังคม | Social",
+                description: "บทบาทที่ดีในสังคม | Better social role"
+              }
+            ].map((benefit, index) => (
+              <div 
+                key={index} 
+                className="bg-white rounded-lg p-4 border border-gray-200 text-center"
+              >
+                <div className="text-sm font-medium text-gray-800 mb-2">
+                  {benefit.title}
+                </div>
+                <div className="text-xs text-gray-600 leading-relaxed">
+                  {benefit.description}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Summary Statement */}
+        <div className="mt-8 bg-gray-100 rounded-lg p-6 border border-gray-300 text-center">
+          <h3 className="text-base font-semibold text-gray-800 mb-2">
+            สรุปผล | Summary
+          </h3>
+          <p className="text-sm text-gray-700 leading-relaxed">
+            การงดแอลกอฮอล์ในช่วงเข้าพรรษาไม่เพียงแต่ช่วยประหยัดค่าใช้จ่าย 
+            แต่ยังส่งผลดีต่อสุขภาพ ครอบครัว และสังคมโดยรวม
+          </p>
+          <p className="text-sm text-gray-600 mt-2">
+            Abstaining from alcohol during Buddhist Lent not only saves money 
+            but also benefits health, family, and society as a whole.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default MonthlyExpenseSummary;

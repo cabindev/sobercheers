@@ -27,7 +27,6 @@ export default async function EditGroupCategoryPage({ params }: EditGroupCategor
           id: category.id,
           name: category.name,
           description: category.description || '',
-          isActive: category.isActive,
         }}
         isEdit={true}
       />

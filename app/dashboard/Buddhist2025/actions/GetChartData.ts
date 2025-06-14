@@ -262,29 +262,107 @@ export async function getAlcoholConsumptionChartData(): Promise<ChartDataResult<
 }
 
 // 🍷 ข้อมูลสำหรับ Drinking Frequency Chart - ใหม่
-export async function getDrinkingFrequencyChartData(): Promise<ChartDataResult<Array<{ name: string; value: number }>>> {
-  try {
-    const frequencyStats = await prisma.buddhist2025.groupBy({
-      by: ['drinkingFrequency'],
-      _count: {
-        drinkingFrequency: true
-      },
-      where: {
-        drinkingFrequency: {
-          not: null
+export async function getDrinkingFrequencyChartData(): Promise<{
+  success: boolean;
+  data?: Array<{ name: string; value: number }>;
+  error?: string;
+}> {
+try {
+  const allFrequencyStats = await prisma.buddhist2025.groupBy({
+    by: ['drinkingFrequency'],
+    _count: {
+      drinkingFrequency: true
+    },
+    where: {
+      AND: [
+        {
+          drinkingFrequency: {
+            not: null
+          }
+        },
+        {
+          drinkingFrequency: {
+            not: ''
+          }
         }
-      },
-      orderBy: {
-        _count: {
-          drinkingFrequency: 'desc'
-        }
+      ]
+    }
+  });
+
+    // สร้าง mapping สำหรับจัดกลุ่มข้อมูล
+    const frequencyMapping = {
+      'ทุกวัน (7 วัน/สัปดาห์)': 0,
+      'เกือบทุกวัน (3-5 วัน/สัปดาห์)': 0,
+      'ทุกสัปดาห์ (1-2 วัน/สัปดาห์)': 0,
+      'ทุกเดือน (1-3 วัน/เดือน)': 0,
+      'นาน ๆ ครั้ง (8-11 วัน/ปี)': 0
+    };
+
+    // จัดกลุ่มข้อมูลตามตัวเลือกหลัก
+    allFrequencyStats.forEach(item => {
+      const frequency = item.drinkingFrequency?.toLowerCase() || '';
+      const count = item._count.drinkingFrequency;
+
+      // ทุกวัน (7 วัน/สัปดาห์)
+      if (frequency === 'ทุกวัน' || frequency === 'ทุกวัน (7 วัน/สัปดาห์)') {
+        frequencyMapping['ทุกวัน (7 วัน/สัปดาห์)'] += count;
+      }
+      // เกือบทุกวัน (3-5 วัน/สัปดาห์)
+      else if (
+        frequency.includes('3-5') || 
+        frequency.includes('4-5') || 
+        frequency.includes('5-6') ||
+        frequency.includes('สัปดาห์ละ 3') ||
+        frequency.includes('สัปดาห์ละ 4') ||
+        frequency.includes('สัปดาห์ละ 5') ||
+        frequency === 'เกือบทุกวัน (3-5 วัน/สัปดาห์)'
+      ) {
+        frequencyMapping['เกือบทุกวัน (3-5 วัน/สัปดาห์)'] += count;
+      }
+      // ทุกสัปดาห์ (1-2 วัน/สัปดาห์)
+      else if (
+        frequency.includes('1-2') && frequency.includes('สัปดาห์') ||
+        frequency.includes('สัปดาห์ละ 1') ||
+        frequency.includes('สัปดาห์ละ 2') ||
+        frequency.includes('2-3') && frequency.includes('สัปดาห์') ||
+        frequency === 'ทุกสัปดาห์ (1-2 วัน/สัปดาห์)'
+      ) {
+        frequencyMapping['ทุกสัปดาห์ (1-2 วัน/สัปดาห์)'] += count;
+      }
+      // ทุกเดือน (1-3 วัน/เดือน)
+      else if (
+        frequency.includes('เดือน') && (
+          frequency.includes('1-2') ||
+          frequency.includes('1-3') ||
+          frequency.includes('2-3') ||
+          frequency.includes('เดือนละ 1') ||
+          frequency.includes('เดือนละ 2') ||
+          frequency.includes('เดือนละ 3')
+        ) ||
+        frequency === 'ทุกเดือน (1-3 วัน/เดือน)'
+      ) {
+        frequencyMapping['ทุกเดือน (1-3 วัน/เดือน)'] += count;
+      }
+      // นาน ๆ ครั้ง (8-11 วัน/ปี)
+      else {
+        frequencyMapping['นาน ๆ ครั้ง (8-11 วัน/ปี)'] += count;
       }
     });
 
-    const chartData = frequencyStats.map(item => ({
-      name: item.drinkingFrequency || 'ไม่ระบุ',
-      value: item._count.drinkingFrequency
-    }));
+    // แปลงเป็น array และเรียงลำดับ
+    const chartData = Object.entries(frequencyMapping)
+      .map(([name, value]) => ({ name, value }))
+      .filter(item => item.value > 0)
+      .sort((a, b) => {
+        const order = [
+          'ทุกวัน (7 วัน/สัปดาห์)',
+          'เกือบทุกวัน (3-5 วัน/สัปดาห์)',
+          'ทุกสัปดาห์ (1-2 วัน/สัปดาห์)',
+          'ทุกเดือน (1-3 วัน/เดือน)',
+          'นาน ๆ ครั้ง (8-11 วัน/ปี)'
+        ];
+        return order.indexOf(a.name) - order.indexOf(b.name);
+      });
 
     return {
       success: true,

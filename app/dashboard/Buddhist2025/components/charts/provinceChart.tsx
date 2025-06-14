@@ -19,7 +19,6 @@ const ProvinceChart: React.FC = () => {
         setLoading(true);
         const result = await getTop10ProvincesChartData();
         if (result.success && result.data) {
-          // เรียงข้อมูลจากมากไปน้อย (มากสุดอันดับ 1)
           const sortedData = result.data.sort((a, b) => b.value - a.value);
           setProvinceData(sortedData);
           setTotalCount(sortedData.reduce((sum, item) => sum + item.value, 0));
@@ -35,21 +34,20 @@ const ProvinceChart: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="h-96 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-orange-500"></div>
-        <span className="ml-2 text-gray-600">กำลังโหลด...</span>
+      <div className="h-64 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-5 w-5 border border-orange-200 border-t-orange-500"></div>
+        <span className="ml-2 text-xs text-gray-500">กำลังโหลด...</span>
       </div>
     );
   }
 
   if (!provinceData.length) {
-    return <div className="text-center text-red-500">ไม่พบข้อมูลจังหวัด</div>;
+    return <div className="text-center text-xs text-gray-500 py-8">ไม่พบข้อมูลจังหวัด</div>;
   }
 
-  // เตรียมข้อมูลสำหรับกราฟ (เรียงกลับเพื่อให้อันดับ 1 อยู่บนสุด)
   const chartData = provinceData.slice().reverse();
   const yAxisLabels = chartData.map((item, index) => {
-    const rank = provinceData.length - index; // คำนวณอันดับ
+    const rank = provinceData.length - index;
     return `${rank}. ${item.name}`;
   });
 
@@ -58,9 +56,9 @@ const ProvinceChart: React.FC = () => {
       text: 'อันดับ 10 จังหวัดที่มีผู้เข้าร่วมมากที่สุด',
       left: 'center',
       textStyle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#374151'
+        fontSize: 13,
+        fontWeight: '500',
+        color: '#4B5563'
       }
     },
     tooltip: {
@@ -68,34 +66,26 @@ const ProvinceChart: React.FC = () => {
       axisPointer: {
         type: 'shadow'
       },
+      backgroundColor: 'white',
+      borderColor: '#E5E7EB',
+      borderWidth: 1,
+      textStyle: {
+        fontSize: 11,
+        color: '#374151'
+      },
       formatter: (params: any) => {
         const data = params[0];
         const percentage = totalCount > 0 ? ((data.value / totalCount) * 100).toFixed(1) : '0';
-        const originalIndex = chartData.length - data.dataIndex - 1; // หาอันดับจริง
+        const originalIndex = chartData.length - data.dataIndex - 1;
         const rank = originalIndex + 1;
         const provinceName = provinceData[originalIndex].name;
         
-        return `
-          <div style="padding: 8px;">
-            <div style="font-weight: bold; color: #FF6B35; margin-bottom: 4px;">
-              🏆 อันดับที่ ${rank}
-            </div>
-            <div style="font-weight: bold; margin-bottom: 4px;">
-              ${provinceName}
-            </div>
-            <div style="color: #666;">
-              จำนวน: <span style="color: #FF6B35; font-weight: bold;">${data.value.toLocaleString()}</span> คน
-            </div>
-            <div style="color: #666;">
-              สัดส่วน: <span style="color: #FF6B35; font-weight: bold;">${percentage}%</span>
-            </div>
-          </div>
-        `;
+        return `อันดับ ${rank}: ${provinceName}<br/>${data.value.toLocaleString()} คน (${percentage}%)`;
       }
     },
     grid: {
-      left: '20%',
-      right: '8%',
+      left: '25%',
+      right: '10%',
       top: '15%',
       bottom: '5%',
       containLabel: false
@@ -103,9 +93,8 @@ const ProvinceChart: React.FC = () => {
     xAxis: {
       type: 'value',
       axisLabel: {
-        formatter: '{value}',
-        fontSize: 11,
-        color: '#666'
+        fontSize: 9,
+        color: '#6B7280'
       },
       axisLine: {
         lineStyle: {
@@ -115,7 +104,7 @@ const ProvinceChart: React.FC = () => {
       splitLine: {
         lineStyle: {
           color: '#F3F4F6',
-          type: 'dashed'
+          type: 'solid'
         }
       }
     },
@@ -129,11 +118,10 @@ const ProvinceChart: React.FC = () => {
         show: false
       },
       axisLabel: {
-        fontSize: 12,
+        fontSize: 9,
         color: '#374151',
-        fontWeight: 'normal',
+        margin: 10,
         formatter: (value: string) => {
-          // ตัดชื่อจังหวัดให้สั้นลงถ้ายาวเกินไป
           const parts = value.split('. ');
           if (parts.length > 1) {
             const rank = parts[0];
@@ -146,73 +134,75 @@ const ProvinceChart: React.FC = () => {
     },
     series: [
       {
-        name: 'จำนวนคน',
         type: 'bar',
         data: chartData.map(item => item.value),
+        barWidth: '60%',
         itemStyle: {
           color: (params: any) => {
-            // สีที่แตกต่างกันตามอันดับ
-            const colors = [
-              '#FFD700', // Gold - อันดับ 1
-              '#C0C0C0', // Silver - อันดับ 2  
-              '#CD7F32', // Bronze - อันดับ 3
-              '#FF6B35', // Orange - อันดับ 4-10
-              '#FF8C42',
-              '#FF6B35',
-              '#E55B13',
-              '#CC4125',
-              '#B8421A',
-              '#A33B1A'
-            ];
             const rank = chartData.length - params.dataIndex;
-            return colors[rank - 1] || '#FF6B35';
+            if (rank === 1) return '#F59E0B'; // Gold - Orange
+            if (rank === 2) return '#FCD34D'; // Silver - Amber
+            if (rank === 3) return '#FEF3C7'; // Bronze - Yellow
+            return '#F97316'; // Default orange
           },
-          borderRadius: [0, 4, 4, 0]
+          borderRadius: [0, 3, 3, 0]
         },
         emphasis: {
           itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.3)'
+            shadowBlur: 6,
+            shadowColor: 'rgba(0, 0, 0, 0.1)'
           }
         },
         label: {
           show: true,
           position: 'right',
-          formatter: (params: any) => {
-            return `${params.value.toLocaleString()} คน`;
-          },
-          fontSize: 11,
+          formatter: '{c}',
+          fontSize: 9,
           color: '#374151',
-          fontWeight: 'bold'
+          fontWeight: '500'
         }
       }
     ]
   };
 
   return (
-    <div className="bg-white h-full">
-      <ReactECharts
-        option={option}
-        style={{ height: '100%', width: '100%' }}
-      />
+    <div className="bg-white h-full flex flex-col">
+      <div className="flex-1">
+        <ReactECharts
+          option={option}
+          style={{ height: '240px', width: '100%' }}
+        />
+      </div>
       
-      {/* แสดงสรุปข้อมูลเพิ่มเติม */}
-      <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <span className="text-gray-600">จังหวัดอันดับ 1:</span>
-            <div className="font-bold text-orange-600 flex items-center">
-              🥇 {provinceData[0]?.name} ({provinceData[0]?.value.toLocaleString()} คน)
+      <div className="mt-3 space-y-1.5">
+        {provinceData.slice(0, 5).map((item, index) => {
+          const colors = ['#F59E0B', '#FCD34D', '#FEF3C7', '#F97316', '#FBBF24'];
+          const bgColors = ['bg-orange-50', 'bg-amber-50', 'bg-yellow-50', 'bg-orange-50', 'bg-amber-50'];
+          const textColors = ['text-orange-700', 'text-amber-700', 'text-yellow-700', 'text-orange-700', 'text-amber-700'];
+          
+          const color = colors[index % colors.length];
+          const bgColor = bgColors[index % bgColors.length];
+          const textColor = textColors[index % textColors.length];
+          const percentage = ((item.value / totalCount) * 100).toFixed(1);
+          const emoji = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
+          
+          return (
+            <div key={item.name} className={`flex items-center justify-between py-1.5 px-2 rounded ${bgColor} hover:opacity-80 transition-opacity`}>
+              <div className="flex items-center space-x-2">
+                <div className="text-xs">{emoji}</div>
+                <div 
+                  className="w-2.5 h-2.5 rounded-full" 
+                  style={{ backgroundColor: color }}
+                ></div>
+                <span className={`text-xs font-normal ${textColor}`}>{item.name}</span>
+              </div>
+              <div className="text-right">
+                <div className={`text-xs font-medium ${textColor}`}>{item.value.toLocaleString()}</div>
+                <div className="text-xs text-gray-500">{percentage}%</div>
+              </div>
             </div>
-          </div>
-          <div>
-            <span className="text-gray-600">รวมทั้งหมด:</span>
-            <div className="font-bold text-blue-600">
-              {totalCount.toLocaleString()} คน
-            </div>
-          </div>
-        </div>
+          );
+        })}
       </div>
     </div>
   );

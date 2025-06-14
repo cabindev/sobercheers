@@ -33,15 +33,15 @@ const GenderChart: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="h-96 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-orange-500"></div>
-        <span className="ml-2 text-gray-600">กำลังโหลด...</span>
+      <div className="h-64 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-5 w-5 border border-orange-200 border-t-orange-500"></div>
+        <span className="ml-2 text-xs text-gray-500">กำลังโหลด...</span>
       </div>
     );
   }
 
   if (!genderData.length) {
-    return <div className="text-center text-red-500">ไม่พบข้อมูลเพศ</div>;
+    return <div className="text-center text-xs text-gray-500 py-8">ไม่พบข้อมูลเพศ</div>;
   }
 
   const option = {
@@ -49,13 +49,20 @@ const GenderChart: React.FC = () => {
       text: 'การแบ่งตามเพศ',
       left: 'center',
       textStyle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#374151'
+        fontSize: 13,
+        fontWeight: '500',
+        color: '#4B5563'
       }
     },
     tooltip: {
       trigger: 'item',
+      backgroundColor: 'white',
+      borderColor: '#E5E7EB',
+      borderWidth: 1,
+      textStyle: {
+        fontSize: 11,
+        color: '#374151'
+      },
       formatter: (params: any) => {
         const percentage = ((params.value / totalCount) * 100).toFixed(1);
         return `${params.name}: ${params.value.toLocaleString()} คน (${percentage}%)`;
@@ -65,19 +72,19 @@ const GenderChart: React.FC = () => {
       {
         name: 'เพศ',
         type: 'pie',
-        radius: ['40%', '70%'],
-        center: ['50%', '50%'],
+        radius: ['45%', '70%'],
+        center: ['50%', '55%'],
         data: genderData.map((item, index) => ({
           ...item,
           itemStyle: {
-            color: ['#FF6B9D', '#4ECDC4', '#FFA07A'][index % 3]
+            color: ['#F59E0B', '#FCD34D', '#FEF3C7'][index % 3] // Orange/Amber/Yellow tones
           }
         })),
         emphasis: {
           itemStyle: {
-            shadowBlur: 10,
+            shadowBlur: 8,
             shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
+            shadowColor: 'rgba(0, 0, 0, 0.1)'
           }
         },
         label: {
@@ -86,8 +93,9 @@ const GenderChart: React.FC = () => {
             const percentage = ((params.value / totalCount) * 100).toFixed(1);
             return `${params.name}\n${percentage}%`;
           },
-          fontSize: 12,
-          fontWeight: 'bold'
+          fontSize: 10,
+          fontWeight: '400',
+          color: '#4B5563'
         }
       }
     ]
@@ -98,28 +106,33 @@ const GenderChart: React.FC = () => {
       <div className="flex-1">
         <ReactECharts
           option={option}
-          style={{ height: '300px', width: '100%' }}
+          style={{ height: '240px', width: '100%' }}
         />
       </div>
       
-      {/* Summary */}
-      <div className="mt-4 space-y-2">
+      {/* Summary - Compact Design */}
+      <div className="mt-3 space-y-1.5">
         {genderData.map((item, index) => {
-          const colors = ['#FF6B9D', '#4ECDC4', '#FFA07A'];
+          const colors = ['#F59E0B', '#FCD34D', '#FEF3C7']; // Orange/Amber/Yellow
+          const bgColors = ['bg-orange-50', 'bg-amber-50', 'bg-yellow-50'];
+          const textColors = ['text-orange-700', 'text-amber-700', 'text-yellow-700'];
+          
           const color = colors[index % colors.length];
+          const bgColor = bgColors[index % bgColors.length];
+          const textColor = textColors[index % textColors.length];
           const percentage = ((item.value / totalCount) * 100).toFixed(1);
           
           return (
-            <div key={item.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50">
+            <div key={item.name} className={`flex items-center justify-between py-1.5 px-2 rounded ${bgColor} hover:opacity-80 transition-opacity`}>
               <div className="flex items-center space-x-2">
                 <div 
-                  className="w-4 h-4 rounded-full" 
+                  className="w-2.5 h-2.5 rounded-full" 
                   style={{ backgroundColor: color }}
                 ></div>
-                <span className="text-sm font-medium">{item.name}</span>
+                <span className={`text-xs font-normal ${textColor}`}>{item.name}</span>
               </div>
               <div className="text-right">
-                <div className="text-sm font-bold">{item.value.toLocaleString()}</div>
+                <div className={`text-xs font-medium ${textColor}`}>{item.value.toLocaleString()}</div>
                 <div className="text-xs text-gray-500">{percentage}%</div>
               </div>
             </div>

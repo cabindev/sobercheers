@@ -57,34 +57,41 @@ export default function Sidebar({ user }: SidebarProps) {
  }, [pathname]);
 
  // Buddhist Lent 2025 menu (ย้ายขึ้นมาบนสุด)
- const buddhistLentMenu = {
-   name: 'Buddhist Lent 2025',
-   href: '/dashboard/Buddhist2025',
-   icon: Church,
-   description: 'จัดการข้อมูลเข้าพรรษา พ.ศ. 2568',
-   subMenus: [
-     {
-       name: 'Dashboard',
-       href: '/dashboard/Buddhist2025',
-       icon: BarChart3,
-       requireAdmin: true,
-       description: 'แดชบอร์ดข้อมูลเข้าพรรษา'
-     },
-     {
-       name: 'ข้อมูลผู้เข้าร่วมเข้าพรรษา',
-       href: '/dashboard/Buddhist2025/tables',
-       icon: Database,
-       requireAdmin: true,
-       description: 'ตารางข้อมูลผู้เข้าร่วม'
-     },
-     {
-       name: 'เพิ่มข้อมูลผู้เข้าร่วม',
-       href: '/Buddhist2025/create',
-       icon: PlusCircle,
-       requireAdmin: false,
-       description: 'เพิ่มข้อมูลผู้เข้าร่วมใหม่'
-     }
-   ]
+const buddhistLentMenu = {
+  name: 'Buddhist Lent 2025',
+  href: '/dashboard/Buddhist2025',
+  icon: Church,
+  description: 'จัดการข้อมูลเข้าพรรษา พ.ศ. 2568',
+  subMenus: [
+    {
+     name: 'Dashboard',
+     href: '/dashboard/Buddhist2025',
+     icon: BarChart3,
+     requireAdmin: true,
+     description: 'แดชบอร์ดข้อมูลเข้าพรรษา'
+    },
+    {
+     name: 'ข้อมูลผู้เข้าร่วมเข้าพรรษา',
+     href: '/dashboard/Buddhist2025/tables',
+     icon: Database,
+     requireAdmin: true,
+     description: 'ตารางข้อมูลผู้เข้าร่วม'
+    },
+    {
+     name: 'จัดการกลุ่มองค์กร',
+     href: '/dashboard/group-category',
+     icon: UserCheck,
+     requireAdmin: true,
+     description: 'จัดการข้อมูลกลุ่มองค์กร'
+    },
+    {
+     name: 'เพิ่มข้อมูลผู้เข้าร่วม',
+     href: '/dashboard/Buddhist2025/create',
+     icon: PlusCircle,
+     requireAdmin: false,
+     description: 'เพิ่มข้อมูลผู้เข้าร่วมใหม่'
+    }
+  ]
  };
 
  // เมนูสำหรับ SoberCheers 2024
@@ -153,10 +160,19 @@ export default function Sidebar({ user }: SidebarProps) {
 
  return (
    <>
+     {/* Mobile hamburger button */}
+     <button
+       onClick={() => toggleMobileSidebar(true)}
+       className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-white border border-gray-200 shadow-sm lg:hidden hover:bg-gray-50"
+       aria-label="เปิดเมนู"
+     >
+       <Menu className="h-5 w-5 text-gray-600" />
+     </button>
+
      {/* Overlay สำหรับกดปิด sidebar บนมือถือ */}
      {isMobileSidebarOpen && (
        <div
-         className="fixed inset-0 bg-slate-900/80 z-10 lg:hidden backdrop-blur-sm"
+         className="fixed inset-0 bg-black/20 z-30 lg:hidden"
          onClick={() => toggleMobileSidebar(false)}
          aria-hidden="true"
        />
@@ -164,25 +180,25 @@ export default function Sidebar({ user }: SidebarProps) {
 
      <aside
        className={cn(
-         "fixed inset-y-0 left-0 z-40 flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 transition-all duration-300 shadow-2xl border-r border-slate-700/50",
-         sidebarCollapsed ? "w-20" : "w-72",
+         "fixed inset-y-0 left-0 z-40 flex flex-col bg-white border-r border-gray-200 transition-all duration-200",
+         sidebarCollapsed ? "w-16" : "w-64",
          "lg:translate-x-0",
          isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
        )}
      >
        {/* Sidebar header */}
-       <div className="flex h-16 items-center justify-between border-b border-slate-700/50 px-4 bg-slate-800/50 backdrop-blur-sm">
+       <div className="flex h-14 items-center justify-between border-b border-gray-200 px-3 bg-gray-50">
          {!sidebarCollapsed ? (
            <div className="flex items-center">
              <Link href="/dashboard/Buddhist2025">
                <img
                  src="/x-right.png"
-                 alt="SoberCheers Logo"
-                 className="h-9 w-auto drop-shadow-lg"
+                 alt="Logo"
+                 className="h-7 w-auto"
                />
              </Link>
-             <Link href="/" className="ml-3">
-               <span className="text-slate-100 font-bold text-lg bg-gradient-to-r from-blue-400 to-emerald-400 text-transparent bg-clip-text">
+             <Link href="/" className="ml-2">
+               <span className="text-gray-800 font-medium text-sm">
                  BUDDHIST LENT 
                </span>
              </Link>
@@ -191,8 +207,8 @@ export default function Sidebar({ user }: SidebarProps) {
            <Link href="/dashboard/Buddhist2025" className="mx-auto">
              <img
                src="/x-left.png"
-               alt="SoberCheers Logo"
-               className="h-10 w-auto drop-shadow-lg"
+               alt="Logo"
+               className="h-7 w-auto"
              />
            </Link>
          )}
@@ -200,37 +216,37 @@ export default function Sidebar({ user }: SidebarProps) {
          {/* ปุ่มปิดบนมือถือ */}
          <button
            onClick={() => toggleMobileSidebar(false)}
-           className="p-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 lg:hidden transition-all duration-200"
+           className="p-1.5 rounded text-gray-500 hover:text-gray-700 hover:bg-gray-100 lg:hidden"
            aria-label="ปิดเมนู"
          >
-           <X className="h-5 w-5" />
+           <X className="h-4 w-4" />
          </button>
 
          {/* ปุ่มย่อ/ขยายบนจอใหญ่ */}
          <button
            onClick={toggleSidebar}
-           className="p-2 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 hidden lg:block transition-all duration-200"
+           className="p-1.5 rounded text-gray-500 hover:text-gray-700 hover:bg-gray-100 hidden lg:block"
            aria-label={sidebarCollapsed ? "ขยายเมนู" : "ย่อเมนู"}
          >
            {sidebarCollapsed ? (
-             <Menu className="h-5 w-5" />
+             <Menu className="h-4 w-4" />
            ) : (
-             <PanelLeft className="h-5 w-5" />
+             <PanelLeft className="h-4 w-4" />
            )}
          </button>
        </div>
 
        {/* Sidebar menu */}
-       <div className="flex-1 overflow-y-auto py-6">
+       <div className="flex-1 overflow-y-auto py-4">
          {/* Buddhist Lent 2025 menu - ย้ายขึ้นมาบนสุด */}
-         <div className="px-4 mb-4">
+         <div className="px-2 mb-2">
            <button
              onClick={() => setIsBuddhistLentMenuOpen(!isBuddhistLentMenuOpen)}
              className={cn(
-               "group flex items-center w-full p-3 rounded-xl transition-all duration-300 border border-transparent",
+               "group flex items-center w-full p-2 rounded text-sm transition-colors",
                pathname?.startsWith("/dashboard/Buddhist2025")
-                 ? "bg-gradient-to-r from-emerald-600 to-emerald-700 text-white shadow-lg border-emerald-500/20"
-                 : "hover:bg-slate-700/50 text-slate-300 hover:text-slate-100 hover:border-slate-600/30",
+                 ? "bg-orange-50 text-orange-700 border-l-2 border-orange-500"
+                 : "text-gray-700 hover:bg-gray-50",
                sidebarCollapsed && "justify-center"
              )}
              title={sidebarCollapsed ? "Buddhist Lent 2025" : ""}
@@ -238,21 +254,21 @@ export default function Sidebar({ user }: SidebarProps) {
              <div
                className={cn(
                  "flex items-center justify-center",
-                 sidebarCollapsed ? "h-10 w-10" : "h-5 w-5"
+                 sidebarCollapsed ? "h-8 w-8" : "h-4 w-4"
                )}
              >
-               <Church className={sidebarCollapsed ? "w-6 h-6" : "w-5 h-5"} />
+               <Church className={sidebarCollapsed ? "w-5 h-5" : "w-4 h-4"} />
              </div>
              {!sidebarCollapsed && (
-               <div className="flex items-center justify-between w-full ml-3">
+               <div className="flex items-center justify-between w-full ml-2">
                  <div>
-                   <span className="font-semibold">{buddhistLentMenu.name}</span>
-                   <p className="text-xs text-slate-400 mt-0.5">
+                   <span className="font-normal text-sm">{buddhistLentMenu.name}</span>
+                   <p className="text-xs text-gray-500 mt-0.5">
                      {buddhistLentMenu.description}
                    </p>
                  </div>
                  <ChevronDown
-                   className={`w-4 h-4 transition-transform duration-300 ${
+                   className={`w-3 h-3 transition-transform ${
                      isBuddhistLentMenuOpen ? "rotate-180" : ""
                    }`}
                  />
@@ -264,8 +280,8 @@ export default function Sidebar({ user }: SidebarProps) {
            {(isBuddhistLentMenuOpen ||
              pathname?.startsWith("/dashboard/Buddhist2025")) &&
              !sidebarCollapsed && (
-               <div className="animate-fadeDown mt-2">
-                 <ul className="bg-slate-800/30 rounded-xl ml-3 mr-1 overflow-hidden backdrop-blur-sm border border-slate-700/30">
+               <div className="mt-1 ml-2">
+                 <ul className="space-y-1">
                    {buddhistLentMenu.subMenus.map((subMenu) => {
                      if (subMenu.requireAdmin && !isAdmin) {
                        return null;
@@ -280,16 +296,16 @@ export default function Sidebar({ user }: SidebarProps) {
                        <li key={subMenu.href}>
                          <Link
                            href={subMenu.href}
-                           className={`flex items-center p-3 transition-all duration-200 ${
+                           className={`flex items-center p-2 text-sm rounded transition-colors ${
                              isSubActive
-                               ? "bg-emerald-500/20 text-emerald-100 border-l-4 border-emerald-400"
-                               : "text-slate-300 hover:bg-slate-700/40 hover:text-slate-100"
+                               ? "bg-orange-100 text-orange-800"
+                               : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                            }`}
                          >
-                           <Icon className="w-4 h-4 mr-3" />
+                           <Icon className="w-4 h-4 mr-2" />
                            <div>
-                             <span className="text-sm font-medium">{subMenu.name}</span>
-                             <p className="text-xs text-slate-400 mt-0.5">
+                             <span className="text-xs font-normal">{subMenu.name}</span>
+                             <p className="text-xs text-gray-400 mt-0.5">
                                {subMenu.description}
                              </p>
                            </div>
@@ -302,23 +318,23 @@ export default function Sidebar({ user }: SidebarProps) {
              )}
          </div>
 
-         <div className="mt-8">
+         <div className="mt-6">
            {!sidebarCollapsed && (
-             <h3 className="px-4 text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">
+             <h3 className="px-2 text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
                ระบบจัดการ
              </h3>
            )}
 
            {/* SoberCheers 2024 menu */}
-           <div className="px-4 mb-4">
+           <div className="px-2 mb-2">
              <button
                onClick={() => setIsSoberMenuOpen(!isSoberMenuOpen)}
                className={cn(
-                 "group flex items-center w-full p-3 rounded-xl transition-all duration-300 border border-transparent",
+                 "group flex items-center w-full p-2 rounded text-sm transition-colors",
                  pathname?.startsWith("/dashboard/soberCheers") ||
                    pathname?.startsWith("/soberCheers")
-                   ? "bg-gradient-to-r from-violet-600 to-violet-700 text-white shadow-lg border-violet-500/20"
-                   : "hover:bg-slate-700/50 text-slate-300 hover:text-slate-100 hover:border-slate-600/30",
+                   ? "bg-green-50 text-green-700 border-l-2 border-green-500"
+                   : "text-gray-700 hover:bg-gray-50",
                  sidebarCollapsed && "justify-center"
                )}
                title={sidebarCollapsed ? "SOBER CHEERs 2024" : ""}
@@ -326,21 +342,21 @@ export default function Sidebar({ user }: SidebarProps) {
                <div
                  className={cn(
                    "flex items-center justify-center",
-                   sidebarCollapsed ? "h-10 w-10" : "h-5 w-5"
+                   sidebarCollapsed ? "h-8 w-8" : "h-4 w-4"
                  )}
                >
-                 <Wine className={sidebarCollapsed ? "w-6 h-6" : "w-5 h-5"} />
+                 <Wine className={sidebarCollapsed ? "w-5 h-5" : "w-4 h-4"} />
                </div>
                {!sidebarCollapsed && (
-                 <div className="flex items-center justify-between w-full ml-3">
+                 <div className="flex items-center justify-between w-full ml-2">
                    <div>
-                     <span className="font-semibold">{soberCheersMenu.name}</span>
-                     <p className="text-xs text-slate-400 mt-0.5">
+                     <span className="font-normal text-sm">{soberCheersMenu.name}</span>
+                     <p className="text-xs text-gray-500 mt-0.5">
                        {soberCheersMenu.description}
                      </p>
                    </div>
                    <ChevronDown
-                     className={`w-4 h-4 transition-transform duration-300 ${
+                     className={`w-3 h-3 transition-transform ${
                        isSoberMenuOpen ? "rotate-180" : ""
                      }`}
                    />
@@ -353,8 +369,8 @@ export default function Sidebar({ user }: SidebarProps) {
                pathname?.startsWith("/dashboard/soberCheers") ||
                pathname?.startsWith("/soberCheers")) &&
                !sidebarCollapsed && (
-                 <div className="animate-fadeDown mt-2">
-                   <ul className="bg-slate-800/30 rounded-xl ml-3 mr-1 overflow-hidden backdrop-blur-sm border border-slate-700/30">
+                 <div className="mt-1 ml-2">
+                   <ul className="space-y-1">
                      {soberCheersMenu.subMenus.map((subMenu) => {
                        if (subMenu.requireAdmin && !isAdmin) {
                          return null;
@@ -369,16 +385,16 @@ export default function Sidebar({ user }: SidebarProps) {
                          <li key={subMenu.href}>
                            <Link
                              href={subMenu.href}
-                             className={`flex items-center p-3 transition-all duration-200 ${
+                             className={`flex items-center p-2 text-sm rounded transition-colors ${
                                isSubActive
-                                 ? "bg-violet-500/20 text-violet-100 border-l-4 border-violet-400"
-                                 : "text-slate-300 hover:bg-slate-700/40 hover:text-slate-100"
+                                 ? "bg-green-100 text-green-800"
+                                 : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                              }`}
                            >
-                             <Icon className="w-4 h-4 mr-3" />
+                             <Icon className="w-4 h-4 mr-2" />
                              <div>
-                               <span className="text-sm font-medium">{subMenu.name}</span>
-                               <p className="text-xs text-slate-400 mt-0.5">
+                               <span className="text-xs font-normal">{subMenu.name}</span>
+                               <p className="text-xs text-gray-400 mt-0.5">
                                  {subMenu.description}
                                </p>
                              </div>
@@ -392,15 +408,15 @@ export default function Sidebar({ user }: SidebarProps) {
            </div>
 
            {/* Form Return menu */}
-           <div className="px-4 mb-4">
+           <div className="px-2 mb-2">
              <button
                onClick={() => setIsFormReturnMenuOpen(!isFormReturnMenuOpen)}
                className={cn(
-                 "group flex items-center w-full p-3 rounded-xl transition-all duration-300 border border-transparent",
+                 "group flex items-center w-full p-2 rounded text-sm transition-colors",
                  pathname?.startsWith("/dashboard/formReturn") ||
                    pathname?.startsWith("/form_return")
-                   ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg border-blue-500/20"
-                   : "hover:bg-slate-700/50 text-slate-300 hover:text-slate-100 hover:border-slate-600/30",
+                   ? "bg-purple-50 text-purple-700 border-l-2 border-purple-500"
+                   : "text-gray-700 hover:bg-gray-50",
                  sidebarCollapsed && "justify-center"
                )}
                title={sidebarCollapsed ? "Form Return Management" : ""}
@@ -408,21 +424,21 @@ export default function Sidebar({ user }: SidebarProps) {
                <div
                  className={cn(
                    "flex items-center justify-center",
-                   sidebarCollapsed ? "h-10 w-10" : "h-5 w-5"
+                   sidebarCollapsed ? "h-8 w-8" : "h-4 w-4"
                  )}
                >
-                 <ClipboardList className={sidebarCollapsed ? "w-6 h-6" : "w-5 h-5"} />
+                 <ClipboardList className={sidebarCollapsed ? "w-5 h-5" : "w-4 h-4"} />
                </div>
                {!sidebarCollapsed && (
-                 <div className="flex items-center justify-between w-full ml-3">
+                 <div className="flex items-center justify-between w-full ml-2">
                    <div>
-                     <span className="font-semibold">{formReturnMenu.name}</span>
-                     <p className="text-xs text-slate-400 mt-0.5">
+                     <span className="font-normal text-sm">{formReturnMenu.name}</span>
+                     <p className="text-xs text-gray-500 mt-0.5">
                        {formReturnMenu.description}
                      </p>
                    </div>
                    <ChevronDown
-                     className={`w-4 h-4 transition-transform duration-300 ${
+                     className={`w-3 h-3 transition-transform ${
                        isFormReturnMenuOpen ? "rotate-180" : ""
                      }`}
                    />
@@ -435,8 +451,8 @@ export default function Sidebar({ user }: SidebarProps) {
                pathname?.startsWith("/dashboard/formReturn") ||
                pathname?.startsWith("/form_return")) &&
                !sidebarCollapsed && (
-                 <div className="animate-fadeDown mt-2">
-                   <ul className="bg-slate-800/30 rounded-xl ml-3 mr-1 overflow-hidden backdrop-blur-sm border border-slate-700/30">
+                 <div className="mt-1 ml-2">
+                   <ul className="space-y-1">
                      {formReturnMenu.subMenus.map((subMenu) => {
                        if (subMenu.requireAdmin && !isAdmin) {
                          return null;
@@ -451,16 +467,16 @@ export default function Sidebar({ user }: SidebarProps) {
                          <li key={subMenu.href}>
                            <Link
                              href={subMenu.href}
-                             className={`flex items-center p-3 transition-all duration-200 ${
+                             className={`flex items-center p-2 text-sm rounded transition-colors ${
                                isSubActive
-                                 ? "bg-blue-500/20 text-blue-100 border-l-4 border-blue-400"
-                                 : "text-slate-300 hover:bg-slate-700/40 hover:text-slate-100"
+                                 ? "bg-purple-100 text-purple-800"
+                                 : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                              }`}
                            >
-                             <Icon className="w-4 h-4 mr-3" />
+                             <Icon className="w-4 h-4 mr-2" />
                              <div>
-                               <span className="text-sm font-medium">{subMenu.name}</span>
-                               <p className="text-xs text-slate-400 mt-0.5">
+                               <span className="text-xs font-normal">{subMenu.name}</span>
+                               <p className="text-xs text-gray-400 mt-0.5">
                                  {subMenu.description}
                                </p>
                              </div>
@@ -476,15 +492,15 @@ export default function Sidebar({ user }: SidebarProps) {
        </div>
 
        {/* User info & logout */}
-       <div className="border-t border-slate-700/50 p-4 bg-slate-800/30 backdrop-blur-sm">
+       <div className="border-t border-gray-200 p-3 bg-gray-50">
          <div
            className={cn(
-             "flex items-center bg-slate-700/30 p-3 rounded-xl backdrop-blur-sm border border-slate-600/20",
+             "flex items-center bg-white p-2 rounded border border-gray-200",
              sidebarCollapsed && "justify-center"
            )}
          >
            <div className="flex-shrink-0">
-             <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-emerald-500 flex items-center justify-center shadow-lg ring-2 ring-slate-600/30">
+             <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200">
                {user?.image ? (
                  <img
                    src={user.image}
@@ -492,19 +508,19 @@ export default function Sidebar({ user }: SidebarProps) {
                    className="w-full h-full rounded-full object-cover"
                  />
                ) : (
-                 <span className="text-sm font-semibold text-white">
+                 <span className="text-xs font-medium text-gray-600">
                    {user?.firstName?.charAt(0) || user?.name?.charAt(0) || "U"}
                  </span>
                )}
              </div>
            </div>
            {!sidebarCollapsed && (
-             <div className="ml-3">
-               <p className="text-sm font-semibold text-slate-100">
+             <div className="ml-2">
+               <p className="text-xs font-medium text-gray-900">
                  {user?.firstName || user?.name || ""} {user?.lastName || ""}
                </p>
-               <p className="text-xs text-slate-400">{user?.email || ""}</p>
-               <p className="text-xs mt-1.5 bg-gradient-to-r from-blue-500/20 to-emerald-500/20 text-blue-100 inline-block px-3 py-1 rounded-full border border-blue-400/20">
+               <p className="text-xs text-gray-500">{user?.email || ""}</p>
+               <p className="text-xs mt-1 bg-gray-100 text-gray-600 inline-block px-2 py-0.5 rounded border border-gray-200">
                  {user?.role === "admin" ? "ผู้ดูแลระบบ" : "ผู้ใช้งาน"}
                </p>
              </div>
@@ -513,14 +529,14 @@ export default function Sidebar({ user }: SidebarProps) {
          <button
            onClick={() => signOut({ callbackUrl: "/" })}
            className={cn(
-             "mt-4 flex items-center p-3 rounded-xl w-full text-slate-300 hover:bg-red-500/20 hover:text-red-100 hover:border-red-400/30 border border-transparent transition-all duration-200",
+             "mt-2 flex items-center p-2 rounded w-full text-gray-600 hover:bg-gray-100 hover:text-gray-900 text-sm transition-colors",
              sidebarCollapsed && "justify-center"
            )}
            aria-label="ออกจากระบบ"
          >
-           <LogOut className="w-5 h-5 flex-shrink-0" />
+           <LogOut className="w-4 h-4 flex-shrink-0" />
            {!sidebarCollapsed && (
-             <span className="ml-3 font-medium">ออกจากระบบ</span>
+             <span className="ml-2 font-normal">ออกจากระบบ</span>
            )}
          </button>
        </div>

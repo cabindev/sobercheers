@@ -5,13 +5,14 @@ import BuddhistLentForm from '../../components/BuddhistLentForm';
 import { Buddhist2025FormData } from '@/types/buddhist';
 
 interface EditPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EditBuddhist2025Page({ params }: EditPageProps) {
-  const id = parseInt(params.id);
+  const { id: idString } = await params;
+  const id = parseInt(idString);
 
   if (isNaN(id)) {
     notFound();
@@ -71,7 +72,8 @@ export default async function EditBuddhist2025Page({ params }: EditPageProps) {
 }
 
 export async function generateMetadata({ params }: EditPageProps) {
-  const id = parseInt(params.id);
+  const { id: idString } = await params;
+  const id = parseInt(idString);
   
   if (isNaN(id)) {
     return {
@@ -84,7 +86,7 @@ export async function generateMetadata({ params }: EditPageProps) {
     
     if (!result.success || !result.data) {
       return {
-        title: 'ไม่พบข้อมูล - แก้ไขผู้สมัครเข้าพรรษา 2025',
+        title: 'ไม่พบข้อมูล - แก้ไขผู้สมัครเข้าพรrrษา 2025',
       };
     }
 

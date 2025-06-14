@@ -8,7 +8,7 @@ import { Buddhist2025 } from '@/types/buddhist';
 import { GroupCategory } from '@/types/group';
 import { getAllBuddhist2025, getBuddhist2025Count } from '../actions/Get';
 import { deleteBuddhist2025 } from '../actions/Delete';
-import { getActiveGroupCategories } from '@/app/group-category/actions/Get';
+import { getActiveGroupCategories } from '@/app/dashboard/group-category/actions/Get';
 import { showSuccessToast, showErrorToast, ToastContainer } from './ui/Toast';
 import { 
   Edit, Trash2, Plus, Search, User, MapPin, Phone, Calendar, 

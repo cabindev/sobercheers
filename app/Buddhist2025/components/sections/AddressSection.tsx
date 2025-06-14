@@ -13,7 +13,7 @@ interface AddressSectionProps {
   onLocationSelect: (location: LocationData) => void;
   disabled: boolean;
 }
-// app/Buddhist2025/components/sections/AddressSection.tsx - เพิ่ม safety checks
+
 export default function AddressSection({ 
   formData, 
   validationErrors, 
@@ -21,14 +21,13 @@ export default function AddressSection({
   onLocationSelect, 
   disabled 
 }: AddressSectionProps) {
-  // ✅ เพิ่ม safety check
   if (!formData) {
     return (
-      <FormSection title="ข้อมูลที่อยู่" icon={<MapPin className="h-5 w-5" />}>
+      <FormSection title="ข้อมูลที่อยู่" icon={<MapPin className="h-4 w-4" />}>
         <div className="animate-pulse">
           <div className="space-y-4">
-            <div className="h-12 bg-gray-200 rounded-lg"></div>
-            <div className="h-12 bg-gray-200 rounded-lg"></div>
+            <div className="h-10 bg-gray-200 rounded-lg"></div>
+            <div className="h-10 bg-gray-200 rounded-lg"></div>
           </div>
         </div>
       </FormSection>
@@ -41,7 +40,7 @@ export default function AddressSection({
                           validationErrors?.zipcode;
 
   return (
-    <FormSection title="ข้อมูลที่อยู่" icon={<MapPin className="h-5 w-5" />}>
+    <FormSection title="ข้อมูลที่อยู่" icon={<MapPin className="h-4 w-4" />}>
       <div className="space-y-4">
         {/* ที่อยู่ */}
         <FormField 
@@ -63,7 +62,7 @@ export default function AddressSection({
 
         {/* ตำบล อำเภอ จังหวัด - ใช้ TambonSearch */}
         <div>
-          <label className="block text-base font-medium text-gray-900 mb-2">
+          <label className="block text-sm text-gray-700 mb-2">
             ตำบล/แขวง อำเภอ/เขต จังหวัด <span className="text-red-500">*</span>
           </label>
           

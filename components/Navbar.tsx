@@ -16,7 +16,8 @@ import {
  ClipboardList,
  ChevronDown,
  X,
- Sparkles
+ Sparkles,
+ ArrowRight
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -90,22 +91,24 @@ export default function Navbar() {
          {/* Logo และ Brand */}
          <div className="flex items-center space-x-3">
            {/* Logo Circle */}
-           <div className="w-12 h-12 rounded-full overflow-hidden ">
-             <img 
-               src="/x-right.png" 
-               alt="Buddhist Lent Logo" 
+           {/* <div className="w-12 h-12 rounded-full overflow-hidden ">
+             <img
+               src="/x-right.png"
+               alt="Buddhist Lent Logo"
                className="w-full h-full object-cover"
              />
-           </div>
-           
+           </div> */}
+
            {/* Brand Name */}
-           <span className="text-sm font-medium bg-gradient-to-r from-slate-700 to-slate-600 text-transparent bg-clip-text">
-             Buddhist Lent
-           </span>
-           
+             <Link href="/">
+             <span className="text-sm font-medium bg-gradient-to-r from-slate-700 to-slate-600 text-transparent bg-clip-text cursor-pointer">
+               Buddhist Lent
+             </span>
+             </Link>
+
            {/* Divider */}
            <div className="hidden md:block w-px h-4 bg-slate-300"></div>
-           
+
            {/* Home Link */}
            <Link
              href="https://sdnthailand.com/"
@@ -145,7 +148,7 @@ export default function Navbar() {
                      คืนข้อมูลงดเหล้าเข้าพรรษา
                      <ChevronDown className="w-3 h-3 ml-1" />
                    </button>
-                   
+
                    {isFormReturnMenuOpen && (
                      <div className="absolute left-0 mt-1 w-60 bg-white rounded-xl shadow-xl border border-slate-200/50 py-2 z-50 backdrop-blur-sm">
                        {formReturnMenuItems.map((item) => (
@@ -158,7 +161,9 @@ export default function Navbar() {
                            <div className="mr-2 mt-0.5">{item.icon}</div>
                            <div>
                              <div className="font-medium">{item.label}</div>
-                             <div className="text-[10px] text-slate-500 mt-0.5">{item.description}</div>
+                             <div className="text-[10px] text-slate-500 mt-0.5">
+                               {item.description}
+                             </div>
                            </div>
                          </Link>
                        ))}
@@ -198,9 +203,11 @@ export default function Navbar() {
                      <p className="text-xs font-medium text-slate-800">
                        {session.user.firstName || session.user.firstName}
                      </p>
-                     <p className="text-[10px] text-slate-500 truncate">{session.user.email}</p>
+                     <p className="text-[10px] text-slate-500 truncate">
+                       {session.user.email}
+                     </p>
                    </div>
-                   
+
                    {userMenuItems.map((item) => (
                      <Link
                        key={item.key}
@@ -212,7 +219,7 @@ export default function Navbar() {
                        <span className="ml-2">{item.label}</span>
                      </Link>
                    ))}
-                   
+
                    <div className="border-t border-slate-100 mt-1 pt-1">
                      <button
                        onClick={() => {
@@ -231,9 +238,10 @@ export default function Navbar() {
            ) : (
              <button
                onClick={() => router.push("/auth/signin")}
-               className="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-all duration-200 shadow-sm"
+               className="inline-flex items-center border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-md transition-all duration-200"
              >
-               Login
+               <User className="w-3 h-3 mr-1" />
+               เข้าสู่ระบบ
              </button>
            )}
          </div>
@@ -247,7 +255,11 @@ export default function Navbar() {
                onClick={() => setIsMenuOpen(!isMenuOpen)}
                className="text-slate-600 hover:text-slate-800 transition-colors p-1"
              >
-               {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+               {isMenuOpen ? (
+                 <X className="w-5 h-5" />
+               ) : (
+                 <Menu className="w-5 h-5" />
+               )}
              </button>
            )}
          </div>
@@ -278,7 +290,9 @@ export default function Navbar() {
                  </Link>
 
                  <div className="px-3 py-2 mt-3">
-                   <p className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">Form Return</p>
+                   <p className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">
+                     Form Return
+                   </p>
                  </div>
                  {formReturnMenuItems.map((item) => (
                    <Link
@@ -297,7 +311,9 @@ export default function Navbar() {
              {session && session.user ? (
                <>
                  <div className="px-3 py-2 mt-3">
-                   <p className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">บัญชีผู้ใช้</p>
+                   <p className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">
+                     บัญชีผู้ใช้
+                   </p>
                  </div>
                  <div className="flex items-center px-3 py-2 bg-slate-50 rounded-lg mx-3">
                    <img
@@ -312,7 +328,9 @@ export default function Navbar() {
                      <p className="text-xs font-medium text-slate-800">
                        {session.user.firstName || session.user.firstName}
                      </p>
-                     <p className="text-[10px] text-slate-500 truncate">{session.user.email}</p>
+                     <p className="text-[10px] text-slate-500 truncate">
+                       {session.user.email}
+                     </p>
                    </div>
                  </div>
                  <Link

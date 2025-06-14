@@ -42,7 +42,7 @@ export default function Profile() {
   if (status !== "authenticated" || !session?.user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-amber-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-300 border-t-gray-600"></div>
       </div>
     );
   }
@@ -54,31 +54,31 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-3xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <button
               onClick={() => router.back()}
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              className="flex items-center text-gray-500 hover:text-gray-700 transition-colors"
             >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              กลับ
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              <span className="text-sm">กลับ</span>
             </button>
-            <h1 className="text-2xl font-bold text-gray-900">โปรไฟล์ของฉัน</h1>
-            <div className="w-16"></div> {/* Spacer */}
+            <h1 className="text-lg font-medium text-gray-800">โปรไฟล์</h1>
+            <div className="w-12"></div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-3xl mx-auto px-4 py-6">
         {/* Profile Header */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-          <div className="bg-gradient-to-r from-amber-500 to-amber-600 h-32 relative">
-            <div className="absolute -bottom-16 left-8">
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
+          <div className="bg-gray-100 h-20 relative">
+            <div className="absolute -bottom-8 left-6">
               <div className="relative">
-                <div className="w-32 h-32 rounded-full border-4 border-white bg-white overflow-hidden shadow-lg">
+                <div className="w-16 h-16 rounded-full border-2 border-white bg-white overflow-hidden">
                   <img
                     src={
                       imageError
@@ -90,32 +90,30 @@ export default function Profile() {
                     onError={() => setImageError(true)}
                   />
                 </div>
-                <button className="absolute bottom-2 right-2 w-8 h-8 bg-amber-500 text-white rounded-full flex items-center justify-center hover:bg-amber-600 transition-colors shadow-lg">
-                  <Camera className="w-4 h-4" />
+                <button className="absolute -bottom-1 -right-1 w-6 h-6 bg-gray-600 text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
+                  <Camera className="w-3 h-3" />
                 </button>
               </div>
             </div>
           </div>
           
-          <div className="pt-20 pb-8 px-8">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                  {session.user.firstName} {session.user.lastName}
-                </h2>
-                <p className="text-gray-600 flex items-center mb-4">
-                  <Mail className="w-4 h-4 mr-2" />
-                  {session.user.email}
-                </p>
-                <div className="flex items-center">
-                  <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                    isAdmin 
-                      ? 'bg-purple-100 text-purple-800' 
-                      : 'bg-blue-100 text-blue-800'
-                  }`}>
-                    <Shield className="w-4 h-4 mr-1" />
-                    {isAdmin ? 'ผู้ดูแลระบบ' : 'ผู้ใช้งาน'}
-                  </div>
+          <div className="pt-12 pb-6 px-6">
+            <div>
+              <h2 className="text-xl font-medium text-gray-800 mb-1">
+                {session.user.firstName} {session.user.lastName}
+              </h2>
+              <p className="text-gray-500 text-sm flex items-center mb-3">
+                <Mail className="w-3 h-3 mr-2" />
+                {session.user.email}
+              </p>
+              <div className="flex items-center">
+                <div className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
+                  isAdmin 
+                    ? 'bg-purple-50 text-purple-700 border border-purple-200' 
+                    : 'bg-blue-50 text-blue-700 border border-blue-200'
+                }`}>
+                  <Shield className="w-3 h-3 mr-1" />
+                  {isAdmin ? 'ผู้ดูแลระบบ' : 'ผู้ใช้งาน'}
                 </div>
               </div>
             </div>
@@ -123,37 +121,37 @@ export default function Profile() {
         </div>
 
         {/* Information Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center mb-4">
-              <User className="w-6 h-6 text-amber-500 mr-3" />
-              <h3 className="text-lg font-semibold text-gray-900">ข้อมูลส่วนตัว</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <div className="flex items-center mb-3">
+              <User className="w-4 h-4 text-gray-600 mr-2" />
+              <h3 className="text-sm font-medium text-gray-800">ข้อมูลส่วนตัว</h3>
             </div>
-            <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">ชื่อ</p>
-                <p className="font-medium text-gray-900">{session.user.firstName}</p>
+            <div className="space-y-3">
+              <div className="bg-gray-50 p-3 rounded">
+                <p className="text-xs text-gray-500 mb-1">ชื่อ</p>
+                <p className="text-sm font-medium text-gray-800">{session.user.firstName}</p>
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">นามสกุล</p>
-                <p className="font-medium text-gray-900">{session.user.lastName}</p>
+              <div className="bg-gray-50 p-3 rounded">
+                <p className="text-xs text-gray-500 mb-1">นามสกุล</p>
+                <p className="text-sm font-medium text-gray-800">{session.user.lastName}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center mb-4">
-              <Shield className="w-6 h-6 text-blue-500 mr-3" />
-              <h3 className="text-lg font-semibold text-gray-900">ข้อมูลบัญชี</h3>
+          <div className="bg-white rounded-lg border border-gray-200 p-4">
+            <div className="flex items-center mb-3">
+              <Shield className="w-4 h-4 text-gray-600 mr-2" />
+              <h3 className="text-sm font-medium text-gray-800">ข้อมูลบัญชี</h3>
             </div>
-            <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">อีเมล</p>
-                <p className="font-medium text-gray-900">{session.user.email}</p>
+            <div className="space-y-3">
+              <div className="bg-gray-50 p-3 rounded">
+                <p className="text-xs text-gray-500 mb-1">อีเมล</p>
+                <p className="text-sm font-medium text-gray-800">{session.user.email}</p>
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">ประเภทสมาชิก</p>
-                <p className="font-medium text-gray-900">
+              <div className="bg-gray-50 p-3 rounded">
+                <p className="text-xs text-gray-500 mb-1">ประเภทสมาชิก</p>
+                <p className="text-sm font-medium text-gray-800">
                   {isAdmin ? 'ผู้ดูแลระบบ' : 'ผู้ใช้งาน'}
                 </p>
               </div>
@@ -162,32 +160,32 @@ export default function Profile() {
         </div>
 
         {/* Action Buttons */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">การดำเนินการ</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <h3 className="text-sm font-medium text-gray-800 mb-4">การดำเนินการ</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <button
               onClick={handleEditProfile}
-              className="flex items-center justify-center px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-sm"
+              className="flex items-center justify-center px-4 py-3 bg-blue-50 text-blue-700 text-sm font-medium rounded border border-blue-200 hover:bg-blue-100 transition-colors"
             >
-              <Edit className="w-5 h-5 mr-2" />
+              <Edit className="w-4 h-4 mr-2" />
               แก้ไขโปรไฟล์
             </button>
 
             {isAdmin && (
               <button
                 onClick={() => router.push("/dashboard")}
-                className="flex items-center justify-center px-6 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-medium rounded-lg hover:from-amber-600 hover:to-amber-700 transition-all duration-200 shadow-sm"
+                className="flex items-center justify-center px-4 py-3 bg-amber-50 text-amber-700 text-sm font-medium rounded border border-amber-200 hover:bg-amber-100 transition-colors"
               >
-                <LayoutDashboard className="w-5 h-5 mr-2" />
+                <LayoutDashboard className="w-4 h-4 mr-2" />
                 แดชบอร์ด
               </button>
             )}
 
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="flex items-center justify-center px-6 py-4 bg-gradient-to-r from-red-500 to-red-600 text-white font-medium rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-sm"
+              className="flex items-center justify-center px-4 py-3 bg-red-50 text-red-700 text-sm font-medium rounded border border-red-200 hover:bg-red-100 transition-colors"
             >
-              <LogOut className="w-5 h-5 mr-2" />
+              <LogOut className="w-4 h-4 mr-2" />
               ออกจากระบบ
             </button>
           </div>

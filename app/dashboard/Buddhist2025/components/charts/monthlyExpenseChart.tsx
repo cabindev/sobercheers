@@ -2,8 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { getMonthlyExpenseChartData } from '../../actions/GetChartData';
-import LoadingSkeleton from '../ui/DashboardLoading';
-import DashboardLoading from '../ui/DashboardLoading';
 
 interface MonthlyExpenseData {
   range: string;
@@ -38,15 +36,15 @@ const MonthlyExpenseChart: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="h-96 flex flex-col items-center justify-center">
-        <DashboardLoading />
-        <span className="mt-4 text-gray-600">กำลังโหลดข้อมูลรายจ่าย...</span>
+      <div className="h-64 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-5 w-5 border border-orange-200 border-t-orange-500"></div>
+        <span className="ml-2 text-xs text-gray-500">กำลังโหลด...</span>
       </div>
     );
   }
 
   if (!expenseData.length) {
-    return <div className="text-center text-red-500">ไม่พบข้อมูลรายจ่ายรายเดือน</div>;
+    return <div className="text-center text-xs text-gray-500 py-8">ไม่พบข้อมูลรายจ่ายรายเดือน</div>;
   }
 
   const calculatePercentage = (count: number, total: number) => {
@@ -61,9 +59,9 @@ const MonthlyExpenseChart: React.FC = () => {
       text: 'รายจ่ายต่อเดือนสำหรับเหล้า',
       left: 'center',
       textStyle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#374151'
+        fontSize: 13,
+        fontWeight: '500',
+        color: '#4B5563'
       }
     },
     tooltip: {
@@ -71,139 +69,121 @@ const MonthlyExpenseChart: React.FC = () => {
       axisPointer: {
         type: 'shadow'
       },
+      backgroundColor: 'white',
+      borderColor: '#E5E7EB',
+      borderWidth: 1,
+      textStyle: {
+        fontSize: 11,
+        color: '#374151'
+      },
       formatter: (params: any) => {
         const data = params[0];
         const item = expenseData.find(exp => exp.range === data.name);
         const percentage = calculatePercentage(data.value, totalCount);
-        return `
-          <div>
-            <strong>${data.name}</strong><br/>
-            จำนวนคน: ${data.value.toLocaleString()} คน<br/>
-            สัดส่วน: ${percentage}%<br/>
-            รายจ่ายเฉลี่ย: ${item?.averageExpense.toLocaleString() || 0} บาท
-          </div>
-        `;
+        return `${data.name}: ${data.value.toLocaleString()} คน (${percentage}%)<br/>เฉลี่ย: ${item?.averageExpense.toLocaleString() || 0} บาท`;
       }
     },
     grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
+      left: '5%',
+      right: '5%',
+      bottom: '15%',
+      top: '15%',
       containLabel: true
     },
     xAxis: {
       type: 'category',
       data: expenseData.map(item => item.range),
       axisTick: {
-        alignWithLabel: true
+        show: false
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#E5E7EB'
+        }
       },
       axisLabel: {
-        fontSize: 10,
-        rotate: 30
+        fontSize: 9,
+        color: '#6B7280',
+        rotate: 30,
+        interval: 0
       }
     },
     yAxis: {
       type: 'value',
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      },
+      splitLine: {
+        lineStyle: {
+          color: '#F3F4F6',
+          type: 'solid'
+        }
+      },
       axisLabel: {
-        formatter: '{value} คน'
+        fontSize: 9,
+        color: '#6B7280',
+        formatter: '{value}'
       }
     },
     series: [
       {
-        name: 'จำนวนคน',
         type: 'bar',
-        data: expenseData.map((item, index) => ({
+        data: expenseData.map(item => ({
           value: item.count,
           itemStyle: {
-            color: ['#059669', '#0D9488', '#0891B2', '#0284C7', '#2563EB', '#7C3AED'][index % 6]
+            color: '#F59E0B',
+            borderRadius: [3, 3, 0, 0]
           }
         })),
+        barWidth: '60%',
         emphasis: {
           itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
+            color: '#F97316'
           }
-        },
-        label: {
-          show: true,
-          position: 'top',
-          formatter: '{c} คน',
-          fontSize: 10
         }
       }
     ]
   };
 
   return (
-    <div className="bg-white h-full">
-      {/* Header Stats */}
-      <div className="mb-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200">
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div>
-            <div className="text-lg font-bold text-green-600">{totalCount.toLocaleString()}</div>
-            <div className="text-xs text-gray-600">ผู้ตอบ</div>
-          </div>
-          <div>
-            <div className="text-lg font-bold text-blue-600">{averageExpense}</div>
-            <div className="text-xs text-gray-600">เฉลี่ย (บาท)</div>
-          </div>
-          <div>
-            <div className="text-lg font-bold text-purple-600">{expenseData.length}</div>
-            <div className="text-xs text-gray-600">ช่วงราคา</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Chart */}
-      <div className="h-80">
+    <div className="bg-white h-full flex flex-col">
+      <div className="flex-1">
         <ReactECharts
           option={option}
-          style={{ height: '100%', width: '100%' }}
+          style={{ height: '240px', width: '100%' }}
         />
       </div>
-
-      {/* Summary Table */}
-      <div className="mt-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">สรุปข้อมูลรายจ่าย</h4>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-          {expenseData.map((item, index) => {
-            const colors = ['#059669', '#0D9488', '#0891B2', '#0284C7', '#2563EB', '#7C3AED'];
-            const color = colors[index % colors.length];
-            const percentage = calculatePercentage(item.count, totalCount);
-            
-            return (
-              <div key={item.range} className="p-3 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
-                <div className="flex items-center space-x-2 mb-1">
-                  <div 
-                    className="w-3 h-3 rounded-full" 
-                    style={{ backgroundColor: color }}
-                  ></div>
-                  <span className="text-sm font-medium text-gray-900">{item.range}</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div>
-                    <div className="font-bold text-gray-900">{item.count.toLocaleString()} คน</div>
-                    <div className="text-gray-500">{percentage}%</div>
-                  </div>
-                  <div>
-                    <div className="font-bold text-green-600">{item.averageExpense.toLocaleString()} บาท</div>
-                    <div className="text-gray-500">เฉลี่ย</div>
-                  </div>
-                </div>
+      
+      <div className="mt-3 space-y-1.5">
+        {expenseData.slice(0, 4).map((item, index) => {
+          const colors = ['#F59E0B', '#FCD34D', '#FEF3C7', '#F97316'];
+          const bgColors = ['bg-orange-50', 'bg-amber-50', 'bg-yellow-50', 'bg-orange-50'];
+          const textColors = ['text-orange-700', 'text-amber-700', 'text-yellow-700', 'text-orange-700'];
+          
+          const color = colors[index % colors.length];
+          const bgColor = bgColors[index % bgColors.length];
+          const textColor = textColors[index % textColors.length];
+          const percentage = calculatePercentage(item.count, totalCount);
+          
+          return (
+            <div key={item.range} className={`flex items-center justify-between py-1.5 px-2 rounded ${bgColor} hover:opacity-80 transition-opacity`}>
+              <div className="flex items-center space-x-2">
+                <div 
+                  className="w-2.5 h-2.5 rounded-full" 
+                  style={{ backgroundColor: color }}
+                ></div>
+                <span className={`text-xs font-normal ${textColor}`}>{item.range.split(' ')[0]}</span>
               </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Financial Insight */}
-      <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
-        <h5 className="text-sm font-semibold text-green-800 mb-1">💰 ข้อมูลเชิงลึก</h5>
-        <div className="text-xs text-green-700">
-          💡 รายจ่ายเฉลี่ยต่อเดือน: {averageExpense} บาท - 
-          การเข้าพรรษาช่วยประหยัดค่าใช้จ่ายและนำไปใช้ในทางที่เป็นประโยชน์
-        </div>
+              <div className="text-right">
+                <div className={`text-xs font-medium ${textColor}`}>{item.count.toLocaleString()}</div>
+                <div className="text-xs text-gray-500">{percentage}%</div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

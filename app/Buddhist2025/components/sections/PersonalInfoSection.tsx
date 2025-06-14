@@ -23,16 +23,15 @@ export default function PersonalInfoSection({
   onChange, 
   disabled 
 }: PersonalInfoSectionProps) {
-  // ✅ เพิ่ม safety check
   if (!formData) {
     return (
-      <FormSection title="ข้อมูลส่วนตัว" icon={<User className="h-5 w-5" />}>
+      <FormSection title="ข้อมูลส่วนตัว" icon={<User className="h-4 w-4" />}>
         <div className="animate-pulse">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="h-12 bg-orange-200 rounded-lg"></div>
-            <div className="h-12 bg-orange-200 rounded-lg"></div>
-            <div className="h-12 bg-orange-200 rounded-lg"></div>
-            <div className="h-12 bg-orange-200 rounded-lg"></div>
+            <div className="h-10 bg-gray-200 rounded-lg"></div>
+            <div className="h-10 bg-gray-200 rounded-lg"></div>
+            <div className="h-10 bg-gray-200 rounded-lg"></div>
+            <div className="h-10 bg-gray-200 rounded-lg"></div>
           </div>
         </div>
       </FormSection>
@@ -40,7 +39,7 @@ export default function PersonalInfoSection({
   }
 
   return (
-    <FormSection title="ข้อมูลส่วนตัว" icon={<User className="h-5 w-5" />}>
+    <FormSection title="ข้อมูลส่วนตัว" icon={<User className="h-4 w-4" />}>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* ชื่อ */}
         <FormField label="ชื่อ" required error={validationErrors?.firstName}>
@@ -84,18 +83,18 @@ export default function PersonalInfoSection({
           />
         </FormField>
 
-        {/* เพศ - Orange Theme */}
+        {/* เพศ - Minimal Style */}
         <FormField label="เพศ (ไม่บังคับ)">
-          <div className="grid grid-cols-3 gap-2">
+          <div className="flex gap-2">
             {genderOptions.map((option) => (
               <label 
                 key={option.value}
                 className={`
-                  flex items-center justify-center p-2 rounded-lg border-2 cursor-pointer text-sm
-                  transition-all duration-200
+                  flex items-center justify-center px-3 py-3 text-sm rounded-lg border cursor-pointer
+                  transition-colors duration-150
                   ${(formData.gender || '') === option.value 
                     ? 'border-orange-500 bg-orange-50 text-orange-700' 
-                    : 'border-gray-200 bg-white hover:bg-orange-50/50 hover:border-orange-300 text-gray-600'
+                    : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 text-gray-600'
                   }
                   ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
                 `}

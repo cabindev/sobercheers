@@ -33,169 +33,110 @@ const AlcoholConsumptionChart: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="h-96 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-orange-500"></div>
-        <span className="ml-2 text-gray-600">กำลังโหลด...</span>
+      <div className="h-64 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-5 w-5 border border-orange-200 border-t-orange-500"></div>
+        <span className="ml-2 text-xs text-gray-500">กำลังโหลด...</span>
       </div>
     );
   }
 
   if (!alcoholData.length) {
-    return <div className="text-center text-red-500">ไม่พบข้อมูลการบริโภคเหล้า</div>;
+    return <div className="text-center text-xs text-gray-500 py-8">ไม่พบข้อมูลการบริโภคเหล้า</div>;
   }
-
-  const calculatePercentage = (count: number, total: number) => {
-    if (total === 0) return '0.0';
-    return ((count / total) * 100).toFixed(1);
-  };
 
   const option = {
     title: {
       text: 'ระดับการบริโภคเหล้า',
       left: 'center',
       textStyle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#374151'
+        fontSize: 13,
+        fontWeight: '500',
+        color: '#4B5563'
       }
     },
     tooltip: {
       trigger: 'item',
-      formatter: (params: any) => {
-        const percentage = calculatePercentage(params.value, totalCount);
-        return `
-          <div>
-            <strong>${params.name}</strong><br/>
-            จำนวน: ${params.value.toLocaleString()} คน<br/>
-            สัดส่วน: ${percentage}%
-          </div>
-        `;
-      }
-    },
-    legend: {
-      orient: 'horizontal',
-      bottom: 0,
-      type: 'scroll',
+      backgroundColor: 'white',
+      borderColor: '#E5E7EB',
+      borderWidth: 1,
       textStyle: {
-        fontSize: 10
+        fontSize: 11,
+        color: '#374151'
+      },
+      formatter: (params: any) => {
+        const percentage = ((params.value / totalCount) * 100).toFixed(1);
+        return `${params.name}: ${params.value.toLocaleString()} คน (${percentage}%)`;
       }
     },
     series: [
       {
-        name: 'ระดับการบริโภคเหล้า',
+        name: 'ระดับการบริโภค',
         type: 'pie',
-        radius: ['40%', '70%'],
-        center: ['50%', '45%'],
+        radius: ['45%', '70%'],
+        center: ['50%', '55%'],
         data: alcoholData.map((item, index) => ({
           ...item,
           itemStyle: {
-            color: [
-              '#EF4444', // แดง - ดื่มมาก
-              '#F97316', // ส้ม - ดื่มปานกลาง  
-              '#EAB308', // เหลือง - ดื่มน้อย
-              '#10B981', // เขียว - ไม่ดื่ม/เลิกแล้ว
-              '#6B7280'  // เทา - ไม่ระบุ
-            ][index % 5]
+            color: ['#F59E0B', '#FCD34D', '#FEF3C7', '#F97316', '#FBBF24'][index % 5]
           }
         })),
         emphasis: {
           itemStyle: {
-            shadowBlur: 10,
+            shadowBlur: 8,
             shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
+            shadowColor: 'rgba(0, 0, 0, 0.1)'
           }
-        },
-        itemStyle: {
-          borderRadius: 5,
-          borderColor: '#fff',
-          borderWidth: 2
         },
         label: {
           show: true,
           formatter: (params: any) => {
-            const percentage = calculatePercentage(params.value, totalCount);
-            return `${percentage}%`;
+            const percentage = ((params.value / totalCount) * 100).toFixed(1);
+            return `${params.name}\n${percentage}%`;
           },
-          fontSize: 12,
-          fontWeight: 'bold'
+          fontSize: 10,
+          fontWeight: '400',
+          color: '#4B5563'
         }
       }
     ]
   };
 
   return (
-    <div className="bg-white h-full">
-      {/* Header Stats */}
-      <div className="mb-4 p-4 bg-gradient-to-r from-red-50 to-green-50 rounded-lg border border-red-200">
-        <div className="grid grid-cols-2 gap-4 text-center">
-          <div>
-            <div className="text-xl font-bold text-red-600">{totalCount.toLocaleString()}</div>
-            <div className="text-xs text-gray-600">ผู้ตอบแบบสอบถาม</div>
-          </div>
-          <div>
-            <div className="text-xl font-bold text-green-600">{alcoholData.length}</div>
-            <div className="text-xs text-gray-600">ระดับการบริโภค</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Chart */}
-      <div className="h-64">
+    <div className="bg-white h-full flex flex-col">
+      <div className="flex-1">
         <ReactECharts
           option={option}
-          style={{ height: '100%', width: '100%' }}
+          style={{ height: '240px', width: '100%' }}
         />
       </div>
-
-      {/* Data Summary */}
-      <div className="mt-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-3">สรุปตามระดับการบริโภค</h4>
-        <div className="space-y-2 max-h-32 overflow-y-auto">
-          {alcoholData.map((item, index) => {
-            const colors = ['#EF4444', '#F97316', '#EAB308', '#10B981', '#6B7280'];
-            const color = colors[index % colors.length];
-            const percentage = calculatePercentage(item.value, totalCount);
-            
-            return (
-              <div key={item.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                <div className="flex items-center space-x-3 flex-1">
-                  <div 
-                    className="w-4 h-4 rounded-full flex-shrink-0" 
-                    style={{ backgroundColor: color }}
-                  ></div>
-                  <span className="text-sm font-medium text-gray-900">{item.name}</span>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <div className="text-sm font-bold text-gray-900">{item.value.toLocaleString()}</div>
-                  <div className="text-xs text-gray-500">{percentage}%</div>
-                </div>
+      
+      <div className="mt-3 space-y-1.5">
+        {alcoholData.map((item, index) => {
+          const colors = ['#F59E0B', '#FCD34D', '#FEF3C7', '#F97316', '#FBBF24'];
+          const bgColors = ['bg-orange-50', 'bg-amber-50', 'bg-yellow-50', 'bg-orange-50', 'bg-amber-50'];
+          const textColors = ['text-orange-700', 'text-amber-700', 'text-yellow-700', 'text-orange-700', 'text-amber-700'];
+          
+          const color = colors[index % colors.length];
+          const bgColor = bgColors[index % bgColors.length];
+          const textColor = textColors[index % textColors.length];
+          const percentage = ((item.value / totalCount) * 100).toFixed(1);
+          
+          return (
+            <div key={item.name} className={`flex items-center justify-between py-1.5 px-2 rounded ${bgColor} hover:opacity-80 transition-opacity`}>
+              <div className="flex items-center space-x-2">
+                <div 
+                  className="w-2.5 h-2.5 rounded-full" 
+                  style={{ backgroundColor: color }}
+                ></div>
+                <span className={`text-xs font-normal ${textColor}`}>{item.name}</span>
               </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Health Insight */}
-      <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
-        <h5 className="text-sm font-semibold text-green-800 mb-1">💡 ข้อมูลเชิงลึก</h5>
-        <div className="text-xs text-green-700">
-          {(() => {
-            const nonDrinkers = alcoholData.find(item => 
-              item.name.includes('ไม่ดื่ม') || 
-              item.name.includes('เลิก') || 
-              item.name.includes('ไม่เคย')
-            );
-            const nonDrinkerPercentage = nonDrinkers ? 
-              calculatePercentage(nonDrinkers.value, totalCount) : '0';
-            
-            return (
-              <span>
-                🌱 ผู้ที่ไม่ดื่มเหล้าหรือเลิกแล้ว: {nonDrinkerPercentage}% 
-                - เป็นแรงบันดาลใจให้กับการเข้าพรรษา
-              </span>
-            );
-          })()}
-        </div>
+              <div className="text-right">
+                <div className={`text-xs font-medium ${textColor}`}>{item.value.toLocaleString()}</div>
+                <div className="text-xs text-gray-500">{percentage}%</div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

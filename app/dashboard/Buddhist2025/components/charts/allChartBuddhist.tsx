@@ -1,24 +1,8 @@
 // app/dashboard/Buddhist2025/components/charts/allChartBuddhist.tsx
 'use client'
 import React, { useEffect, useState } from 'react';
-import { 
-  FaUsers, 
-  FaChartBar, 
-  FaVenusMars, 
-  FaCalendarAlt, 
-  FaHeart,
-  FaTrophy,
-  FaUser,
-  FaGlobe,
-  FaBuilding,
-  FaClock,
-  FaDollarSign,
-  FaStethoscope,
-  FaWineBottle,
-  FaMap,
-  FaCalculator
-} from 'react-icons/fa';
 import { getDashboardSummary } from '../../actions/GetChartData';
+import DashboardLoading from '../ui/DashboardLoading'; // เพิ่ม import นี้
 import GenderChart from './genderChart';
 import ProvinceChart from './provinceChart';
 import RegionChart from './regionChart';
@@ -30,43 +14,29 @@ import IntentPeriodChart from './intentPeriodChart';
 import MonthlyExpenseChart from './monthlyExpenseChart';
 import MonthlyExpenseSummary from './monthlyExpenseSummary';
 import HealthImpactChart from './healthImpactChart';
-import DashboardLoading from '../ui/DashboardLoading';
 
 interface CountCardProps {
-  icon: React.ReactNode;
   title: string;
   count: string;
   unit: string;
   color: string;
-  bgColor: string;
 }
 
 const CountCard: React.FC<CountCardProps> = ({ 
-  icon, 
   title, 
   count, 
   unit, 
-  color, 
-  bgColor
+  color
 }) => (
-  <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group">
-    <div className="flex items-center justify-between">
-      <div className="flex-1">
-        <div className="text-sm font-medium text-gray-600 uppercase tracking-wider mb-2">
-          {title}
-        </div>
-        <div className="text-3xl font-bold text-gray-900 mb-1">
-          {count}
-        </div>
-        <div className="text-sm text-gray-500 font-medium">
-          {unit}
-        </div>
-      </div>
-      <div className={`${color} ${bgColor} p-4 rounded-xl group-hover:scale-110 transition-transform duration-300`}>
-        <div className="text-2xl">
-          {icon}
-        </div>
-      </div>
+  <div className="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+    <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+      {title}
+    </div>
+    <div className="text-2xl font-semibold text-gray-900 mb-1">
+      {count}
+    </div>
+    <div className="text-xs text-gray-600">
+      {unit}
     </div>
   </div>
 );
@@ -74,33 +44,24 @@ const CountCard: React.FC<CountCardProps> = ({
 interface ChartCardProps {
   title: string;
   children: React.ReactNode;
-  icon: React.ReactNode;
   className?: string;
   description?: string;
-  height?: string;
 }
 
 const ChartCard: React.FC<ChartCardProps> = ({ 
   title, 
   children, 
-  icon, 
   className = '', 
-  description,
-  height = "min-h-[350px]"
+  description
 }) => (
-  <div className={`bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 ${className}`}>
-    <div className="flex items-start justify-between mb-6">
-      <div className="flex items-start space-x-3">
-        <div className="text-2xl text-orange-500 p-2 bg-orange-50 rounded-xl">{icon}</div>
-        <div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-1">{title}</h3>
-          {description && (
-            <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
-          )}
-        </div>
-      </div>
+  <div className={`bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow ${className}`}>
+    <div className="p-4 border-b border-gray-100">
+      <h3 className="text-sm font-medium text-gray-800">{title}</h3>
+      {description && (
+        <p className="text-xs text-gray-500 mt-1">{description}</p>
+      )}
     </div>
-    <div className={height}>
+    <div className="p-0">
       {children}
     </div>
   </div>
@@ -128,195 +89,181 @@ const DashboardBuddhist: React.FC = () => {
     fetchDashboardData();
   }, []);
 
-  // แสดง loading จนกว่าข้อมูลจะโหลดเสร็จ
+  // ใช้ DashboardLoading component แทน
   if (isLoading || !dashboardData) {
     return <DashboardLoading />;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-amber-50">
-      <div className="p-4 lg:p-6">
-        <div className="max-w-8xl mx-auto">
+    <div className="min-h-screen bg-gray-50">
+      <div className="p-6">
+        <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 text-transparent bg-clip-text mb-3">
-              🙏 Buddhist Lent 2025 Dashboard
+            <h1 className="text-2xl font-semibold text-gray-800 mb-2">
+              Buddhist Lent 2025 Dashboard
             </h1>
-            <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              แดชบอร์ดสำหรับติดตามและวิเคราะห์ข้อมูลผู้เข้าร่วมกิจกรรมเข้าพรรษา พ.ศ. 2568
+            <p className="text-sm text-gray-600">
+              แดชบอร์ดติดตามและวิเคราะห์ข้อมูลผู้เข้าร่วมกิจกรรมเข้าพรรษา พ.ศ. 2568 | Dashboard for tracking and analyzing Buddhist Lent activity participants 2025
             </p>
-            <div className="mt-4 h-1 w-24 bg-gradient-to-r from-orange-400 to-amber-500 mx-auto rounded-full"></div>
           </div>
 
-          {/* Stats Cards - ใช้ข้อมูลที่โหลดเสร็จแล้ว */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             <CountCard
-              icon={<FaUser />}
-              title="ผู้ลงทะเบียนทั้งหมด"
+              title="ผู้ลงทะเบียนทั้งหมด | Total Registrations"
               count={`${dashboardData.totalParticipants.toLocaleString()}`}
-              unit="คน"
-              color="text-orange-500"
-              bgColor="bg-orange-50"
+              unit="คน | People"
+              color="blue"
             />
             <CountCard
-              icon={<FaGlobe />}
-              title="จังหวัดที่เข้าร่วม"
+              title="จังหวัดที่เข้าร่วม | Participating Provinces"
               count={`${dashboardData.totalProvinces}`}
-              unit="จังหวัด"
-              color="text-blue-500"
-              bgColor="bg-blue-50"
+              unit="จังหวัด | Provinces"
+              color="green"
             />
             <CountCard
-              icon={<FaBuilding />}
-              title="หมวดหมู่กลุ่ม"
+              title="หมวดหมู่กลุ่ม | Group Categories"
               count={`${dashboardData.totalGroupCategories}`}
-              unit="ประเภท"
-              color="text-purple-500"
-              bgColor="bg-purple-50"
+              unit="ประเภท | Types"
+              color="purple"
             />
             <CountCard
-              icon={<FaTrophy />}
-              title="อายุเฉลี่ย"
+              title="อายุเฉลี่ย | Average Age"
               count={`${dashboardData.avgAge}`}
-              unit="ปี"
-              color="text-green-500"
-              bgColor="bg-green-50"
+              unit="ปี | Years"
+              color="orange"
             />
           </div>
 
-          {/* Main Geographic Section - Province, Region, Gender */}
-          <div className="grid grid-cols-1 xl:grid-cols-6 gap-6 mb-8">
+          {/* Main Charts Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             <ChartCard
-              title="การกระจายตามจังหวัด"
-              description="แสดงการกระจายผู้เข้าร่วมตามจังหวัดต่างๆ"
-              icon={<FaChartBar />}
-              className="xl:col-span-2"
-              height="min-h-[450px]"
+              title="การกระจายตามจังหวัด | Provincial Distribution"
+              description="แสดงการกระจายผู้เข้าร่วมตามจังหวัดต่างๆ | Distribution of participants by provinces"
             >
               <ProvinceChart />
             </ChartCard>
             
             <ChartCard
-              title="การกระจายตามภูมิภาค"
-              description="แสดงการกระจายผู้เข้าร่วมตามภูมิภาคของประเทศไทย"
-              icon={<FaMap />}
-              className="xl:col-span-2"
-              height="min-h-[450px]"
+              title="การกระจายตามภูมิภาค | Regional Distribution"
+              description="แสดงการกระจายผู้เข้าร่วมตามภูมิภาคของประเทศไทย | Distribution by Thai regions"
             >
               <RegionChart />
             </ChartCard>
             
             <ChartCard 
-              title="การแบ่งตามเพศ" 
-              description="สัดส่วนผู้เข้าร่วมแยกตามเพศ"
-              icon={<FaVenusMars />}
-              className="xl:col-span-2"
-              height="min-h-[450px]"
+              title="การแบ่งตามเพศ | Gender Distribution"
+              description="สัดส่วนผู้เข้าร่วมแยกตามเพศ | Participant ratio by gender"
             >
               <GenderChart />
             </ChartCard>
           </div>
 
-          {/* Age Group และ Motivation */}
+          {/* Age and Demographics */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <ChartCard 
-              title="กลุ่มอายุผู้เข้าร่วม" 
-              description="การแบ่งกลุ่มตามช่วงอายุของผู้เข้าร่วมกิจกรรม"
-              icon={<FaUsers />}
-              height="min-h-[450px]"
+              title="กลุ่มอายุผู้เข้าร่วม | Age Groups"
+              description="การแบ่งกลุ่มตามช่วงอายุของผู้เข้าร่วมกิจกรรม | Age distribution of participants"
             >
               <AgeGroupChart />
             </ChartCard>
             
             <ChartCard 
-              title="แรงจูงใจในการเข้าร่วม" 
-              description="ปัจจัยที่เป็นแรงจูงใจให้เข้าร่วมกิจกรรมเข้าพรรษา"
-              icon={<FaHeart />}
-              height="min-h-[450px]"
+              title="แรงจูงใจในการเข้าร่วม | Motivation Factors"
+              description="ปัจจัยที่เป็นแรงจูงใจให้เข้าร่วมกิจกรรมเข้าพรรษา | Factors motivating participation in Buddhist Lent"
             >
               <MotivationChart />
             </ChartCard>
           </div>
 
-          {/* Alcohol Consumption และ Drinking Frequency */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <ChartCard 
-              title="ระดับการดื่มแอลกอฮอล์" 
-              description="สถิติการดื่มแอลกอฮอล์ของผู้เข้าร่วม"
-              icon={<FaCalendarAlt />}
-              height="min-h-[450px]"
-            >
-              <AlcoholConsumptionChart />
-            </ChartCard>
+          {/* Alcohol Consumption Section */}
+          <div className="mb-6">
+            <div className="text-center mb-6">
+              <h2 className="text-lg font-medium text-gray-800 mb-2">
+                ข้อมูลการดื่มแอลกอฮอล์ | Alcohol Consumption Data
+              </h2>
+              <p className="text-xs text-gray-600">
+                สถิติและผลกระทบจากการงดแอลกอฮอล์ของผู้เข้าร่วม | Statistics and effects of alcohol abstinence among participants
+              </p>
+            </div>
             
-            <ChartCard 
-              title="ความถี่การดื่มเหล้า" 
-              description="ความถี่ในการดื่มเหล้าของผู้เข้าร่วม"
-              icon={<FaWineBottle />}
-              height="min-h-[450px]"
-            >
-              <DrinkingFrequencyChart />
-            </ChartCard>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <ChartCard 
+                title="ระดับการดื่มแอลกอฮอล์ | Alcohol Consumption Levels"
+                description="สถิติการดื่มแอลกอฮอล์ของผู้เข้าร่วม | Alcohol consumption statistics of participants"
+              >
+                <AlcoholConsumptionChart />
+              </ChartCard>
+              
+              <ChartCard 
+                title="ความถี่การดื่มแอลกอฮอล์ | Drinking Frequency"
+                description="ความถี่ในการดื่มของผู้ที่มีประวัติการดื่มแอลกอฮอล์ | Drinking frequency among those with drinking history"
+              >
+                <DrinkingFrequencyChart />
+              </ChartCard>
+            </div>
           </div>
 
-
-          {/* Intent Period และ Monthly Expense Chart */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <ChartCard 
-              title="ระยะเวลาตั้งใจเข้าพรรษา" 
-              description="ระยะเวลาที่ผู้เข้าร่วมตั้งใจจะงดเหล้า"
-              icon={<FaClock />}
-              height="min-h-[500px]"
-            >
-              <IntentPeriodChart />
-            </ChartCard>
+          {/* Detailed Analysis for Drinkers */}
+          <div className="mb-6">
+            <div className="text-center mb-6">
+              <h2 className="text-lg font-medium text-gray-800 mb-2">
+                ข้อมูลเชิงลึกสำหรับผู้ที่มีประวัติการดื่ม | Detailed Data for Those with Drinking History
+              </h2>
+              <p className="text-xs text-gray-600">
+                ข้อมูลเฉพาะผู้ที่เคยดื่มแอลกอฮอล์และได้กรอกข้อมูลเพิ่มเติม | Specific data for those with alcohol consumption history who provided additional information
+              </p>
+            </div>
             
-            <ChartCard 
-              title="รายจ่ายต่อเดือนสำหรับเหล้า" 
-              description="จำนวนเงินที่ใช้จ่ายสำหรับเหล้าต่อเดือน (แบบกราฟ)"
-              icon={<FaDollarSign />}
-              height="min-h-[500px]"
-            >
-              <MonthlyExpenseChart />
-            </ChartCard>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <ChartCard 
+                title="รายจ่ายต่อเดือนสำหรับแอลกอฮอล์ | Monthly Alcohol Expenses"
+                description="จำนวนเงินที่ผู้มีประวัติการดื่มใช้จ่ายต่อเดือน | Monthly spending on alcohol by those with drinking history"
+              >
+                <MonthlyExpenseChart />
+              </ChartCard>
+              
+              <ChartCard 
+                title="ผลกระทบต่อสุขภาพ | Health Impact"
+                description="ผลกระทบที่เกิดขึ้นต่อสุขภาพจากการงดแอลกอฮอล์ | Health effects from abstaining alcohol"
+              >
+                <HealthImpactChart />
+              </ChartCard>
+              
+              <ChartCard 
+                title="ระยะเวลาตั้งใจเข้าพรรษา | Intended Abstinence Period"
+                description="ระยะเวลาที่ผู้มีประวัติการดื่มตั้งใจจะงดแอลกอฮอล์ | Intended alcohol abstinence duration for those with drinking history"
+              >
+                <IntentPeriodChart />
+              </ChartCard>
+            </div>
           </div>
 
-          {/* Health Impact - full width */}
-          <div className="grid grid-cols-1 gap-6 mb-8">
-            <ChartCard 
-              title="ผลกระทบต่อสุขภาพ" 
-              description="ผลกระทบที่เกิดขึ้นต่อสุขภาพจากการงดเหล้า"
-              icon={<FaStethoscope />}
-              height="min-h-[450px]"
-            >
-              <HealthImpactChart />
-            </ChartCard>
-          </div>
-          {/* Monthly Expense Summary - ส่วนสำคัญ */}
+          {/* Financial Analysis */}
           <div className="mb-8">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-3">
-                <FaCalculator className="text-green-600" />
-                การวิเคราะห์ค่าใช้จ่ายและการประหยัด
+              <h2 className="text-lg font-medium text-gray-800 mb-2">
+                การวิเคราะห์ค่าใช้จ่ายและการประหยัด | Cost Analysis & Savings
               </h2>
-              <p className="text-gray-600">
-                ข้อมูลการใช้จ่ายและผลประโยชน์ที่จะได้รับจากการเข้าร่วมกิจกรรม
+              <p className="text-xs text-gray-600">
+                ข้อมูลการใช้จ่ายและผลประโยชน์ที่จะได้รับจากการเข้าร่วมกิจกรรม | Expense data and benefits from participation in the activity
               </p>
             </div>
             <MonthlyExpenseSummary />
           </div>
 
           {/* Footer */}
-          <div className="text-center mt-12 py-8 border-t border-gray-200 bg-white rounded-2xl shadow-sm">
-            <div className="space-y-2">
-              <p className="text-gray-700 font-medium">
-                🙏 Buddhist Lent 2025 Dashboard
-              </p>
-              <p className="text-sm text-gray-600">
-                พัฒนาเพื่อติดตามกิจกรรมเข้าพรรษา ประจำปี พ.ศ. 2568
+          <div className="text-center py-6 border-t border-gray-200 bg-white rounded-lg">
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-gray-700">
+                Buddhist Lent 2025 Dashboard
               </p>
               <p className="text-xs text-gray-500">
-                © 2025 - ข้อมูลอัพเดทล่าสุด: {new Date().toLocaleDateString('th-TH')}
+                พัฒนาเพื่อติดตามกิจกรรมเข้าพรรษา ประจำปี พ.ศ. 2568 | Developed for Buddhist Lent Activity Tracking 2025
+              </p>
+              <p className="text-xs text-gray-400">
+                ข้อมูลอัพเดทล่าสุด | Last Updated: {new Date().toLocaleDateString('th-TH')}
               </p>
             </div>
           </div>

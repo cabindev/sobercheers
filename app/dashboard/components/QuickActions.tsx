@@ -22,7 +22,10 @@ export default function QuickActions({ isAdmin }: QuickActionsProps) {
       description: 'เพิ่มผู้เข้าร่วมกิจกรรมใหม่',
       href: '/Buddhist2025/create',
       icon: Church,
-      color: 'from-emerald-500 to-emerald-600',
+      bgColor: 'bg-orange-50',
+      textColor: 'text-orange-700',
+      borderColor: 'border-orange-200',
+      hoverColor: 'hover:bg-orange-100',
       requireAdmin: false
     },
     ...(isAdmin ? [{
@@ -30,7 +33,10 @@ export default function QuickActions({ isAdmin }: QuickActionsProps) {
       description: 'ดูและจัดการข้อมูลทั้งหมด',
       href: '/dashboard/Buddhist2025/tables',
       icon: Database,
-      color: 'from-emerald-600 to-emerald-700',
+      bgColor: 'bg-orange-50',
+      textColor: 'text-orange-700',
+      borderColor: 'border-orange-200',
+      hoverColor: 'hover:bg-orange-100',
       requireAdmin: true
     }] : []),
     ...(isAdmin ? [{
@@ -38,7 +44,10 @@ export default function QuickActions({ isAdmin }: QuickActionsProps) {
       description: 'สถิติและรายงาน',
       href: '/dashboard/Buddhist2025',
       icon: BarChart3,
-      color: 'from-emerald-500 to-green-600',
+      bgColor: 'bg-orange-50',
+      textColor: 'text-orange-700',
+      borderColor: 'border-orange-200',
+      hoverColor: 'hover:bg-orange-100',
       requireAdmin: true
     }] : []),
 
@@ -48,7 +57,10 @@ export default function QuickActions({ isAdmin }: QuickActionsProps) {
       description: 'ลงทะเบียนงดเหล้าใหม่',
       href: '/soberCheers',
       icon: Wine,
-      color: 'from-violet-500 to-violet-600',
+      bgColor: 'bg-green-50',
+      textColor: 'text-green-700',
+      borderColor: 'border-green-200',
+      hoverColor: 'hover:bg-green-100',
       requireAdmin: false
     },
     ...(isAdmin ? [{
@@ -56,7 +68,10 @@ export default function QuickActions({ isAdmin }: QuickActionsProps) {
       description: 'จัดการข้อมูลผู้งดเหล้า',
       href: '/dashboard/soberCheers/components/soberTable',
       icon: Database,
-      color: 'from-violet-600 to-violet-700',
+      bgColor: 'bg-green-50',
+      textColor: 'text-green-700',
+      borderColor: 'border-green-200',
+      hoverColor: 'hover:bg-green-100',
       requireAdmin: true
     }] : []),
 
@@ -66,7 +81,10 @@ export default function QuickActions({ isAdmin }: QuickActionsProps) {
       description: 'สร้างฟอร์มคืนข้อมูลใหม่',
       href: '/form_return/create',
       icon: ClipboardList,
-      color: 'from-blue-500 to-blue-600',
+      bgColor: 'bg-purple-50',
+      textColor: 'text-purple-700',
+      borderColor: 'border-purple-200',
+      hoverColor: 'hover:bg-purple-100',
       requireAdmin: false
     },
     ...(isAdmin ? [{
@@ -74,7 +92,10 @@ export default function QuickActions({ isAdmin }: QuickActionsProps) {
       description: 'จัดการรายการคืนข้อมูล',
       href: '/dashboard/formReturn',
       icon: FileText,
-      color: 'from-blue-600 to-blue-700',
+      bgColor: 'bg-purple-50',
+      textColor: 'text-purple-700',
+      borderColor: 'border-purple-200',
+      hoverColor: 'hover:bg-purple-100',
       requireAdmin: true
     }] : [])
   ];
@@ -84,9 +105,9 @@ export default function QuickActions({ isAdmin }: QuickActionsProps) {
   );
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
-      <h2 className="text-xl font-semibold text-slate-900 mb-6 flex items-center">
-        <PlusCircle className="w-6 h-6 mr-2 text-blue-500" />
+    <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+      <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+        <PlusCircle className="w-5 h-5 mr-2 text-gray-600" />
         การดำเนินการด่วน
       </h2>
       
@@ -97,20 +118,21 @@ export default function QuickActions({ isAdmin }: QuickActionsProps) {
             <Link
               key={index}
               href={action.href}
-              className="group relative overflow-hidden bg-gradient-to-r text-white rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              style={{
-                backgroundImage: `linear-gradient(135deg, var(--tw-gradient-stops))`,
-              }}
+              className={`group block p-4 rounded-lg border transition-all duration-200 ${action.bgColor} ${action.borderColor} ${action.hoverColor} hover:shadow-md`}
             >
-              <div className={`absolute inset-0 bg-gradient-to-r ${action.color} opacity-90 group-hover:opacity-100 transition-opacity`}></div>
-              <div className="relative z-10">
-                <Icon className="w-8 h-8 mb-3 text-white/90" />
-                <h3 className="font-semibold text-lg mb-2">{action.title}</h3>
-                <p className="text-white/80 text-sm">{action.description}</p>
+              <div className="flex items-start space-x-3">
+                <div className={`p-2 rounded ${action.bgColor} border ${action.borderColor}`}>
+                  <Icon className={`w-5 h-5 ${action.textColor}`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className={`font-medium text-sm ${action.textColor} mb-1`}>
+                    {action.title}
+                  </h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    {action.description}
+                  </p>
+                </div>
               </div>
-              
-              {/* Hover Effect */}
-              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </Link>
           );
         })}
