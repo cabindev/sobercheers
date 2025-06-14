@@ -83,7 +83,7 @@ model GroupCategory {
   createdAt       DateTime                 @default(now())
   updatedAt       DateTime                 @updatedAt
   
-  // ความสัมพันธ์
+
   buddhist2025    Buddhist2025[]
   
   @@index([createdAt])
