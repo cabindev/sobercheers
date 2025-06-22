@@ -145,3 +145,70 @@ enum Role {
   member
   admin
 }
+
+// ✅ โมเดลสำหรับเก็บชื่อองค์กร (Master Data)
+model OrganizationCategory {
+  id              Int                    @id @default(autoincrement())
+  name            String                 @unique // ชื่อองค์กร เช่น "โรงพยาบาลสมเด็จพระเทพรัตน์", "เทศบาลตำบลบางไผ่"
+  shortName       String?                // ชื่อย่อ เช่น "รพ.สมเด็จ", "ทต.บางไผ่"
+  description     String?                // คำอธิบายองค์กร
+  categoryType    String                 // ประเภทองค์กร เช่น "โรงพยาบาล", "เทศบาล", "โรงเรียน", "วัด"
+  
+  // การจัดการ
+  isActive        Boolean                @default(true) // สถานะการใช้งาน
+  sortOrder       Int?                   // ลำดับการแสดง
+  
+  // Metadata
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  
+  // Relationships
+  organizations   Organization[]         // ข้อมูลส่งคืนจากองค์กรนี้
+  
+  @@index([createdAt])
+  @@index([isActive, sortOrder])
+  @@index([categoryType])
+}
+
+// ✅ โมเดลสำหรับข้อมูลส่งคืนจากสมาชิก
+model Organization {
+  id                    Int                      @id @default(autoincrement())
+  
+  // ข้อมูลผู้ส่ง
+  firstName             String                   // ชื่อผู้ส่งข้อมูล
+  lastName              String                   // นามสกุลผู้ส่งข้อมูล
+  
+  // ข้อมูลองค์กร
+  organizationCategoryId Int                     // เชื่อมกับชื่อองค์กร
+  organizationCategory   OrganizationCategory    @relation(fields: [organizationCategoryId], references: [id])
+  
+  // ข้อมูลที่อยู่
+  addressLine1          String                   // ที่อยู่
+  district              String                   // ตำบล/แขวง
+  amphoe                String                   // อำเภอ/เขต
+  province              String                   // จังหวัด
+  zipcode               String                   // รหัสไปรษณีย์
+  type                  String                   // ประเภทพื้นที่ (ตำบล/แขวง)
+  
+  // ข้อมูลติดต่อ
+  phoneNumber           String                   @unique // เบอร์โทรศัพท์
+  
+  // ข้อมูลการดำเนินงาน
+  numberOfSigners       Int                      // จำนวนผู้ลงนาม
+  
+  // ✅ รูปภาพ 5 รูป (บังคับ 2 รูป แรก)
+  image1                String                   // รูปที่ 1 (บังคับ)
+  image2                String                   // รูปที่ 2 (บังคับ)
+  image3                String?                  // รูปที่ 3 (ไม่บังคับ)
+  image4                String?                  // รูปที่ 4 (ไม่บังคับ)
+  image5                String?                  // รูปที่ 5 (ไม่บังคับ)
+  
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+  
+  // Indexes
+  @@index([organizationCategoryId])
+  @@index([province, createdAt])
+  @@index([createdAt])
+  @@index([phoneNumber])
+}
