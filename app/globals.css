@@ -4,7 +4,10 @@
 
 @import 'leaflet/dist/leaflet.css';
 
-/* app/globals.css */
+/* เพิ่ม font-family สำหรับ Inter */
+.font-inter {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
 
 .logo-container {
  display: flex;
