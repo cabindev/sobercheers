@@ -237,7 +237,7 @@ export default function OrganizationCategoryForm({ initialData, isEdit = false }
                 </p>
               )}
               <p className="mt-1 text-xs text-gray-500">
-                กรอกประเภทองค์กรตามลักษณะจริง เช่น หน่วยงานราชการ, องค์กรเอกชน,บริษัท,NGO อื่นๆ
+                กรอกประเภทองค์กรตามลักษณะจริง เช่น หน่วยงานราชการ, องค์กรเอกชน,บริษัท,NGO, อื่นๆ
               </p>
             </div>
 

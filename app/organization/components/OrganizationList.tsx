@@ -10,8 +10,8 @@ import { deleteOrganization } from '../actions/Delete';
 import { getActiveOrganizationCategories } from '@/app/dashboard/organization-category/actions/Get';
 import { 
   Edit, Trash2, Plus, Search, Building2, 
-  X, Eye, BarChart3, Calendar, 
-  Phone, MapPin, Users, Image as ImageIcon, ChevronLeft, ChevronRight
+  X, Eye, Phone, MapPin, Users, Image as ImageIcon, 
+  ChevronLeft, ChevronRight, Calendar, Check, AlertTriangle
 } from 'lucide-react';
 
 export default function OrganizationList() {
@@ -28,7 +28,6 @@ export default function OrganizationList() {
   const [totalOrganizations, setTotalOrganizations] = useState(0);
   const [sortBy, setSortBy] = useState<'firstName' | 'createdAt' | 'numberOfSigners'>('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-
   const [provinces, setProvinces] = useState<string[]>([]);
 
   useEffect(() => {
@@ -58,7 +57,7 @@ export default function OrganizationList() {
         sortBy,
         sortOrder,
         page: currentPage,
-        limit: 15
+        limit: 20
       };
 
       const result = await getAllOrganizations(filters);
@@ -101,144 +100,133 @@ export default function OrganizationList() {
     }
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
-        <div className="flex flex-col justify-center items-center min-h-96 space-y-4">
-          <div className="relative">
-            <div className="w-10 h-10 border-4 border-orange-200 rounded-full animate-spin border-t-orange-600"></div>
-          </div>
-          <div className="text-center">
-            <h3 className="text-base font-light text-gray-900">กำลังโหลดข้อมูล</h3>
-            <p className="text-sm text-gray-500 font-light">โปรดรอสักครู่...</p>
-          </div>
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-6 h-6 border-2 border-gray-300 border-t-orange-500 rounded-full animate-spin mx-auto mb-2"></div>
+          <p className="text-sm text-gray-600">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
-      <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
+    <div className="min-h-screen bg-gray-100">
+      <div className="max-w-7xl mx-auto px-4 py-4 space-y-4">
         
         {/* Header */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-amber-500 rounded-lg flex items-center justify-center">
-                <Building2 className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-light text-gray-900">ข้อมูลส่งคืนองค์กร</h1>
-                <p className="text-sm text-gray-500 font-light">จัดการข้อมูลที่ส่งคืนจากองค์กรต่างๆ</p>
-                <div className="flex items-center mt-1 text-xs text-gray-400">
-                  <BarChart3 className="h-3 w-3 mr-1" />
-                  ทั้งหมด {totalOrganizations} รายการ
+        <div className="bg-white border border-gray-200 rounded">
+          <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-3">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-orange-500 rounded flex items-center justify-center">
+                  <Building2 className="h-4 w-4 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-sm font-semibold text-gray-900">Organization Data | ข้อมูลส่งคืนองค์กร</h1>
+                  <p className="text-xs text-gray-600">Manage submitted organization data | จัดการข้อมูลที่ส่งคืนจากองค์กรต่างๆ</p>
                 </div>
               </div>
+              
+              <Link
+                href="/organization/create"
+                className="inline-flex items-center px-3 py-1.5 text-sm font-medium bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors duration-200"
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                Add New
+              </Link>
             </div>
-            
-            <Link
-              href="/organization/create"
-              className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-light py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center shadow-sm text-sm"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              เพิ่มข้อมูลใหม่
-            </Link>
+          </div>
+
+          {/* Stats */}
+          <div className="px-4 py-2 bg-white">
+            <div className="flex items-center justify-between text-xs text-gray-600">
+              <span>Total records: {totalOrganizations}</span>
+              <span>Page {currentPage} of {totalPages}</span>
+            </div>
           </div>
         </div>
 
         {/* Search & Filters */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="ค้นหาชื่อ, เบอร์โทร, ที่อยู่..."
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="pl-10 pr-4 w-full py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-colors duration-200 text-sm"
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => {
-                    setSearchTerm('');
+        <div className="bg-white border border-gray-200 rounded">
+          <div className="p-3">
+            <div className="flex flex-col lg:flex-row gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search name, phone, address..."
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="pl-8 pr-3 w-full py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setCurrentPage(1);
+                    }}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                <select
+                  value={filterCategory}
+                  onChange={(e) => {
+                    setFilterCategory(e.target.value ? parseInt(e.target.value) : '');
+                    setCurrentPage(1);
+                  }}
+                  className="px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 min-w-[120px]"
                 >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-            
-            <div className="flex flex-wrap gap-3">
-              <select
-                value={filterCategory}
-                onChange={(e) => {
-                  setFilterCategory(e.target.value ? parseInt(e.target.value) : '');
-                  setCurrentPage(1);
-                }}
-                className="px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-400 focus:border-orange-400 text-sm min-w-[140px]"
-              >
-                <option value="">ทุกองค์กร</option>
-                {organizationCategories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-              
-              <select
-                value={filterProvince}
-                onChange={(e) => {
-                  setFilterProvince(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-400 focus:border-orange-400 text-sm min-w-[120px]"
-              >
-                <option value="">ทุกจังหวัด</option>
-                {provinces.map((province) => (
-                  <option key={province} value={province}>
-                    {province}
-                  </option>
-                ))}
-              </select>
-              
-              <select
-                value={`${sortBy}-${sortOrder}`}
-                onChange={(e) => {
-                  const [newSortBy, newSortOrder] = e.target.value.split('-');
-                  setSortBy(newSortBy as typeof sortBy);
-                  setSortOrder(newSortOrder as typeof sortOrder);
-                  setCurrentPage(1);
-                }}
-                className="px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-orange-400 focus:border-orange-400 text-sm min-w-[140px]"
-              >
-                <option value="createdAt-desc">วันที่ส่ง (ใหม่-เก่า)</option>
-                <option value="createdAt-asc">วันที่ส่ง (เก่า-ใหม่)</option>
-                <option value="firstName-asc">ชื่อ (ก-ฮ)</option>
-                <option value="firstName-desc">ชื่อ (ฮ-ก)</option>
-                <option value="numberOfSigners-desc">จำนวนผู้ลงนาม (มาก-น้อย)</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="mt-3 text-xs text-gray-500 flex items-center justify-between">
-            <div className="flex items-center">
-              <Eye className="h-3 w-3 mr-1" />
-              แสดง {organizations.length} จาก {totalOrganizations} รายการ
-            </div>
-            <div className="text-xs text-gray-400">
-              หน้า {currentPage} จาก {totalPages}
+                  <option value="">All Organizations</option>
+                  {organizationCategories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+                
+                <select
+                  value={filterProvince}
+                  onChange={(e) => {
+                    setFilterProvince(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 min-w-[100px]"
+                >
+                  <option value="">All Provinces</option>
+                  {provinces.map((province) => (
+                    <option key={province} value={province}>
+                      {province}
+                    </option>
+                  ))}
+                </select>
+                
+                <select
+                  value={`${sortBy}-${sortOrder}`}
+                  onChange={(e) => {
+                    const [newSortBy, newSortOrder] = e.target.value.split('-');
+                    setSortBy(newSortBy as typeof sortBy);
+                    setSortOrder(newSortOrder as typeof sortOrder);
+                    setCurrentPage(1);
+                  }}
+                  className="px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 min-w-[120px]"
+                >
+                  <option value="createdAt-desc">Latest First</option>
+                  <option value="createdAt-asc">Oldest First</option>
+                  <option value="firstName-asc">Name A-Z</option>
+                  <option value="firstName-desc">Name Z-A</option>
+                  <option value="numberOfSigners-desc">Most Signers</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -246,127 +234,209 @@ export default function OrganizationList() {
         {/* Content */}
         {organizations.length > 0 ? (
           <>
-            {/* Cards Layout */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {organizations.map((org) => (
-                <div key={org.id} className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">
-                  <div className="p-4">
-                    {/* Header */}
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center">
-                        <div className="w-10 h-10 bg-gradient-to-r from-emerald-400 to-green-500 rounded-lg flex items-center justify-center mr-3">
-                          <Users className="h-5 w-5 text-white" />
+            {/* Table Layout for Desktop */}
+            <div className="hidden lg:block bg-white border border-gray-200 rounded overflow-hidden">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Contact | ผู้ติดต่อ
+                    </th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Organization | องค์กร
+                    </th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Location | สถานที่
+                    </th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Signers | ผู้ลงนาม
+                    </th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Images | รูปภาพ
+                    </th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Date | วันที่
+                    </th>
+                    <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions | การจัดการ
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {organizations.map((org) => (
+                    <tr key={org.id} className="hover:bg-gray-50">
+                      <td className="px-3 py-2 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center mr-2">
+                            <Users className="h-3 w-3 text-orange-600" />
+                          </div>
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {org.firstName} {org.lastName}
+                            </div>
+                            <div className="text-xs text-gray-500 flex items-center">
+                              <Phone className="h-3 w-3 mr-1" />
+                              {org.phoneNumber}
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-900">
-                            {org.firstName} {org.lastName}
-                          </h3>
-                          <p className="text-xs text-gray-500">ID: {org.id}</p>
+                      </td>
+                      <td className="px-3 py-2">
+                        <div className="text-sm text-gray-900">{org.organizationCategory.name}</div>
+                        <div className="text-xs text-gray-500">{org.organizationCategory.categoryType}</div>
+                      </td>
+                      <td className="px-3 py-2">
+                        <div className="text-sm text-gray-900 flex items-center">
+                          <MapPin className="h-3 w-3 mr-1 text-gray-400" />
+                          {org.province}
                         </div>
-                      </div>
-                      
-                      <div className="flex items-center space-x-1">
-                        <Link
-                          href={`/organization/view/${org.id}`}
-                          className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded transition-colors duration-200"
-                          title="ดูรายละเอียด"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Link>
-                        
-                        <Link
-                          href={`/organization/edit/${org.id}`}
-                          className="p-1.5 text-orange-600 hover:bg-orange-50 rounded transition-colors duration-200"
-                          title="แก้ไข"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Link>
-                        
-                        <button
-                          onClick={() => handleDelete(org.id, `${org.firstName} ${org.lastName}`)}
-                          disabled={isDeleting === org.id}
-                          className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors duration-200 disabled:opacity-50"
-                          title="ลบ"
-                        >
-                          {isDeleting === org.id ? (
-                            <div className="animate-spin h-4 w-4 border-2 border-red-600 border-t-transparent rounded-full"></div>
-                          ) : (
-                            <Trash2 className="h-4 w-4" />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Organization */}
-                    <div className="mb-3">
-                      <p className="text-sm font-medium text-gray-900 mb-1">
-                        {org.organizationCategory.name}
-                      </p>
-                      {org.organizationCategory.shortName && (
-                        <p className="text-xs text-gray-500 mb-1">
-                          ({org.organizationCategory.shortName})
-                        </p>
-                      )}
-                      <div className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-orange-100 text-orange-800">
-                        {org.organizationCategory.categoryType}
-                      </div>
-                    </div>
-
-                    {/* Address */}
-                    <div className="mb-3">
-                      <div className="flex items-start text-sm text-gray-600 mb-1">
-                        <MapPin className="h-4 w-4 text-gray-400 mr-1 flex-shrink-0 mt-0.5" />
-                        <div className="min-w-0">
-                          <p className="truncate">{org.addressLine1}</p>
-                          <p className="text-xs text-gray-500">
-                            {org.type}{org.district}, อ.{org.amphoe}, จ.{org.province} {org.zipcode}
-                          </p>
+                        <div className="text-xs text-gray-500">
+                          {org.type}{org.district}, {org.amphoe}
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Contact & Stats */}
-                    <div className="grid grid-cols-2 gap-3 mb-3 text-sm">
-                      <div className="flex items-center">
-                        <Phone className="h-4 w-4 text-gray-400 mr-1" />
-                        <span className="text-gray-600 truncate">{org.phoneNumber}</span>
-                      </div>
-                      
-                      <div className="flex items-center">
-                        <Users className="h-4 w-4 text-gray-400 mr-1" />
-                        <span className="text-gray-600">{org.numberOfSigners} คน</span>
-                      </div>
-                    </div>
-
-                    {/* Images */}
-                    <div className="mb-3">
-                      <div className="flex items-center justify-between">
+                      </td>
+                      <td className="px-3 py-2 whitespace-nowrap">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800">
+                          {org.numberOfSigners} คน
+                        </span>
+                      </td>
+                      <td className="px-3 py-2 whitespace-nowrap">
                         <div className="flex items-center space-x-1">
                           {[org.image1, org.image2, org.image3, org.image4, org.image5].map((image, index) => (
                             <div 
                               key={index} 
-                              className={`w-5 h-5 rounded border flex items-center justify-center ${
-                                image ? 'bg-green-100 border-green-300' : 'bg-gray-100 border-gray-300'
+                              className={`w-3 h-3 rounded border ${
+                                image ? 'bg-green-500 border-green-600' : 'bg-gray-200 border-gray-300'
                               }`}
+                              title={image ? 'Has image' : 'No image'}
                             >
-                              <ImageIcon className={`h-3 w-3 ${image ? 'text-green-600' : 'text-gray-400'}`} />
+                              {image && <Check className="h-2 w-2 text-white m-0.5" />}
                             </div>
                           ))}
+                          <span className="text-xs text-gray-500 ml-1">
+                            {[org.image1, org.image2, org.image3, org.image4, org.image5].filter(Boolean).length}/5
+                          </span>
                         </div>
-                        <span className="text-xs text-gray-500">
-                          {[org.image1, org.image2, org.image3, org.image4, org.image5].filter(Boolean).length}/5 รูป
-                        </span>
+                      </td>
+                      <td className="px-3 py-2 whitespace-nowrap">
+                        <div className="text-xs text-gray-500 flex items-center">
+                          <Calendar className="h-3 w-3 mr-1" />
+                          {new Date(org.createdAt).toLocaleDateString('th-TH', {
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </div>
+                      </td>
+                      <td className="px-3 py-2 whitespace-nowrap text-right">
+                        <div className="flex items-center justify-end space-x-1">
+                          <Link
+                            href={`/organization/view/${org.id}`}
+                            className="p-1 text-orange-600 hover:bg-orange-50 rounded transition-colors duration-200"
+                            title="View"
+                          >
+                            <Eye className="h-3 w-3" />
+                          </Link>
+                          
+                          <Link
+                            href={`/organization/edit/${org.id}`}
+                            className="p-1 text-gray-600 hover:bg-gray-100 rounded transition-colors duration-200"
+                            title="Edit"
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Link>
+                          
+                          <button
+                            onClick={() => handleDelete(org.id, `${org.firstName} ${org.lastName}`)}
+                            disabled={isDeleting === org.id}
+                            className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors duration-200 disabled:opacity-50"
+                            title="Delete"
+                          >
+                            {isDeleting === org.id ? (
+                              <div className="animate-spin h-3 w-3 border border-red-600 border-t-transparent rounded-full"></div>
+                            ) : (
+                              <Trash2 className="h-3 w-3" />
+                            )}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Card Layout for Mobile */}
+            <div className="lg:hidden space-y-3">
+              {organizations.map((org) => (
+                <div key={org.id} className="bg-white border border-gray-200 rounded p-3">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center">
+                      <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center mr-2">
+                        <Users className="h-3 w-3 text-orange-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-900">
+                          {org.firstName} {org.lastName}
+                        </h3>
+                        <p className="text-xs text-gray-500">ID: {org.id}</p>
                       </div>
                     </div>
+                    
+                    <div className="flex items-center space-x-1">
+                      <Link
+                        href={`/organization/view/${org.id}`}
+                        className="p-1 text-orange-600 hover:bg-orange-50 rounded"
+                      >
+                        <Eye className="h-3 w-3" />
+                      </Link>
+                      <Link
+                        href={`/organization/edit/${org.id}`}
+                        className="p-1 text-gray-600 hover:bg-gray-100 rounded"
+                      >
+                        <Edit className="h-3 w-3" />
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(org.id, `${org.firstName} ${org.lastName}`)}
+                        className="p-1 text-red-600 hover:bg-red-50 rounded"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                  </div>
 
-                    {/* Date */}
-                    <div className="flex items-center text-xs text-gray-500 pt-2 border-t border-gray-100">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      ส่งเมื่อ {new Date(org.createdAt).toLocaleDateString('th-TH', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })}
+                  <div className="space-y-1 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500">Organization:</span>
+                      <span className="text-gray-900">{org.organizationCategory.name}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500">Phone:</span>
+                      <span className="text-gray-900">{org.phoneNumber}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500">Location:</span>
+                      <span className="text-gray-900">{org.province}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500">Signers:</span>
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-orange-100 text-orange-800">
+                        {org.numberOfSigners} คน
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500">Images:</span>
+                      <div className="flex items-center space-x-0.5">
+                        {[org.image1, org.image2, org.image3, org.image4, org.image5].map((image, index) => (
+                          <div 
+                            key={index} 
+                            className={`w-2.5 h-2.5 rounded border ${
+                              image ? 'bg-green-500' : 'bg-gray-200'
+                            }`}
+                          />
+                        ))}
+                        <span className="text-xs text-gray-500 ml-1">
+                          {[org.image1, org.image2, org.image3, org.image4, org.image5].filter(Boolean).length}/5
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -375,23 +445,23 @@ export default function OrganizationList() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-sm border border-gray-200 p-4">
+              <div className="bg-white border border-gray-200 rounded p-3">
                 <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-500 font-light">
-                    แสดง {((currentPage - 1) * 15) + 1} ถึง {Math.min(currentPage * 15, totalOrganizations)} จาก {totalOrganizations} รายการ
+                  <div className="text-xs text-gray-500">
+                    Showing {((currentPage - 1) * 20) + 1} to {Math.min(currentPage * 20, totalOrganizations)} of {totalOrganizations} entries
                   </div>
                   
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1">
                     <button
-                      onClick={() => handlePageChange(currentPage - 1)}
+                      onClick={() => setCurrentPage(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className="flex items-center px-3 py-1.5 text-sm text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-light"
+                      className="flex items-center px-2 py-1 text-xs text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <ChevronLeft className="h-4 w-4 mr-1" />
-                      ก่อนหน้า
+                      <ChevronLeft className="h-3 w-3 mr-0.5" />
+                      Previous
                     </button>
                     
-                    <div className="flex items-center space-x-1">
+                    <div className="flex items-center space-x-0.5">
                       {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                         let pageNum;
                         if (totalPages <= 5) {
@@ -407,8 +477,8 @@ export default function OrganizationList() {
                         return (
                           <button
                             key={pageNum}
-                            onClick={() => handlePageChange(pageNum)}
-                            className={`px-3 py-1.5 text-sm rounded-lg transition-colors duration-200 font-light ${
+                            onClick={() => setCurrentPage(pageNum)}
+                            className={`px-2 py-1 text-xs rounded transition-colors duration-200 ${
                               currentPage === pageNum
                                 ? 'bg-orange-500 text-white'
                                 : 'text-gray-600 bg-white border border-gray-300 hover:bg-gray-50'
@@ -421,12 +491,12 @@ export default function OrganizationList() {
                     </div>
                     
                     <button
-                      onClick={() => handlePageChange(currentPage + 1)}
+                      onClick={() => setCurrentPage(currentPage + 1)}
                       disabled={currentPage === totalPages}
-                      className="flex items-center px-3 py-1.5 text-sm text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-light"
+                      className="flex items-center px-2 py-1 text-xs text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      ถัดไป
-                      <ChevronRight className="h-4 w-4 ml-1" />
+                      Next
+                      <ChevronRight className="h-3 w-3 ml-0.5" />
                     </button>
                   </div>
                 </div>
@@ -435,24 +505,24 @@ export default function OrganizationList() {
           </>
         ) : (
           /* Empty State */
-          <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-sm border border-gray-200 p-10 text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Building2 className="h-8 w-8 text-gray-400" />
+          <div className="bg-white border border-gray-200 rounded p-8 text-center">
+            <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center mx-auto mb-3">
+              <Building2 className="h-6 w-6 text-gray-400" />
             </div>
-            <h3 className="text-lg font-light text-gray-900 mb-2">ไม่พบข้อมูล</h3>
-            <p className="text-sm text-gray-500 font-light mb-5">
+            <h3 className="text-sm font-medium text-gray-900 mb-1">No Data Found</h3>
+            <p className="text-xs text-gray-500 mb-4">
               {searchTerm || filterCategory || filterProvince
-                ? 'ลองปรับเปลี่ยนเงื่อนไขการค้นหา' 
-                : 'ยังไม่มีข้อมูลส่งคืนจากองค์กร'
+                ? 'Try adjusting your search criteria' 
+                : 'No organization data has been submitted yet'
               }
             </p>
             {!searchTerm && !filterCategory && !filterProvince && (
               <Link
                 href="/organization/create"
-                className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-600 text-white font-light rounded-lg hover:from-orange-600 hover:to-amber-700 transition-all duration-200 shadow-sm text-sm"
+                className="inline-flex items-center px-3 py-1.5 text-sm font-medium bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors duration-200"
               >
-                <Plus className="h-4 w-4 mr-2" />
-                เพิ่มข้อมูลใหม่
+                <Plus className="h-4 w-4 mr-1" />
+                Add First Entry
               </Link>
             )}
           </div>

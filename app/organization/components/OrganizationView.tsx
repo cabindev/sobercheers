@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { Organization } from '@/types/organization';
 import { 
   ArrowLeft, Edit, Building2, User, MapPin, Phone, 
-  Users, Calendar, Tag, Image as ImageIcon, Download, 
-  ExternalLink, CheckCircle, Clock
+  Users, Calendar, Tag, Image as ImageIcon, Download,
+  CheckCircle, Clock, FileText
 } from 'lucide-react';
 
 interface OrganizationViewProps {
@@ -26,33 +26,33 @@ export default function OrganizationView({ organization }: OrganizationViewProps
   ].filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+    <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <div className="bg-white/90 backdrop-blur-sm shadow-sm border-b border-orange-100">
-        <div className="max-w-6xl mx-auto px-6 py-4">
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-3">
           <button
             onClick={() => router.back()}
-            className="flex items-center text-gray-500 hover:text-gray-700 mb-3 transition-colors duration-200 text-sm font-light"
+            className="flex items-center text-gray-600 hover:text-gray-900 mb-2 text-sm font-medium"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            ย้อนกลับ
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            Back
           </button>
 
-          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
-            <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange-400 to-amber-500 rounded-xl flex items-center justify-center shadow-sm">
-                <Building2 className="h-8 w-8 text-white" />
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-3">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-orange-500 rounded flex items-center justify-center">
+                <Building2 className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-light text-gray-900">
+                <h1 className="text-lg font-semibold text-gray-900">
                   {organization.firstName} {organization.lastName}
                 </h1>
-                <p className="text-sm text-gray-500 font-light">
-                  ข้อมูลส่งคืนจาก {organization.organizationCategory.name}
+                <p className="text-sm text-gray-600">
+                  Organization Data | ข้อมูลส่งคืนจาก {organization.organizationCategory.name}
                 </p>
-                <div className="flex items-center mt-2 text-xs text-gray-400">
+                <div className="flex items-center mt-1 text-xs text-gray-500">
                   <Clock className="h-3 w-3 mr-1" />
-                  ส่งเมื่อ {new Date(organization.createdAt).toLocaleDateString('th-TH', {
+                  Submitted | ส่งเมื่อ {new Date(organization.createdAt).toLocaleDateString('th-TH', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
@@ -63,29 +63,29 @@ export default function OrganizationView({ organization }: OrganizationViewProps
               </div>
             </div>
             
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
               <Link
                 href={`/organization/edit/${organization.id}`}
-                className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-medium py-2.5 px-5 rounded-lg transition-all duration-150 flex items-center shadow-sm shadow-orange-200/50 text-sm"
+                className="inline-flex items-center px-3 py-1.5 text-sm font-medium bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors duration-200"
               >
-                <Edit className="h-4 w-4 mr-2" />
-                แก้ไขข้อมูล
+                <Edit className="h-4 w-4 mr-1" />
+                Edit
               </Link>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-6 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 py-4 space-y-4">
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="bg-white border border-gray-200 rounded p-3">
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center mr-3">
-                <User className="h-5 w-5 text-emerald-600" />
+              <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center mr-2">
+                <User className="h-3 w-3 text-orange-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">ผู้ส่งข้อมูล</p>
+                <p className="text-xs text-gray-500">Contact | ผู้ติดต่อ</p>
                 <p className="text-sm font-medium text-gray-900">
                   {organization.firstName} {organization.lastName}
                 </p>
@@ -93,71 +93,63 @@ export default function OrganizationView({ organization }: OrganizationViewProps
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="bg-white border border-gray-200 rounded p-3">
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
-                <Building2 className="h-5 w-5 text-orange-600" />
+              <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center mr-2">
+                <Building2 className="h-3 w-3 text-gray-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">องค์กร</p>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-xs text-gray-500">Organization | องค์กร</p>
+                <p className="text-sm font-medium text-gray-900 truncate">
                   {organization.organizationCategory.name}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="bg-white border border-gray-200 rounded p-3">
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                <Users className="h-5 w-5 text-purple-600" />
+              <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center mr-2">
+                <Users className="h-3 w-3 text-gray-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">ผู้ลงนาม</p>
+                <p className="text-xs text-gray-500">Signers | ผู้ลงนาม</p>
                 <p className="text-sm font-medium text-gray-900">
-                  {organization.numberOfSigners} คน
+                  {organization.numberOfSigners} people
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="bg-white border border-gray-200 rounded p-3">
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-3">
-                <ImageIcon className="h-5 w-5 text-amber-600" />
+              <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center mr-2">
+                <ImageIcon className="h-3 w-3 text-gray-600" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">รูปภาพ</p>
+                <p className="text-xs text-gray-500">Images | รูปภาพ</p>
                 <p className="text-sm font-medium text-gray-900">
-                  {images.length}/5 รูป
+                  {images.length}/5 images
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* ข้อมูลองค์กร */}
-          <div className="bg-white rounded-lg border border-gray-200">
-            <div className="p-6 border-b border-gray-100">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gradient-to-r from-orange-400 to-amber-500 rounded-lg flex items-center justify-center mr-3">
-                  <Building2 className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-light text-gray-900">ข้อมูลองค์กร</h2>
-                  <p className="text-sm text-gray-500 font-light">รายละเอียดองค์กรที่ส่งข้อมูล</p>
-                </div>
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Organization Information */}
+          <div className="bg-white border border-gray-200 rounded">
+            <div className="px-3 py-2 border-b border-gray-200 bg-gray-50">
+              <h2 className="text-sm font-medium text-gray-900">Organization Information | ข้อมูลองค์กร</h2>
             </div>
 
-            <div className="p-6 space-y-4">
+            <div className="p-3 space-y-3">
               <div className="flex items-start">
-                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                  <Building2 className="h-4 w-4 text-gray-600" />
+                <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center mr-2 flex-shrink-0">
+                  <Building2 className="h-3 w-3 text-gray-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-xs text-gray-500 font-medium mb-1">ชื่อองค์กร</p>
+                  <p className="text-xs text-gray-500 mb-0.5">Organization Name | ชื่อองค์กร</p>
                   <p className="text-sm text-gray-900">{organization.organizationCategory.name}</p>
                   {organization.organizationCategory.shortName && (
                     <p className="text-xs text-gray-500">({organization.organizationCategory.shortName})</p>
@@ -166,24 +158,24 @@ export default function OrganizationView({ organization }: OrganizationViewProps
               </div>
 
               <div className="flex items-start">
-                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                  <Tag className="h-4 w-4 text-gray-600" />
+                <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center mr-2 flex-shrink-0">
+                  <Tag className="h-3 w-3 text-gray-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-xs text-gray-500 font-medium mb-1">ประเภทองค์กร</p>
-                  <div className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-orange-100 text-orange-800">
+                  <p className="text-xs text-gray-500 mb-0.5">Type | ประเภทองค์กร</p>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-orange-100 text-orange-800">
                     {organization.organizationCategory.categoryType}
-                  </div>
+                  </span>
                 </div>
               </div>
 
               {organization.organizationCategory.description && (
                 <div className="flex items-start">
-                  <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                    <CheckCircle className="h-4 w-4 text-gray-600" />
+                  <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center mr-2 flex-shrink-0">
+                    <FileText className="h-3 w-3 text-gray-600" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-xs text-gray-500 font-medium mb-1">คำอธิบาย</p>
+                    <p className="text-xs text-gray-500 mb-0.5">Description | คำอธิบาย</p>
                     <p className="text-sm text-gray-900">{organization.organizationCategory.description}</p>
                   </div>
                 </div>
@@ -191,40 +183,32 @@ export default function OrganizationView({ organization }: OrganizationViewProps
             </div>
           </div>
 
-          {/* ข้อมูลติดต่อ */}
-          <div className="bg-white rounded-lg border border-gray-200">
-            <div className="p-6 border-b border-gray-100">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gradient-to-r from-emerald-400 to-green-500 rounded-lg flex items-center justify-center mr-3">
-                  <Phone className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-light text-gray-900">ข้อมูลติดต่อ</h2>
-                  <p className="text-sm text-gray-500 font-light">ข้อมูลการติดต่อและผู้ลงนาม</p>
-                </div>
-              </div>
+          {/* Contact Information */}
+          <div className="bg-white border border-gray-200 rounded">
+            <div className="px-3 py-2 border-b border-gray-200 bg-gray-50">
+              <h2 className="text-sm font-medium text-gray-900">Contact Information | ข้อมูลติดต่อ</h2>
             </div>
 
-            <div className="p-6 space-y-4">
+            <div className="p-3 space-y-3">
               <div className="flex items-start">
-                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                  <User className="h-4 w-4 text-gray-600" />
+                <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center mr-2 flex-shrink-0">
+                  <User className="h-3 w-3 text-gray-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-xs text-gray-500 font-medium mb-1">ผู้ส่งข้อมูล</p>
+                  <p className="text-xs text-gray-500 mb-0.5">Contact Person | ผู้ส่งข้อมูล</p>
                   <p className="text-sm text-gray-900">{organization.firstName} {organization.lastName}</p>
                 </div>
               </div>
 
               <div className="flex items-start">
-                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                  <Phone className="h-4 w-4 text-gray-600" />
+                <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center mr-2 flex-shrink-0">
+                  <Phone className="h-3 w-3 text-gray-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-xs text-gray-500 font-medium mb-1">เบอร์โทรศัพท์</p>
+                  <p className="text-xs text-gray-500 mb-0.5">Phone Number | เบอร์โทรศัพท์</p>
                   <a 
                     href={`tel:${organization.phoneNumber}`}
-                    className="text-sm text-orange-600 hover:text-orange-700 transition-colors duration-200"
+                    className="text-sm text-orange-600 hover:text-orange-700"
                   >
                     {organization.phoneNumber}
                   </a>
@@ -232,23 +216,23 @@ export default function OrganizationView({ organization }: OrganizationViewProps
               </div>
 
               <div className="flex items-start">
-                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                  <Users className="h-4 w-4 text-gray-600" />
+                <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center mr-2 flex-shrink-0">
+                  <Users className="h-3 w-3 text-gray-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-xs text-gray-500 font-medium mb-1">จำนวนผู้ลงนาม</p>
-                  <div className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-100 text-emerald-800">
-                    {organization.numberOfSigners} คน
-                  </div>
+                  <p className="text-xs text-gray-500 mb-0.5">Number of Signers | จำนวนผู้ลงนาม</p>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-green-100 text-green-800">
+                    {organization.numberOfSigners} people
+                  </span>
                 </div>
               </div>
 
               <div className="flex items-start">
-                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                  <Calendar className="h-4 w-4 text-gray-600" />
+                <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center mr-2 flex-shrink-0">
+                  <Calendar className="h-3 w-3 text-gray-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-xs text-gray-500 font-medium mb-1">วันที่ส่งข้อมูล</p>
+                  <p className="text-xs text-gray-500 mb-0.5">Submission Date | วันที่ส่งข้อมูล</p>
                   <p className="text-sm text-gray-900">
                     {new Date(organization.createdAt).toLocaleDateString('th-TH', {
                       year: 'numeric',
@@ -264,118 +248,107 @@ export default function OrganizationView({ organization }: OrganizationViewProps
           </div>
         </div>
 
-        {/* ที่อยู่ */}
-        <div className="bg-white rounded-lg border border-gray-200">
-          <div className="p-6 border-b border-gray-100">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-lg flex items-center justify-center mr-3">
-                <MapPin className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h2 className="text-lg font-light text-gray-900">ที่อยู่องค์กร</h2>
-                <p className="text-sm text-gray-500 font-light">ที่อยู่ที่ตั้งขององค์กร</p>
-              </div>
-            </div>
+        {/* Address Information */}
+        <div className="bg-white border border-gray-200 rounded">
+          <div className="px-3 py-2 border-b border-gray-200 bg-gray-50">
+            <h2 className="text-sm font-medium text-gray-900">Address Information | ที่อยู่องค์กร</h2>
           </div>
 
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="space-y-2">
-                <p className="text-xs text-gray-500 font-medium">ที่อยู่</p>
+          <div className="p-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+              <div>
+                <p className="text-xs text-gray-500 mb-0.5">Address | ที่อยู่</p>
                 <p className="text-sm text-gray-900">{organization.addressLine1}</p>
               </div>
 
-              <div className="space-y-2">
-                <p className="text-xs text-gray-500 font-medium">ตำบล/แขวง</p>
+              <div>
+                <p className="text-xs text-gray-500 mb-0.5">Sub-district | ตำบล/แขวง</p>
                 <p className="text-sm text-gray-900">{organization.type}{organization.district}</p>
               </div>
 
-              <div className="space-y-2">
-                <p className="text-xs text-gray-500 font-medium">อำเภอ/เขต</p>
+              <div>
+                <p className="text-xs text-gray-500 mb-0.5">District | อำเภอ/เขต</p>
                 <p className="text-sm text-gray-900">อำเภอ{organization.amphoe}</p>
               </div>
 
-              <div className="space-y-2">
-                <p className="text-xs text-gray-500 font-medium">จังหวัด</p>
+              <div>
+                <p className="text-xs text-gray-500 mb-0.5">Province | จังหวัด</p>
                 <p className="text-sm text-gray-900">จังหวัด{organization.province}</p>
               </div>
             </div>
 
-            <div className="mt-4 pt-4 border-t border-gray-100">
+            <div className="pt-2 border-t border-gray-100">
               <div className="flex items-center">
-                <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
-                  <MapPin className="h-4 w-4 text-gray-600" />
+                <div className="w-5 h-5 bg-gray-100 rounded flex items-center justify-center mr-2">
+                  <MapPin className="h-3 w-3 text-gray-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-medium">รหัสไปรษณีย์</p>
+                  <p className="text-xs text-gray-500">Postal Code | รหัสไปรษณีย์</p>
                   <p className="text-sm text-gray-900">{organization.zipcode}</p>
                 </div>
               </div>
             </div>
 
-            <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+            <div className="mt-3 p-2 bg-gray-50 rounded">
               <p className="text-sm text-gray-700">
-                <strong>ที่อยู่เต็ม:</strong> {organization.addressLine1} {organization.type}{organization.district} 
+                <strong>Full Address | ที่อยู่เต็ม:</strong> {organization.addressLine1} {organization.type}{organization.district} 
                 อำเภอ{organization.amphoe} จังหวัด{organization.province} {organization.zipcode}
               </p>
             </div>
           </div>
         </div>
 
-        {/* รูปภาพ */}
-        <div className="bg-white rounded-lg border border-gray-200">
-          <div className="p-6 border-b border-gray-100">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gradient-to-r from-pink-400 to-rose-500 rounded-lg flex items-center justify-center mr-3">
-                  <ImageIcon className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-light text-gray-900">รูปภาพประกอบ</h2>
-                  <p className="text-sm text-gray-500 font-light">รูปภาพที่ส่งมาพร้อมข้อมูล ({images.length}/5 รูป)</p>
-                </div>
-              </div>
-            </div>
+        {/* Images */}
+        <div className="bg-white border border-gray-200 rounded">
+          <div className="px-3 py-2 border-b border-gray-200 bg-gray-50">
+            <h2 className="text-sm font-medium text-gray-900">
+              Images | รูปภาพประกอบ ({images.length}/5 images)
+            </h2>
           </div>
 
-          <div className="p-6">
+          <div className="p-3">
             {images.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                 {[1, 2, 3, 4, 5].map((index) => {
                   const image = (organization as any)[`image${index}`];
                   return (
-                    <div key={index} className="space-y-2">
+                    <div key={index} className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-gray-900">รูปภาพที่ {index}</p>
+                        <p className="text-xs font-medium text-gray-700">Image {index} | รูปที่ {index}</p>
                         {image && (
-                          <div className="flex items-center space-x-2">
-                            <div className="inline-flex items-center px-2 py-1 rounded text-xs bg-green-100 text-green-800">
-                              <CheckCircle className="h-3 w-3 mr-1" />
-                              มีรูปภาพ
-                            </div>
-                          </div>
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-green-100 text-green-800">
+                            <CheckCircle className="h-2.5 w-2.5 mr-0.5" />
+                            Ready
+                          </span>
                         )}
                       </div>
                       
-                      <div className={`relative w-full h-48 rounded-lg border-2 border-dashed ${
+                      <div className={`relative w-full h-24 border rounded ${
                         image ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50'
                       }`}>
                         {image ? (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-center">
-                              <ImageIcon className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                              <p className="text-sm text-green-700 font-medium">รูปภาพพร้อมแล้ว</p>
-                              <button className="mt-2 inline-flex items-center px-3 py-1 text-xs text-green-700 bg-green-100 rounded-md hover:bg-green-200 transition-colors duration-200">
-                                <Download className="h-3 w-3 mr-1" />
-                                ดาวน์โหลด
-                              </button>
+                          <div className="relative w-full h-full">
+                            <img
+                              src={image}
+                              alt={`Image ${index}`}
+                              className="w-full h-full object-cover rounded"
+                            />
+                            <div className="absolute top-1 right-1">
+                              <a
+                                href={image}
+                                download
+                                className="inline-flex items-center px-1.5 py-0.5 text-xs text-white bg-black bg-opacity-70 rounded hover:bg-opacity-90"
+                              >
+                                <Download className="h-2.5 w-2.5 mr-0.5" />
+                                Download
+                              </a>
                             </div>
                           </div>
                         ) : (
                           <div className="absolute inset-0 flex items-center justify-center">
                             <div className="text-center">
-                              <ImageIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                              <p className="text-sm text-gray-500">ไม่มีรูปภาพ</p>
+                              <ImageIcon className="h-6 w-6 text-gray-400 mx-auto mb-1" />
+                              <p className="text-xs text-gray-500">No Image</p>
                             </div>
                           </div>
                         )}
@@ -385,39 +358,39 @@ export default function OrganizationView({ organization }: OrganizationViewProps
                 })}
               </div>
             ) : (
-              <div className="text-center py-8">
-                <ImageIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500">ไม่มีรูปภาพ</p>
+              <div className="text-center py-6">
+                <ImageIcon className="h-12 w-12 text-gray-300 mx-auto mb-2" />
+                <p className="text-sm text-gray-500">No images uploaded</p>
               </div>
             )}
           </div>
         </div>
 
         {/* Actions */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="bg-white border border-gray-200 rounded p-3">
+          <div className="flex flex-col sm:flex-row gap-2 justify-center">
             <Link
               href={`/organization/edit/${organization.id}`}
-              className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-lg font-medium hover:from-orange-600 hover:to-amber-700 transition-all duration-150 text-sm"
+              className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors duration-200"
             >
-              <Edit className="h-4 w-4 mr-2" />
-              แก้ไขข้อมูล
+              <Edit className="h-4 w-4 mr-1" />
+              Edit Data
             </Link>
             
             <button
               onClick={() => window.print()}
-              className="flex items-center justify-center px-6 py-3 bg-white text-gray-600 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-all duration-150 text-sm"
+              className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors duration-200"
             >
-              <Download className="h-4 w-4 mr-2" />
-              พิมพ์ข้อมูล
+              <Download className="h-4 w-4 mr-1" />
+              Print
             </button>
             
             <Link
               href="/organization"
-              className="flex items-center justify-center px-6 py-3 bg-white text-gray-600 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-all duration-150 text-sm"
+              className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors duration-200"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              กลับไปรายการ
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              Back to List
             </Link>
           </div>
         </div>

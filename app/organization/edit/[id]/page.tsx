@@ -1,4 +1,4 @@
-// app/organization/edit/[id]/page.tsx
+// app/organization/edit/[id]/page.tsx - แก้ไขให้ส่ง ID ไปยัง OrganizationForm
 import { notFound } from 'next/navigation';
 import { getOrganizationById } from '../../actions/Get';
 import { getActiveOrganizationCategories } from '@/app/dashboard/organization-category/actions/Get';
@@ -30,6 +30,7 @@ export default async function EditOrganizationPage({ params }: EditOrganizationP
       <OrganizationForm
         organizationCategories={organizationCategories}
         initialData={{
+          id: organization.id, // ✅ เพิ่ม ID สำคัญมาก!
           firstName: organization.firstName,
           lastName: organization.lastName,
           organizationCategoryId: organization.organizationCategoryId,
@@ -44,9 +45,9 @@ export default async function EditOrganizationPage({ params }: EditOrganizationP
           numberOfSigners: organization.numberOfSigners,
           image1: organization.image1,
           image2: organization.image2,
-          image3: organization.image3,
-          image4: organization.image4,
-          image5: organization.image5
+          image3: organization.image3 ?? undefined,
+          image4: organization.image4 ?? undefined,
+          image5: organization.image5 ?? undefined
         }}
         isEdit={true}
       />

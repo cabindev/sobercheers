@@ -53,7 +53,7 @@ export default function OrganizationSelector({ value, onChange, error, disabled 
   }
 
   return (
-    <FormField label="ชื่อองค์กร" required error={error}>
+    <FormField label="ชื่อองค์กร | Organization" required error={error}>
       {organizationCategories.length > 0 ? (
         <div className="space-y-3">
           {/* Group by category type */}
@@ -70,8 +70,8 @@ export default function OrganizationSelector({ value, onChange, error, disabled 
                     <label 
                       key={category.id}
                       className={`
-                        inline-flex items-center px-3 py-2 rounded-lg border cursor-pointer
-                        text-sm transition-colors duration-150
+                        inline-flex items-center px-2 py-1.5 rounded text-xs cursor-pointer border
+                        transition-colors duration-150
                         ${value === category.id
                           ? 'border-orange-500 bg-orange-50 text-orange-700'
                           : 'border-gray-300 bg-white text-gray-700 hover:border-orange-400 hover:bg-orange-50'
@@ -92,11 +92,7 @@ export default function OrganizationSelector({ value, onChange, error, disabled 
                         <span className="font-medium">
                           {category.name}
                         </span>
-                        {category.shortName && (
-                          <span className="text-xs text-gray-500">
-                            {category.shortName}
-                          </span>
-                        )}
+                 
                       </div>
                     </label>
                   ))}
