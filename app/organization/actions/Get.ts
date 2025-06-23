@@ -1,8 +1,10 @@
 // app/organization/actions/Get.ts
 'use server';
 
-import prisma from '@/app/lib/db';
+import { PrismaClient } from '@prisma/client';
 import { Organization } from '@/types/organization';
+
+const prisma = new PrismaClient();
 
 export interface OrganizationFilters {
   search?: string;
@@ -83,6 +85,8 @@ export async function getAllOrganizations(filters?: OrganizationFilters): Promis
   } catch (error) {
     console.error('Error fetching organizations:', error);
     throw new Error('Failed to fetch organizations');
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
@@ -100,6 +104,8 @@ export async function getOrganizationById(id: number): Promise<Organization | nu
   } catch (error) {
     console.error('Error fetching organization by ID:', error);
     throw new Error('Failed to fetch organization');
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
@@ -124,7 +130,7 @@ export async function getOrganizationStats() {
         ORDER BY count DESC
       `,
       
-      // Group by province  
+      // Group by province
       prisma.$queryRaw`
         SELECT 
           "province",
@@ -154,6 +160,8 @@ export async function getOrganizationStats() {
   } catch (error) {
     console.error('Error fetching organization stats:', error);
     throw new Error('Failed to fetch organization stats');
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
@@ -172,5 +180,45 @@ export async function getProvincesWithData(): Promise<string[]> {
   } catch (error) {
     console.error('Error fetching provinces:', error);
     throw new Error('Failed to fetch provinces');
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+// ดึงสถิติตามองค์กร
+export async function getOrganizationCategoryStats() {
+  try {
+    const result = await prisma.organization.findMany({
+      select: {
+        organizationCategoryId: true,
+        organizationCategory: {
+          select: {
+            id: true,
+            name: true,
+            categoryType: true
+          }
+        }
+      }
+    });
+
+    // Group manually since Prisma groupBy with include has limitations
+    const grouped = result.reduce((acc: Record<number, any>, org) => {
+      const categoryId = org.organizationCategoryId;
+      if (!acc[categoryId]) {
+        acc[categoryId] = {
+          organizationCategory: org.organizationCategory,
+          count: 0
+        };
+      }
+      acc[categoryId].count++;
+      return acc;
+    }, {});
+
+    return Object.values(grouped);
+  } catch (error) {
+    console.error('Error fetching organization category stats:', error);
+    throw new Error('Failed to fetch organization category stats');
+  } finally {
+    await prisma.$disconnect();
   }
 }

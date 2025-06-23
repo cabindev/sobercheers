@@ -168,6 +168,7 @@ model OrganizationCategory {
   @@index([createdAt])
   @@index([isActive, sortOrder])
   @@index([categoryType])
+  @@map("OrganizationCategory") // กำหนดชื่อตารางให้ชัดเจน
 }
 
 // ✅ โมเดลสำหรับข้อมูลส่งคืนจากสมาชิก
@@ -211,4 +212,5 @@ model Organization {
   @@index([province, createdAt])
   @@index([createdAt])
   @@index([phoneNumber])
+  @@map("Organization") // กำหนดชื่อตารางให้ชัดเจน
 }

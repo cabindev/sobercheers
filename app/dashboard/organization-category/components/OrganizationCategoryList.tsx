@@ -192,7 +192,7 @@ export default function OrganizationCategoryList() {
             
             <div className="flex items-center space-x-3">
               <Link
-                href="/organization-category/create"
+                href="/dashboard/organization-category/create"
                 className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-medium py-2.5 px-5 rounded-lg transition-all duration-150 flex items-center shadow-sm shadow-orange-200/50 hover:shadow-md hover:scale-105 text-sm"
               >
                 <Plus className="h-4 w-4 mr-2" />

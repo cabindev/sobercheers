@@ -88,7 +88,7 @@ export default function OrganizationCategoryForm({ initialData, isEdit = false }
         });
       }
       
-      router.push('/organization-category');
+      router.push('/dashboard/organization-category');
       router.refresh();
     } catch (error) {
       console.error('Error saving organization category:', error);
@@ -228,7 +228,7 @@ export default function OrganizationCategoryForm({ initialData, isEdit = false }
                 onChange={(e) => handleInputChange('categoryType', e.target.value)}
                 required
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:border-orange-400 focus:ring-1 focus:ring-orange-200 transition-colors duration-200 text-sm"
-                placeholder="เช่น โรงพยาบาล, เทศบาล, โรงเรียน, วัด, ชุมชน"
+                placeholder="เช่น โรงพยาบาล, เทศบาล, โรงเรียน, วัด, ชุมชน,บริษัท ,NGO"
               />
               {errors.categoryType && (
                 <p className="mt-1 text-xs text-red-600 flex items-center">
@@ -237,7 +237,7 @@ export default function OrganizationCategoryForm({ initialData, isEdit = false }
                 </p>
               )}
               <p className="mt-1 text-xs text-gray-500">
-                กรอกประเภทองค์กรตามลักษณะจริง เช่น หน่วยงานราชการ, องค์กรเอกชน, อื่นๆ
+                กรอกประเภทองค์กรตามลักษณะจริง เช่น หน่วยงานราชการ, องค์กรเอกชน,บริษัท,NGO อื่นๆ
               </p>
             </div>
 
