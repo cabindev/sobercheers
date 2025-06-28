@@ -48,8 +48,9 @@ interface OrganizationFormProps {
 }
 
 // ฟังก์ชันสำหรับตรวจสอบและทำความสะอาด URL ของรูปภาพ
-const validateImageUrl = (url: string | undefined): string | null => {
-  if (!url || url.trim() === '') return null;
+const validateImageUrl = (url: string | undefined | null): string | null => {
+  // ตรวจสอบว่าเป็น string และไม่ว่าง
+  if (!url || typeof url !== 'string' || url.trim() === '') return null;
   
   try {
     // ถ้าเป็น URL แบบ relative path ให้เพิ่ม leading slash
@@ -132,7 +133,7 @@ export default function OrganizationForm({ organizationCategories, initialData, 
     });
   }, []);
 
-  // Memoized callback for input changes
+  // Memoized callback for input changes - ปรับปรุงให้รองรับ type ที่ถูกต้อง
   const handleInputChange = useCallback((field: keyof OrganizationFormData, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
@@ -519,11 +520,13 @@ export default function OrganizationForm({ organizationCategories, initialData, 
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                 {[1, 2, 3, 4, 5].map((index) => {
                   const imageField = `image${index}` as keyof OrganizationFormData;
-                  const imageUrl = formData[imageField];
+                  const imageValue = formData[imageField];
                   const isUploading = uploadingImages[index];
                   const isRequired = index <= 2;
 
                   // ✅ ตรวจสอบและทำความสะอาด URL ก่อนส่งให้ Next.js Image
+                  // แปลงเป็น string หรือ undefined เท่านั้น
+                  const imageUrl = typeof imageValue === 'string' ? imageValue : undefined;
                   const validImageUrl = validateImageUrl(imageUrl);
 
                   return (
