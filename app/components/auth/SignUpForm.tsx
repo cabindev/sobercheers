@@ -102,7 +102,7 @@ export default function SignUpForm() {
           <div className="flex justify-center mb-6">
             <Image 
               src="/x-right.png" 
-              alt="SOBER CHEERs Logo" 
+              alt="Buddhist lent Logo" 
               width={120} 
               height={120} 
               className="object-contain"
@@ -111,7 +111,7 @@ export default function SignUpForm() {
           
           <h1 className="text-2xl font-bold text-gray-800 text-center mb-2">สมัครสมาชิก</h1>
           <p className="text-gray-600 text-center mb-6 text-sm">
-            ร่วมเป็นส่วนหนึ่งของ SOBER CHEERs
+            ร่วมเป็นส่วนหนึ่งของ Buddhist lent
           </p>
           
           <form className="space-y-5" onSubmit={handleSubmit}>

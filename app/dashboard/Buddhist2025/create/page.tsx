@@ -1,5 +1,5 @@
 // app/dashboard/Buddhist2025/create/page.tsx
-import BuddhistLentForm from '@/app/Buddhist2025/components/BuddhistLentForm';
+import BuddhistLentForm from '@/app/Buddhist-Lent/components/BuddhistLentForm';
 
 export default function DashboardCreateBuddhist2025Page() {
   return (

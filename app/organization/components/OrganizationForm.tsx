@@ -10,7 +10,7 @@ import { createOrganization } from '../actions/Post';
 import { updateOrganization } from '../actions/Update';
 import { uploadImage, validateImageFile } from '@/app/lib/imageUpload';
 import OrganizationSelector from './OrganizationSelector';
-import TambonSearch from '../../Buddhist2025/components/TambonSearch';
+import TambonSearch from '../../Buddhist-Lent/components/TambonSearch';
 // นำเข้า Toast functions
 import { 
   showSuccessToast, 

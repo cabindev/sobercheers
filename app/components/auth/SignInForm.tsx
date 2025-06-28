@@ -53,7 +53,7 @@ export default function SignInForm() {
           <div className="flex justify-center mb-6">
             <Image 
               src="/x-right.png" 
-              alt="SOBER CHEERs Logo" 
+              alt="Buddhist lent Logo" 
               width={120} 
               height={120} 
               className="object-contain"
@@ -62,7 +62,7 @@ export default function SignInForm() {
           
           <h1 className="text-2xl font-bold text-gray-800 text-center mb-2">เข้าสู่ระบบ</h1>
           <p className="text-gray-600 text-center mb-6 text-sm">
-            ยินดีต้อนรับสู่ SOBER CHEERs - งดเหล้าเข้าพรรษา
+            ยินดีต้อนรับสู่ Buddhist lent - งดเหล้าเข้าพรรษา
           </p>
           
           <form className="space-y-5" onSubmit={handleSubmit}>

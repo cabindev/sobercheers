@@ -1,5 +1,5 @@
 // app/dashboard/Buddhist2025/list/page.tsx
-import BuddhistLentList from '@/app/Buddhist2025/components/BuddhistLentList';
+import BuddhistLentList from '@/app/Buddhist-Lent/components/BuddhistLentList';
 
 export default function DashboardBuddhistLentListPage() {
   return (

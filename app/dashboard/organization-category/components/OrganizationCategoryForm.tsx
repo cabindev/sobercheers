@@ -123,7 +123,7 @@ export default function OrganizationCategoryForm({ initialData, isEdit = false }
               <Building2 className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-light text-gray-900">
+              <h1 className="text-xl font-bold text-gray-900">
                 {isEdit ? 'แก้ไขข้อมูลองค์กร' : 'เพิ่มองค์กรใหม่'}
               </h1>
               <p className="text-sm text-gray-500 font-light">

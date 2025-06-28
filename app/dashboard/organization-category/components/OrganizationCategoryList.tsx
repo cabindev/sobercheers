@@ -181,7 +181,7 @@ export default function OrganizationCategoryList() {
                 <Building2 className="h-7 w-7 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-light text-gray-900">จัดการองค์กร</h1>
+                <h1 className="text-xl font-bold text-gray-900">จัดการข้อมูลองค์กร</h1>
                 <p className="text-sm text-gray-500 mt-1 font-light">จัดการองค์กรสำหรับระบบส่งคืนข้อมูล</p>
                 <div className="flex items-center mt-2 text-xs text-gray-400">
                   <BarChart3 className="h-3 w-3 mr-1" />
@@ -445,7 +445,7 @@ export default function OrganizationCategoryList() {
             </p>
             {!searchTerm && !filterCategoryType && filterStatus === 'all' && (
               <Link
-                href="/organization-category/create"
+                href="/dashboard/organization-category/create"
                 className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-600 text-white font-medium rounded-lg hover:from-orange-600 hover:to-amber-700 transition-all duration-150 shadow-sm shadow-orange-200/50 text-sm"
               >
                 <Plus className="h-4 w-4 mr-2" />
