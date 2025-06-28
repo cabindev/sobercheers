@@ -1,4 +1,4 @@
-// app/organization/components/OrganizationForm.tsx - ใช้ Toast แทน alert ในระบบคืนข้อมูลงดเหล้าเข้าพรรษา
+// app/organization/components/OrganizationForm.tsx - แก้ไข Image URL validation ในระบบคืนข้อมูลงดเหล้าเข้าพรรษา
 'use client';
 import { useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
@@ -46,6 +46,30 @@ interface OrganizationFormProps {
   initialData?: OrganizationFormData;
   isEdit?: boolean;
 }
+
+// ฟังก์ชันสำหรับตรวจสอบและทำความสะอาด URL ของรูปภาพ
+const validateImageUrl = (url: string | undefined): string | null => {
+  if (!url || url.trim() === '') return null;
+  
+  try {
+    // ถ้าเป็น URL แบบ relative path ให้เพิ่ม leading slash
+    if (url.startsWith('/')) {
+      return url;
+    }
+    
+    // ถ้าเป็น URL แบบ absolute
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      new URL(url); // ตรวจสอบว่าเป็น URL ที่ถูกต้อง
+      return url;
+    }
+    
+    // ถ้าไม่มี protocol ให้เพิ่ม leading slash
+    return `/${url}`;
+  } catch (error) {
+    console.warn('Invalid image URL:', url, error);
+    return null;
+  }
+};
 
 export default function OrganizationForm({ organizationCategories, initialData, isEdit = false }: OrganizationFormProps) {
   const router = useRouter();
@@ -340,7 +364,7 @@ export default function OrganizationForm({ organizationCategories, initialData, 
           </div>
         )}
 
-        {/* Form content ยังคงเหมือนเดิม */}
+        {/* Form content */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Personal Information */}
           <div className="bg-white border border-gray-200 rounded">
@@ -485,7 +509,7 @@ export default function OrganizationForm({ organizationCategories, initialData, 
             </div>
           </div>
 
-          {/* Images */}
+          {/* Images - แก้ไขการแสดงรูปภาพ */}
           <div className="bg-white border border-gray-200 rounded">
             <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
               <h2 className="text-sm font-medium text-gray-900">Images | รูปภาพประกอบ</h2>
@@ -499,6 +523,9 @@ export default function OrganizationForm({ organizationCategories, initialData, 
                   const isUploading = uploadingImages[index];
                   const isRequired = index <= 2;
 
+                  // ✅ ตรวจสอบและทำความสะอาด URL ก่อนส่งให้ Next.js Image
+                  const validImageUrl = validateImageUrl(imageUrl);
+
                   return (
                     <div key={index} className="space-y-1">
                       <label className="block text-xs font-medium text-gray-700">
@@ -506,14 +533,19 @@ export default function OrganizationForm({ organizationCategories, initialData, 
                       </label>
                       
                       <div className="relative">
-                        {imageUrl ? (
+                        {validImageUrl ? (
                           <div className="relative w-full h-24 bg-gray-100 border border-gray-300 rounded overflow-hidden">
                             <Image
-                              src={typeof imageUrl === 'string' ? imageUrl : ''}
+                              src={validImageUrl}
                               alt={`Image ${index}`}
                               fill
                               className="object-cover"
                               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
+                              onError={(e) => {
+                                console.warn(`Failed to load image ${index}:`, validImageUrl);
+                                // ซ่อนรูปภาพที่โหลดไม่ได้
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
                             />
                             <button
                               type="button"
