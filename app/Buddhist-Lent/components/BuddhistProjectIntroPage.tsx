@@ -121,7 +121,7 @@ const BuddhistProjectIntroPage: React.FC = () => {
                   <div className="w-8 h-8 flex items-center justify-center mx-auto lg:mx-0 mb-2">
                     <Users className="w-5 h-5 text-stone-400" />
                   </div>
-                  <h4 className="font-semibold text-base text-stone-700 mb-1">หน่วยงานหลัก</h4>
+                  <h4 className="font-semibold text-base text-stone-700 mb-1">ดำเนินงานโดย</h4>
                   <p className="text-stone-500 font-light mb-1 text-sm">สำนักงานเครือข่ายองค์กรงดเหล้า (สคล.)</p>
                   <p className="text-stone-400 font-light text-xs">ภายใต้การสนับสนุน สำนักงานกองทุนสนับสนุนการสร้างเสริมสุขภาพ (สสส.)</p>
                 </div>
