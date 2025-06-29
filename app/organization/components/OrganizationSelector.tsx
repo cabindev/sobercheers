@@ -65,13 +65,13 @@ export default function OrganizationSelector({ value, onChange, error, disabled 
                 <div className="text-xs font-medium text-gray-600 uppercase tracking-wide px-1">
                   {categoryType}
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
                   {categoriesInType.map((category) => (
                     <label 
                       key={category.id}
                       className={`
-                        inline-flex items-center px-2 py-1.5 rounded text-xs cursor-pointer border
-                        transition-colors duration-150
+                        flex items-center px-3 py-2 rounded text-xs cursor-pointer border
+                        transition-colors duration-150 min-h-[44px]
                         ${value === category.id
                           ? 'border-orange-500 bg-orange-50 text-orange-700'
                           : 'border-gray-300 bg-white text-gray-700 hover:border-orange-400 hover:bg-orange-50'
@@ -88,11 +88,17 @@ export default function OrganizationSelector({ value, onChange, error, disabled 
                         disabled={disabled}
                         className="sr-only"
                       />
-                      <div className="flex flex-col">
-                        <span className="font-medium">
+                      <div className="flex flex-col text-left w-full">
+                        {/* ชื่อหลักองค์กร */}
+                        <span className="font-medium leading-tight">
                           {category.name}
                         </span>
-                 
+                        {/* ชื่อย่อองค์กร - แสดงขนาดเล็กๆใต้ชื่อหลัก */}
+                        {category.shortName && (
+                          <span className="text-xs text-gray-500 mt-0.5">
+                            ({category.shortName})
+                          </span>
+                        )}
                       </div>
                     </label>
                   ))}
@@ -113,10 +119,29 @@ export default function OrganizationSelector({ value, onChange, error, disabled 
           {(() => {
             const selectedCategory = organizationCategories.find(cat => cat.id === value);
             return selectedCategory?.description ? (
-              <p className="text-sm text-gray-700">
-                <span className="text-gray-900 font-medium">คำอธิบาย:</span> {selectedCategory.description}
-              </p>
-            ) : null;
+              <div className="space-y-1">
+                {/* แสดงชื่อเต็มและชื่อย่อของที่เลือก */}
+                <div className="text-sm">
+                  <span className="font-medium text-gray-900">{selectedCategory.name}</span>
+                  {selectedCategory.shortName && (
+                    <span className="text-gray-600 ml-1">({selectedCategory.shortName})</span>
+                  )}
+                </div>
+                {/* คำอธิบาย */}
+                <p className="text-sm text-gray-700">
+                  <span className="text-gray-900 font-medium">คำอธิบาย:</span> {selectedCategory.description}
+                </p>
+              </div>
+            ) : (
+              selectedCategory && (
+                <div className="text-sm">
+                  <span className="font-medium text-gray-900">{selectedCategory.name}</span>
+                  {selectedCategory.shortName && (
+                    <span className="text-gray-600 ml-1">({selectedCategory.shortName})</span>
+                  )}
+                </div>
+              )
+            );
           })()}
         </div>
       )}

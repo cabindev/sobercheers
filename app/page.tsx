@@ -1,4 +1,4 @@
-// app/page.tsx - หน้าแรกระบบจัดการข้อมูลองค์กรงดเหล้าเข้าพรรษา
+// app/page.tsx 
 'use client';
 import React from 'react';
 import { useRouter } from 'next/navigation';
@@ -149,7 +149,7 @@ export default function Home() {
 
         {/* Stats Cards */}
         {/* How it Works */}
-        <div className="bg-white rounded-xl border border-gray-200 p-8">
+        <div className=" p-8">
           <div className="text-center mb-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-2">วิธีการใช้งาน | How to Use</h3>
             <p className="text-gray-600">ขั้นตอนการรายงานข้อมูลการงดเหล้าเข้าพรรษา | Steps to report Buddhist Lent abstinence data</p>

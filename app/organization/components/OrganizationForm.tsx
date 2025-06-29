@@ -1,4 +1,4 @@
-// app/organization/components/OrganizationForm.tsx - แก้ไข Image URL validation ในระบบคืนข้อมูลงดเหล้าเข้าพรรษา
+// app/organization/components/OrganizationForm.tsx 
 'use client';
 import { useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
