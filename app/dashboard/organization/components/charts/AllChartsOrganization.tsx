@@ -1,7 +1,9 @@
 // app/dashboard/organization/components/charts/AllChartsOrganization.tsx
+// แก้ไข duplicate keys และเพิ่ม error handling + เปลี่ยน Organization Type เป็นแผนภูมิ
 'use client'
 import React, { useEffect, useState } from 'react';
-import { getOrganizationDashboardSummary } from '../../actions/GetChartData';
+import ReactECharts from 'echarts-for-react';
+import { getOrganizationDashboardSummary, getOrganizationTypeChartData } from '../../actions/GetChartData';
 import DashboardLoading from '../ui/DashboardLoading';
 import OrganizationStats from './OrganizationStats';
 import OrganizationCategoryChart from './OrganizationCategoryChart';
@@ -11,7 +13,6 @@ import SubmissionTrendChart from './SubmissionTrendChart';
 import ImageCompletionChart from './ImageCompletionChart';
 import MonthlySubmissionChart from './MonthlySubmissionChart';
 import ContactStatsChart from './ContactStatsChart';
-import { getOrganizationTypeChartData } from '../../actions/GetChartData';
 
 interface ChartCardProps {
   title: string;
@@ -42,6 +43,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
 // Organization Type Chart Component
 const OrganizationTypeChart: React.FC = () => {
   const [typeData, setTypeData] = useState<Array<{ name: string; value: number }>>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,6 +53,7 @@ const OrganizationTypeChart: React.FC = () => {
         const result = await getOrganizationTypeChartData();
         if (result.success && result.data) {
           setTypeData(result.data);
+          setTotalCount(result.data.reduce((sum, item) => sum + item.value, 0));
         }
       } catch (error) {
         console.error('Error fetching organization type data:', error);
@@ -74,37 +77,106 @@ const OrganizationTypeChart: React.FC = () => {
     return <div className="text-center text-xs text-gray-500 py-8">ไม่พบข้อมูลประเภทองค์กร</div>;
   }
 
-  const totalCount = typeData.reduce((sum, item) => sum + item.value, 0);
+  const option = {
+    title: {
+      text: 'ประเภทองค์กร',
+      left: 'center',
+      textStyle: {
+        fontSize: 13,
+        fontWeight: '500',
+        color: '#4B5563'
+      }
+    },
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: 'white',
+      borderColor: '#E5E7EB',
+      borderWidth: 1,
+      textStyle: {
+        fontSize: 11,
+        color: '#374151'
+      },
+      formatter: (params: any) => {
+        const percentage = ((params.value / totalCount) * 100).toFixed(1);
+        return `${params.name}: ${params.value.toLocaleString()} องค์กร (${percentage}%)`;
+      }
+    },
+    series: [
+      {
+        name: 'ประเภทองค์กร',
+        type: 'pie',
+        radius: ['45%', '70%'],
+        center: ['50%', '55%'],
+        data: typeData.map((item, index) => ({
+          ...item,
+          itemStyle: {
+            color: ['#10B981', '#34D399', '#6EE7B7', '#059669', '#047857'][index % 5] // Green gradient tones
+          }
+        })),
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 8,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.1)'
+          }
+        },
+        label: {
+          show: true,
+          formatter: (params: any) => {
+            const percentage = ((params.value / totalCount) * 100).toFixed(1);
+            const shortName = params.name.length > 8 ? 
+              `${params.name.substring(0, 6)}...` : params.name;
+            return `${shortName}\n${percentage}%`;
+          },
+          fontSize: 9,
+          fontWeight: '400',
+          color: '#4B5563'
+        }
+      }
+    ]
+  };
 
   return (
     <div className="bg-white h-full flex flex-col">
-      <div className="p-4">
-        <div className="grid grid-cols-2 gap-3">
-          {typeData.map((item, index) => {
-            const colors = ['#10B981', '#34D399', '#6EE7B7', '#059669'];
-            const bgColors = ['bg-green-50', 'bg-green-100', 'bg-green-50', 'bg-green-100'];
-            const textColors = ['text-green-700', 'text-green-800', 'text-green-700', 'text-green-800'];
-            
-            const color = colors[index % colors.length];
-            const bgColor = bgColors[index % bgColors.length];
-            const textColor = textColors[index % textColors.length];
-            const percentage = ((item.value / totalCount) * 100).toFixed(1);
-            
-            return (
-              <div key={item.name} className={`${bgColor} rounded-lg p-3 text-center border border-green-200`}>
-                <div className={`text-lg font-semibold ${textColor} mb-1`}>
-                  {item.value.toLocaleString()}
-                </div>
-                <div className={`text-xs ${textColor} mb-1`}>
+      <div className="flex-1">
+        <ReactECharts
+          option={option}
+          style={{ height: '240px', width: '100%' }}
+        />
+      </div>
+      
+      <div className="mt-3 space-y-1.5">
+        {typeData.map((item, index) => {
+          const colors = ['#10B981', '#34D399', '#6EE7B7', '#059669', '#047857'];
+          const bgColors = ['bg-green-50', 'bg-green-100', 'bg-green-50', 'bg-green-100', 'bg-green-50'];
+          const textColors = ['text-green-700', 'text-green-800', 'text-green-700', 'text-green-800', 'text-green-700'];
+          
+          const color = colors[index % colors.length];
+          const bgColor = bgColors[index % bgColors.length];
+          const textColor = textColors[index % textColors.length];
+          const percentage = ((item.value / totalCount) * 100).toFixed(1);
+          
+          // สร้าง unique key เพื่อป้องกัน duplicate keys
+          const uniqueKey = `type-${item.name}-${index}-${item.value}`;
+          
+          return (
+            <div key={uniqueKey} className={`flex items-center justify-between py-1.5 px-2 rounded ${bgColor} hover:opacity-80 transition-opacity`}>
+              <div className="flex items-center space-x-2 flex-1 min-w-0">
+                <div 
+                  className="w-2.5 h-2.5 rounded-full" 
+                  style={{ backgroundColor: color }}
+                ></div>
+                <span className={`text-xs font-normal ${textColor} truncate`} title={item.name}>
                   {item.name}
-                </div>
-                <div className="text-xs text-gray-500">
-                  {percentage}%
-                </div>
+                </span>
               </div>
-            );
-          })}
-        </div>
+              <div className="text-right">
+                <div className={`text-xs font-medium ${textColor}`}>{item.value.toLocaleString()}</div>
+                <div className="text-xs text-gray-500">{percentage}%</div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -253,37 +325,40 @@ const DashboardOrganization: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-                <div className="text-2xl font-semibold text-green-600 mb-1">
-                  {dashboardData.organizationsWithCompleteImages}
+              {[
+                {
+                  key: 'complete-images',
+                  value: dashboardData.organizationsWithCompleteImages,
+                  label1: 'องค์กรที่มีรูปครบ',
+                  label2: 'Organizations with Complete Images'
+                },
+                {
+                  key: 'recent-registrations', 
+                  value: dashboardData.recentOrganizations,
+                  label1: 'ลงทะเบียนใหม่',
+                  label2: 'Recent Registrations (7 days)'
+                },
+                {
+                  key: 'completeness-rate',
+                  value: `${((dashboardData.organizationsWithCompleteImages / dashboardData.totalOrganizations) * 100).toFixed(1)}%`,
+                  label1: 'อัตราความครบถ้วน',
+                  label2: 'Completeness Rate'
+                },
+                {
+                  key: 'avg-signers',
+                  value: dashboardData.avgSignersPerOrganization,
+                  label1: 'เฉลี่ยผู้ลงนาม',
+                  label2: 'Average Signers per Org'
+                }
+              ].map((stat) => (
+                <div key={stat.key} className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                  <div className="text-2xl font-semibold text-green-600 mb-1">
+                    {typeof stat.value === 'number' ? stat.value.toLocaleString() : stat.value}
+                  </div>
+                  <div className="text-xs text-green-700 mb-1">{stat.label1}</div>
+                  <div className="text-xs text-gray-500">{stat.label2}</div>
                 </div>
-                <div className="text-xs text-green-700 mb-1">องค์กรที่มีรูปครบ</div>
-                <div className="text-xs text-gray-500">Organizations with Complete Images</div>
-              </div>
-              
-              <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-                <div className="text-2xl font-semibold text-green-600 mb-1">
-                  {dashboardData.recentOrganizations}
-                </div>
-                <div className="text-xs text-green-700 mb-1">ลงทะเบียนใหม่</div>
-                <div className="text-xs text-gray-500">Recent Registrations (7 days)</div>
-              </div>
-              
-              <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-                <div className="text-2xl font-semibold text-green-600 mb-1">
-                  {((dashboardData.organizationsWithCompleteImages / dashboardData.totalOrganizations) * 100).toFixed(1)}%
-                </div>
-                <div className="text-xs text-green-700 mb-1">อัตราความครบถ้วน</div>
-                <div className="text-xs text-gray-500">Completeness Rate</div>
-              </div>
-              
-              <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-                <div className="text-2xl font-semibold text-green-600 mb-1">
-                  {dashboardData.avgSignersPerOrganization}
-                </div>
-                <div className="text-xs text-green-700 mb-1">เฉลี่ยผู้ลงนาม</div>
-                <div className="text-xs text-gray-500">Average Signers per Org</div>
-              </div>
+              ))}
             </div>
           </div>
 

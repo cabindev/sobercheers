@@ -1,4 +1,5 @@
 // app/dashboard/organization/components/charts/OrganizationStats.tsx
+// เอา emoji icons ออกจาก stat cards
 'use client'
 import React, { useEffect, useState } from 'react';
 import { getOrganizationDashboardSummary } from '../../actions/GetChartData';
@@ -18,7 +19,6 @@ interface StatCardProps {
   value: string;
   unit: string;
   description: string;
-  icon: string;
   color: string;
 }
 
@@ -27,7 +27,6 @@ const StatCard: React.FC<StatCardProps> = ({
   value, 
   unit, 
   description,
-  icon,
   color
 }) => (
   <div className="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
@@ -35,11 +34,8 @@ const StatCard: React.FC<StatCardProps> = ({
       <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">
         {title}
       </div>
-      <div className={`text-lg ${color}`}>
-        {icon}
-      </div>
     </div>
-    <div className="text-2xl font-semibold text-gray-900 mb-1">
+    <div className="text-2xl font-semibold text-green-600 mb-1">
       {value}
     </div>
     <div className="text-xs text-gray-600">
@@ -94,7 +90,6 @@ const OrganizationStats: React.FC = () => {
         value={statsData.totalOrganizations.toLocaleString()}
         unit="องค์กร | Organizations"
         description="จำนวนองค์กรที่ลงทะเบียนทั้งหมด"
-        icon="🏢"
         color="text-green-600"
       />
       
@@ -103,7 +98,6 @@ const OrganizationStats: React.FC = () => {
         value={statsData.totalProvinces.toString()}
         unit="จังหวัด | Provinces"
         description="จังหวัดที่มีองค์กรเข้าร่วม"
-        icon="📍"
         color="text-green-600"
       />
       
@@ -112,7 +106,6 @@ const OrganizationStats: React.FC = () => {
         value={statsData.totalCategories.toString()}
         unit="ประเภท | Types"
         description="หมวดหมู่องค์กรที่เปิดใช้งาน"
-        icon="📂"
         color="text-green-600"
       />
       
@@ -121,7 +114,6 @@ const OrganizationStats: React.FC = () => {
         value={statsData.totalSigners.toLocaleString()}
         unit="คน | People"
         description={`เฉลี่ย ${statsData.avgSignersPerOrganization} คน/องค์กร`}
-        icon="✍️"
         color="text-green-600"
       />
     </div>

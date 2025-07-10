@@ -1,4 +1,5 @@
 // app/dashboard/organization/actions/GetChartData.ts
+// แก้ไขเพิ่มการจัดการข้อมูลซ้ำและ null values เพื่อป้องกัน duplicate keys
 'use server';
 
 import prisma from '@/app/lib/db';
@@ -32,17 +33,26 @@ export async function getOrganizationCategoryChartData(): Promise<ChartDataResul
       }
     });
 
-    const chartData = categoryStats.map(item => {
+    // จัดการข้อมูลและป้องกัน duplicate keys
+    const chartData = categoryStats.map((item, index) => {
       const category = organizationCategories.find(cat => cat.id === item.organizationCategoryId);
+      const categoryName = category?.name || 'ไม่ระบุ';
+      
+      // เพิ่ม suffix เพื่อป้องกัน duplicate keys ในกรณีที่มีชื่อเดียวกัน
+      const uniqueName = categoryName === 'ไม่ระบุ' ? `ไม่ระบุ-${index + 1}` : categoryName;
+      
       return {
-        name: category?.name || 'ไม่ระบุ',
+        name: uniqueName,
         value: item._count.organizationCategoryId
       };
     });
 
+    // กรองข้อมูลที่มี value = 0 ออก
+    const filteredData = chartData.filter(item => item.value > 0);
+
     return {
       success: true,
-      data: chartData
+      data: filteredData
     };
   } catch (error) {
     console.error('Error fetching organization category chart data:', error);
@@ -68,10 +78,14 @@ export async function getProvinceDistributionChartData(): Promise<ChartDataResul
       }
     });
 
-    const chartData = provinceStats.map(item => ({
-      name: item.province,
-      value: item._count.province
-    }));
+    // ป้องกัน null values และ duplicate keys
+    const chartData = provinceStats
+      .filter(item => item.province && item.province.trim() !== '') // กรอง null และ empty string
+      .map((item, index) => ({
+        name: item.province || `ไม่ระบุ-${index + 1}`,
+        value: item._count.province
+      }))
+      .filter(item => item.value > 0); // กรองข้อมูลที่มี value = 0
 
     return {
       success: true,
@@ -135,11 +149,13 @@ export async function getSignersChartData(): Promise<ChartDataResult<Array<{ ran
       }
     });
 
-    const chartData = Object.entries(signersRanges).map(([range, data]) => ({
-      range,
-      count: data.count,
-      totalSigners: data.total
-    }));
+    const chartData = Object.entries(signersRanges)
+      .map(([range, data]) => ({
+        range,
+        count: data.count,
+        totalSigners: data.total
+      }))
+      .filter(item => item.count > 0); // กรองข้อมูลที่มี count = 0
 
     return {
       success: true,
@@ -234,7 +250,7 @@ export async function getImageCompletionChartData(): Promise<ChartDataResult<Arr
 
     const chartData = Object.entries(imageCount)
       .map(([name, value]) => ({ name, value }))
-      .filter(item => item.value > 0);
+      .filter(item => item.value > 0); // กรองข้อมูลที่มี value = 0
 
     return {
       success: true,
@@ -272,10 +288,12 @@ export async function getMonthlySubmissionChartData(): Promise<ChartDataResult<A
       monthlyCount[monthKey] = (monthlyCount[monthKey] || 0) + 1;
     });
 
-    const chartData = Object.entries(monthlyCount).map(([month, count]) => ({
-      month,
-      count
-    }));
+    const chartData = Object.entries(monthlyCount)
+      .map(([month, count]) => ({
+        month,
+        count
+      }))
+      .filter(item => item.count > 0); // กรองข้อมูลที่มี count = 0
 
     return {
       success: true,
@@ -306,10 +324,14 @@ export async function getTop10ProvincesChartData(): Promise<ChartDataResult<Arra
       take: 10
     });
 
-    const chartData = provinceStats.map(item => ({
-      name: item.province,
-      value: item._count.province
-    }));
+    // ป้องกัน null values และ duplicate keys
+    const chartData = provinceStats
+      .filter(item => item.province && item.province.trim() !== '') // กรอง null และ empty string
+      .map((item, index) => ({
+        name: item.province || `ไม่ระบุ-${index + 1}`,
+        value: item._count.province
+      }))
+      .filter(item => item.value > 0); // กรองข้อมูลที่มี value = 0
 
     return {
       success: true,
@@ -337,9 +359,13 @@ export async function getOrganizationTypeChartData(): Promise<ChartDataResult<Ar
     // นับประเภทองค์กร
     const typeCount: { [key: string]: number } = {};
     
-    allOrganizations.forEach(org => {
+    allOrganizations.forEach((org, index) => {
       if (org.type && org.type.trim() !== '') {
         typeCount[org.type] = (typeCount[org.type] || 0) + 1;
+      } else {
+        // จัดการกรณีที่ type เป็น null หรือ empty
+        const unknownKey = `ไม่ระบุ-${index + 1}`;
+        typeCount[unknownKey] = (typeCount[unknownKey] || 0) + 1;
       }
     });
 
@@ -356,6 +382,7 @@ export async function getOrganizationTypeChartData(): Promise<ChartDataResult<Ar
         name: typeMapping[type as keyof typeof typeMapping] || type || 'ไม่ระบุ',
         value: count
       }))
+      .filter(item => item.value > 0) // กรองข้อมูลที่มี value = 0
       .sort((a, b) => b.value - a.value);
 
     return {
@@ -427,7 +454,10 @@ export async function getOrganizationDashboardSummary(): Promise<ChartDataResult
       })
     ]);
 
-    const totalProvinces = provinceCount.length;
+    // กรองจังหวัดที่ไม่ใช่ null หรือ empty
+    const validProvinces = provinceCount.filter(item => item.province && item.province.trim() !== '');
+    const totalProvinces = validProvinces.length;
+    
     const signers = signersData.map(item => item.numberOfSigners).filter(s => s !== null) as number[];
     const totalSigners = signers.reduce((sum, count) => sum + count, 0);
     const avgSignersPerOrganization = signers.length > 0 ? Math.round(totalSigners / signers.length) : 0;
@@ -462,67 +492,72 @@ export async function getOrganizationDashboardSummary(): Promise<ChartDataResult
 
 // 📞 ข้อมูลสำหรับ Contact Stats Chart (สถิติข้อมูลติดต่อ)
 export async function getContactStatsChartData(): Promise<ChartDataResult<{
-  phoneNumberStats: Array<{ name: string; value: number }>;
-  completenessStats: Array<{ name: string; value: number }>;
+    phoneNumberStats: Array<{ name: string; value: number }>;
+    completenessStats: Array<{ name: string; value: number }>;
 }>> {
-  try {
-    const contactData = await prisma.organization.findMany({
-      select: {
-        phoneNumber: true,
-        firstName: true,
-        lastName: true,
-        addressLine1: true
-      }
-    });
+    try {
+        const contactData = await prisma.organization.findMany({
+            select: {
+                phoneNumber: true,
+                firstName: true,
+                lastName: true,
+                addressLine1: true
+            }
+        });
 
-    // สถิติเบอร์โทรศัพท์
-    const phoneStats = {
-      'มีเบอร์โทรศัพท์': 0,
-      'ไม่มีเบอร์โทรศัพท์': 0
-    };
+        // สถิติเบอร์โทรศัพท์
+        const phoneStats = {
+            'มีเบอร์โทรศัพท์': 0,
+            'ไม่มีเบอร์โทรศัพท์': 0
+        };
 
-    // สถิติความครบถ้วนของข้อมูลติดต่อ
-    const completenessStats = {
-      'ข้อมูลครบถ้วน': 0,
-      'ข้อมูลไม่ครบถ้วน': 0
-    };
+        // สถิติความครบถ้วนของข้อมูลติดต่อ
+        const completenessStats = {
+            'ข้อมูลครบถ้วน': 0,
+            'ข้อมูลไม่ครบถ้วน': 0
+        };
 
-    contactData.forEach(org => {
-      // ตรวจสอบเบอร์โทรศัพท์
-      if (org.phoneNumber && org.phoneNumber.trim() !== '') {
-        phoneStats['มีเบอร์โทรศัพท์']++;
-      } else {
-        phoneStats['ไม่มีเบอร์โทรศัพท์']++;
-      }
+        contactData.forEach(org => {
+            // ตรวจสอบเบอร์โทรศัพท์
+            if (org.phoneNumber && org.phoneNumber.trim() !== '') {
+                phoneStats['มีเบอร์โทรศัพท์']++;
+            } else {
+                phoneStats['ไม่มีเบอร์โทรศัพท์']++;
+            }
 
-      // ตรวจสอบความครบถ้วน (ชื่อ, นามสกุล, ที่อยู่, เบอร์โทร)
-      const isComplete = org.firstName && org.firstName.trim() !== '' &&
-                        org.lastName && org.lastName.trim() !== '' &&
-                        org.addressLine1 && org.addressLine1.trim() !== '' &&
-                        org.phoneNumber && org.phoneNumber.trim() !== '';
+            // ตรวจสอบความครบถ้วน (ชื่อ, นามสกุล, ที่อยู่, เบอร์โทร)
+            const isComplete = org.firstName && org.firstName.trim() !== '' &&
+                                                org.lastName && org.lastName.trim() !== '' &&
+                                                org.addressLine1 && org.addressLine1.trim() !== '' &&
+                                                org.phoneNumber && org.phoneNumber.trim() !== '';
 
-      if (isComplete) {
-        completenessStats['ข้อมูลครบถ้วน']++;
-      } else {
-        completenessStats['ข้อมูลไม่ครบถ้วน']++;
-      }
-    });
+            if (isComplete) {
+                completenessStats['ข้อมูลครบถ้วน']++;
+            } else {
+                completenessStats['ข้อมูลไม่ครบถ้วน']++;
+            }
+        });
 
-    const phoneNumberStats = Object.entries(phoneStats).map(([name, value]) => ({ name, value }));
-    const completenessStatsArray = Object.entries(completenessStats).map(([name, value]) => ({ name, value }));
+        const phoneNumberStats = Object.entries(phoneStats)
+            .map(([name, value]) => ({ name, value }))
+            .filter(item => item.value > 0); // กรองข้อมูลที่มี value = 0
+            
+        const completenessStatsArray = Object.entries(completenessStats)
+            .map(([name, value]) => ({ name, value }))
+            .filter(item => item.value > 0); // กรองข้อมูลที่มี value = 0
 
-    return {
-      success: true,
-      data: {
-        phoneNumberStats,
-        completenessStats: completenessStatsArray
-      }
-    };
-  } catch (error) {
-    console.error('Error fetching contact stats chart data:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to fetch contact stats data'
-    };
-  }
+        return {
+            success: true,
+            data: {
+                phoneNumberStats,
+                completenessStats: completenessStatsArray
+            }
+        };
+    } catch (error) {
+        console.error('Error fetching contact stats chart data:', error);
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Failed to fetch contact stats data'
+        };
+    }
 }

@@ -1,5 +1,5 @@
 // app/dashboard/components/Sidebar.tsx
-// หน้า Sidebar สำหรับจัดการเมนูหลักของระบบ งดเหล้าเข้าพรรษา
+// หน้า Sidebar สำหรับจัดการเมนูหลักของระบบ งดเหล้าเข้าพรรษา - แก้ไข path ให้ถูกต้อง
 'use client'
 
 import { useState, useEffect } from 'react';
@@ -25,7 +25,8 @@ import {
   Database,
   Church,
   Building2,
-  Settings
+  Settings,
+  Table
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -66,19 +67,25 @@ export default function Sidebar({ user }: SidebarProps) {
   // Organization Management menu
   const organizationMenu = {
     name: 'จัดการข้อมูลองค์กร',
-    href: '/dashboard/organization-category',
+    href: '/dashboard/organization',
     icon: Building2,
     subMenus: [
+      {
+        name: 'Dashboard',
+        href: '/dashboard/organization',
+        icon: BarChart3,
+        requireAdmin: true
+      },
+      {
+        name: 'ตารางข้อมูลองค์กร',
+        href: '/dashboard/organization/components/tables',
+        icon: Table,
+        requireAdmin: true
+      },
       {
         name: 'จัดการหมวดหมู่องค์กร',
         href: '/dashboard/organization-category',
         icon: Settings,
-        requireAdmin: true
-      },
-      {
-        name: 'รายการองค์กร',
-        href: '/dashboard/organization',
-        icon: Database,
         requireAdmin: true
       },
       {
@@ -300,7 +307,8 @@ export default function Sidebar({ user }: SidebarProps) {
                       const Icon = subMenu.icon;
                       const isSubActive =
                         pathname === subMenu.href ||
-                        pathname?.startsWith(subMenu.href);
+                        (subMenu.href === '/dashboard/organization' && pathname === '/dashboard/organization') ||
+                        (subMenu.href === '/dashboard/organization/components/tables' && pathname?.includes('/organization/components/tables'));
 
                       return (
                         <li key={subMenu.href}>

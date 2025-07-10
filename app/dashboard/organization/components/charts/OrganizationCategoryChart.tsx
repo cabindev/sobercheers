@@ -1,4 +1,5 @@
 // app/dashboard/organization/components/charts/OrganizationCategoryChart.tsx
+// แก้ไข Error: Encountered two children with the same key โดยเพิ่ม unique identifier
 import React, { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { getOrganizationCategoryChartData } from '../../actions/GetChartData';
@@ -123,8 +124,11 @@ const OrganizationCategoryChart: React.FC = () => {
           const textColor = textColors[index % textColors.length];
           const percentage = ((item.value / totalCount) * 100).toFixed(1);
           
+          // สร้าง unique key โดยรวม index เข้าด้วยเพื่อป้องกัน duplicate keys
+          const uniqueKey = `${item.name}-${index}-${item.value}`;
+          
           return (
-            <div key={item.name} className={`flex items-center justify-between py-1.5 px-2 rounded ${bgColor} hover:opacity-80 transition-opacity`}>
+            <div key={uniqueKey} className={`flex items-center justify-between py-1.5 px-2 rounded ${bgColor} hover:opacity-80 transition-opacity`}>
               <div className="flex items-center space-x-2 flex-1 min-w-0">
                 <div 
                   className="w-2.5 h-2.5 rounded-full" 
