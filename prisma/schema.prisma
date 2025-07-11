@@ -180,8 +180,8 @@ model Organization {
   lastName              String                   // นามสกุลผู้ส่งข้อมูล
   
   // ข้อมูลองค์กร
-  organizationCategoryId Int                     // เชื่อมกับชื่อองค์กร
-  organizationCategory   OrganizationCategory    @relation(fields: [organizationCategoryId], references: [id])
+  organizationCategoryId Int?                    // เปลี่ยนจาก Int เป็น Int? (optional)
+  organizationCategory   OrganizationCategory?   @relation(fields: [organizationCategoryId], references: [id])
   
   // ข้อมูลที่อยู่
   addressLine1          String                   // ที่อยู่
@@ -189,7 +189,7 @@ model Organization {
   amphoe                String                   // อำเภอ/เขต
   province              String                   // จังหวัด
   zipcode               String                   // รหัสไปรษณีย์
-  type                  String                   // ประเภทพื้นที่ (ตำบล/แขวง)
+  type                  String                   // ประเภทพื้นที่ (ภูมิภาค/)
   
   // ข้อมูลติดต่อ
   phoneNumber           String                   @unique // เบอร์โทรศัพท์

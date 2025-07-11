@@ -28,12 +28,12 @@ interface OrganizationWithCategory {
   image5: string | null;
   createdAt: Date;
   updatedAt: Date;
-  organizationCategoryId: number;
+  organizationCategoryId: number | null;
   organizationCategory: {
     id: number;
     name: string;
     shortName: string | null;
-  };
+  } | null;
 }
 
 interface OrganizationCategory {

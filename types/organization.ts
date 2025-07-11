@@ -54,8 +54,8 @@ export interface Organization {
   id: number;
   firstName: string;
   lastName: string;
-  organizationCategoryId: number;
-  organizationCategory: OrganizationCategory;
+  organizationCategoryId: number | null;
+  organizationCategory: OrganizationCategory | null;
   addressLine1: string;
   district: string;
   amphoe: string;

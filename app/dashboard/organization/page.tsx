@@ -1,4 +1,4 @@
-// app/dashboard/organization-dashboard/page.tsx
+// app/dashboard/organization/page.tsx
 import React from 'react';
 import AllChartsOrganization from './components/charts/AllChartsOrganization';
 

@@ -246,6 +246,12 @@ export default function OrganizationList() {
                       Organization | องค์กร
                     </th>
                     <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Category | หมวดหมู่
+                    </th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Region | ภูมิภาค
+                    </th>
+                    <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Location | สถานที่
                     </th>
                     <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -282,8 +288,13 @@ export default function OrganizationList() {
                         </div>
                       </td>
                       <td className="px-3 py-2">
-                        <div className="text-sm text-gray-900">{org.organizationCategory.name}</div>
-                        <div className="text-xs text-gray-500">{org.organizationCategory.categoryType}</div>
+                        <div className="text-sm text-gray-900">{org.organizationCategory?.name || '-'}</div>
+                      </td>
+                      <td className="px-3 py-2">
+                        <div className="text-sm text-gray-900">{org.organizationCategory?.categoryType || '-'}</div>
+                      </td>
+                      <td className="px-3 py-2">
+                        <div className="text-sm text-gray-900">{org.type}</div>
                       </td>
                       <td className="px-3 py-2">
                         <div className="text-sm text-gray-900 flex items-center">
@@ -291,7 +302,7 @@ export default function OrganizationList() {
                           {org.province}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {org.type}{org.district}, {org.amphoe}
+                          {org.district}, {org.amphoe}
                         </div>
                       </td>
                       <td className="px-3 py-2 whitespace-nowrap">
@@ -406,11 +417,19 @@ export default function OrganizationList() {
                   <div className="space-y-1 text-xs">
                     <div className="flex items-center justify-between">
                       <span className="text-gray-500">Organization:</span>
-                      <span className="text-gray-900">{org.organizationCategory.name}</span>
+                      <span className="text-gray-900">{org.organizationCategory?.name || '-'}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500">Category:</span>
+                      <span className="text-gray-900">{org.organizationCategory?.categoryType || '-'}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-500">Phone:</span>
                       <span className="text-gray-900">{org.phoneNumber}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500">Region:</span>
+                      <span className="text-gray-900">{org.type}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-500">Location:</span>

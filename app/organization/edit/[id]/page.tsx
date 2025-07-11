@@ -33,8 +33,8 @@ export default async function EditOrganizationPage({ params }: EditOrganizationP
           id: organization.id, // ✅ เพิ่ม ID สำคัญมาก!
           firstName: organization.firstName,
           lastName: organization.lastName,
-          organizationCategoryId: organization.organizationCategoryId,
-          organizationCategory: organization.organizationCategory,
+          organizationCategoryId: organization.organizationCategoryId || undefined,
+          organizationCategory: organization.organizationCategory || undefined,
           addressLine1: organization.addressLine1,
           district: organization.district,
           amphoe: organization.amphoe,

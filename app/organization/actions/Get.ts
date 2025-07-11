@@ -1,4 +1,5 @@
 // app/organization/actions/Get.ts
+// ระบบดึงข้อมูลองค์กร - แก้ไขแบบง่ายหลังจากปรับ schema
 'use server';
 
 import { PrismaClient } from '@prisma/client';
@@ -16,7 +17,7 @@ export interface OrganizationFilters {
   limit?: number;
 }
 
-// ดึงข้อมูลทั้งหมด
+// ดึงข้อมูลทั้งหมด - ปรับปรุงให้รองรับ optional organizationCategory
 export async function getAllOrganizations(filters?: OrganizationFilters): Promise<{
   data: Organization[];
   total: number;
@@ -68,6 +69,7 @@ export async function getAllOrganizations(filters?: OrganizationFilters): Promis
         skip,
         take: limit,
         include: {
+          // 🔥 ตอนนี้ organizationCategory เป็น optional แล้ว จะไม่มี error
           organizationCategory: true
         }
       }),
@@ -84,7 +86,12 @@ export async function getAllOrganizations(filters?: OrganizationFilters): Promis
     };
   } catch (error) {
     console.error('Error fetching organizations:', error);
-    throw new Error('Failed to fetch organizations');
+    return {
+      data: [],
+      total: 0,
+      page: filters?.page || 1,
+      totalPages: 0
+    };
   } finally {
     await prisma.$disconnect();
   }
@@ -120,26 +127,32 @@ export async function getOrganizationStats() {
     ] = await Promise.all([
       prisma.organization.count(),
       
-      // Group by organization category
-      prisma.$queryRaw`
-        SELECT 
-          "organizationCategoryId",
-          COUNT(*) as count
-        FROM "Organization" 
-        GROUP BY "organizationCategoryId"
-        ORDER BY count DESC
-      `,
+      // Group by organization category - ตอนนี้รองรับ null values แล้ว
+      prisma.organization.groupBy({
+        by: ['organizationCategoryId'],
+        _count: {
+          id: true
+        },
+        orderBy: {
+          _count: {
+            id: 'desc'
+          }
+        }
+      }),
       
       // Group by province
-      prisma.$queryRaw`
-        SELECT 
-          "province",
-          COUNT(*) as count
-        FROM "Organization" 
-        GROUP BY "province"
-        ORDER BY count DESC
-        LIMIT 10
-      `,
+      prisma.organization.groupBy({
+        by: ['province'],
+        _count: {
+          id: true
+        },
+        orderBy: {
+          _count: {
+            id: 'desc'
+          }
+        },
+        take: 10
+      }),
       
       // Recent organizations (last 7 days)
       prisma.organization.count({
@@ -168,15 +181,22 @@ export async function getOrganizationStats() {
 // ดึงรายการจังหวัดที่มีข้อมูล
 export async function getProvincesWithData(): Promise<string[]> {
   try {
-    const result = await prisma.$queryRaw<Array<{ province: string }>>`
-      SELECT DISTINCT "province" 
-      FROM "Organization" 
-      WHERE "province" IS NOT NULL 
-      AND "province" != ''
-      ORDER BY "province" ASC
-    `;
+    const provinces = await prisma.organization.findMany({
+      select: {
+        province: true
+      },
+      distinct: ['province'],
+      where: {
+        province: {
+          not: ''
+        }
+      },
+      orderBy: {
+        province: 'asc'
+      }
+    });
     
-    return result.map(item => item.province);
+    return provinces.map(item => item.province).filter(Boolean);
   } catch (error) {
     console.error('Error fetching provinces:', error);
     throw new Error('Failed to fetch provinces');
@@ -188,33 +208,32 @@ export async function getProvincesWithData(): Promise<string[]> {
 // ดึงสถิติตามองค์กร
 export async function getOrganizationCategoryStats() {
   try {
-    const result = await prisma.organization.findMany({
+    const result = await prisma.organizationCategory.findMany({
       select: {
-        organizationCategoryId: true,
-        organizationCategory: {
+        id: true,
+        name: true,
+        categoryType: true,
+        _count: {
           select: {
-            id: true,
-            name: true,
-            categoryType: true
+            organizations: true
           }
+        }
+      },
+      orderBy: {
+        organizations: {
+          _count: 'desc'
         }
       }
     });
 
-    // Group manually since Prisma groupBy with include has limitations
-    const grouped = result.reduce((acc: Record<number, any>, org) => {
-      const categoryId = org.organizationCategoryId;
-      if (!acc[categoryId]) {
-        acc[categoryId] = {
-          organizationCategory: org.organizationCategory,
-          count: 0
-        };
-      }
-      acc[categoryId].count++;
-      return acc;
-    }, {});
-
-    return Object.values(grouped);
+    return result.map(category => ({
+      organizationCategory: {
+        id: category.id,
+        name: category.name,
+        categoryType: category.categoryType
+      },
+      count: category._count.organizations
+    }));
   } catch (error) {
     console.error('Error fetching organization category stats:', error);
     throw new Error('Failed to fetch organization category stats');

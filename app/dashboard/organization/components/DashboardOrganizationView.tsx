@@ -74,7 +74,7 @@ export default function DashboardOrganizationView({ organization }: DashboardOrg
               {organization.firstName} {organization.lastName}
             </h1>
             <p className="text-gray-600">
-              ข้อมูลองค์กร: {organization.organizationCategory.name}
+              ข้อมูลองค์กร: {organization.organizationCategory?.name || '-'}
             </p>
             <div className="flex items-center mt-1 text-sm text-gray-500">
               <Clock className="h-3 w-3 mr-1" />
@@ -140,7 +140,7 @@ export default function DashboardOrganizationView({ organization }: DashboardOrg
             <div className="ml-3">
               <p className="text-sm font-medium text-gray-500">องค์กร</p>
               <p className="text-base font-semibold text-gray-900 truncate">
-                {organization.organizationCategory.name}
+                {organization.organizationCategory?.name || '-'}
               </p>
             </div>
           </div>
@@ -189,8 +189,8 @@ export default function DashboardOrganizationView({ organization }: DashboardOrg
               </div>
               <div className="flex-1">
                 <p className="text-sm text-gray-500 mb-1">ชื่อองค์กร</p>
-                <p className="text-base text-gray-900">{organization.organizationCategory.name}</p>
-                {organization.organizationCategory.shortName && (
+                <p className="text-base text-gray-900">{organization.organizationCategory?.name || '-'}</p>
+                {organization.organizationCategory?.shortName && (
                   <p className="text-sm text-gray-500">({organization.organizationCategory.shortName})</p>
                 )}
               </div>
@@ -208,7 +208,7 @@ export default function DashboardOrganizationView({ organization }: DashboardOrg
               </div>
             </div>
 
-            {organization.organizationCategory.description && (
+            {organization.organizationCategory?.description && (
               <div className="flex items-start">
                 <div className="p-2 bg-gray-100 rounded-lg mr-3">
                   <FileText className="h-4 w-4 text-gray-600" />

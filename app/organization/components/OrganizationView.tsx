@@ -48,7 +48,7 @@ export default function OrganizationView({ organization }: OrganizationViewProps
                   {organization.firstName} {organization.lastName}
                 </h1>
                 <p className="text-sm text-gray-600">
-                  Organization Data | ข้อมูลส่งคืนจาก {organization.organizationCategory.name}
+                  Organization Data | ข้อมูลส่งคืนจาก {organization.organizationCategory?.name || '-'}
                 </p>
                 <div className="flex items-center mt-1 text-xs text-gray-500">
                   <Clock className="h-3 w-3 mr-1" />
@@ -101,7 +101,7 @@ export default function OrganizationView({ organization }: OrganizationViewProps
               <div>
                 <p className="text-xs text-gray-500">Organization | องค์กร</p>
                 <p className="text-sm font-medium text-gray-900 truncate">
-                  {organization.organizationCategory.name}
+                  {organization.organizationCategory?.name || '-'}
                 </p>
               </div>
             </div>
@@ -150,8 +150,8 @@ export default function OrganizationView({ organization }: OrganizationViewProps
                 </div>
                 <div className="flex-1">
                   <p className="text-xs text-gray-500 mb-0.5">Organization Name | ชื่อองค์กร</p>
-                  <p className="text-sm text-gray-900">{organization.organizationCategory.name}</p>
-                  {organization.organizationCategory.shortName && (
+                  <p className="text-sm text-gray-900">{organization.organizationCategory?.name || '-'}</p>
+                  {organization.organizationCategory?.shortName && (
                     <p className="text-xs text-gray-500">({organization.organizationCategory.shortName})</p>
                   )}
                 </div>
@@ -164,12 +164,12 @@ export default function OrganizationView({ organization }: OrganizationViewProps
                 <div className="flex-1">
                   <p className="text-xs text-gray-500 mb-0.5">Type | ประเภทองค์กร</p>
                   <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-orange-100 text-orange-800">
-                    {organization.organizationCategory.categoryType}
+                    {organization.organizationCategory?.categoryType || '-'}
                   </span>
                 </div>
               </div>
 
-              {organization.organizationCategory.description && (
+              {organization.organizationCategory?.description && (
                 <div className="flex items-start">
                   <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center mr-2 flex-shrink-0">
                     <FileText className="h-3 w-3 text-gray-600" />

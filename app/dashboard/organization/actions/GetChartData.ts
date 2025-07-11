@@ -359,13 +359,12 @@ export async function getOrganizationTypeChartData(): Promise<ChartDataResult<Ar
     // นับประเภทองค์กร
     const typeCount: { [key: string]: number } = {};
     
-    allOrganizations.forEach((org, index) => {
+    allOrganizations.forEach((org) => {
       if (org.type && org.type.trim() !== '') {
         typeCount[org.type] = (typeCount[org.type] || 0) + 1;
       } else {
-        // จัดการกรณีที่ type เป็น null หรือ empty
-        const unknownKey = `ไม่ระบุ-${index + 1}`;
-        typeCount[unknownKey] = (typeCount[unknownKey] || 0) + 1;
+        // รวมทุกกรณีที่ไม่ระบุเป็นกลุ่มเดียว
+        typeCount['ไม่ระบุ'] = (typeCount['ไม่ระบุ'] || 0) + 1;
       }
     });
 

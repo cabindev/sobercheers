@@ -40,6 +40,7 @@ export default function Sidebar({ user }: SidebarProps) {
   const [isFormReturnMenuOpen, setIsFormReturnMenuOpen] = useState(false);
   const [isBuddhistLentMenuOpen, setIsBuddhistLentMenuOpen] = useState(false);
   const [isOrganizationMenuOpen, setIsOrganizationMenuOpen] = useState(false);
+  const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
 
   // เปิดเมนูอัตโนมัติตามหน้าที่กำลังเปิดอยู่
   useEffect(() => {
@@ -55,6 +56,9 @@ export default function Sidebar({ user }: SidebarProps) {
     if (pathname?.startsWith('/dashboard/Buddhist2025')) {
       setIsBuddhistLentMenuOpen(true);
     }
+    if (pathname?.startsWith('/dashboard/setting')) {
+      setIsSettingsMenuOpen(true);
+    }
   }, [pathname]);
 
   // ปิด sidebar บนมือถือเมื่อเปลี่ยนหน้า
@@ -66,7 +70,7 @@ export default function Sidebar({ user }: SidebarProps) {
 
   // Organization Management menu
   const organizationMenu = {
-    name: 'จัดการข้อมูลองค์กร',
+    name: '[บริหารองค์กรเข้าร่วม เข้าพรรษา]',
     href: '/dashboard/organization',
     icon: Building2,
     subMenus: [
@@ -77,9 +81,15 @@ export default function Sidebar({ user }: SidebarProps) {
         requireAdmin: true
       },
       {
-        name: 'ตารางข้อมูลองค์กร',
-        href: '/dashboard/organization/components/tables',
+        name: 'ข้อมูลองค์กร ร่วมเข้าพรรษา',
+        href: '/dashboard/organization/tables',
         icon: Table,
+        requireAdmin: true
+      },
+      {
+        name: 'แกลเลอรี่องค์กร',
+        href: '/dashboard/organization/gallery',
+        icon: Building2,
         requireAdmin: true
       },
       {
@@ -132,7 +142,7 @@ export default function Sidebar({ user }: SidebarProps) {
 
   // เมนูสำหรับ SoberCheers 2024
   const soberCheersMenu = {
-    name: 'SOBER CHEERS 2024',
+    name: 'Sober Cheers 2024',
     href: '/dashboard/soberCheers',
     icon: Wine,
     subMenus: [
@@ -154,12 +164,6 @@ export default function Sidebar({ user }: SidebarProps) {
         icon: PlusCircle,
         requireAdmin: false
       },
-      {
-        name: 'Admin Panel',
-        href: '/dashboard/member/components/admin',
-        icon: UserCheck,
-        requireAdmin: true
-      }
     ]
   };
 
@@ -177,20 +181,26 @@ export default function Sidebar({ user }: SidebarProps) {
       }
     ]
   };
+
+  // เมนูสำหรับ Settings
+  const settingsMenu = {
+    name: 'Settings',
+    href: '/dashboard/setting',
+    icon: Settings,
+    subMenus: [
+      {
+        name: 'จัดการผู้ดูแลระบบ',
+        href: '/dashboard/setting/admin',
+        icon: UserCheck,
+        requireAdmin: true
+      }
+    ]
+  };
   
   const isAdmin = user?.role === 'admin';
 
   return (
     <>
-      {/* Mobile hamburger button */}
-      <button
-        onClick={() => toggleMobileSidebar(true)}
-        className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-white border border-gray-200 shadow-sm lg:hidden hover:bg-gray-50"
-        aria-label="เปิดเมนู"
-      >
-        <Menu className="h-5 w-5 text-gray-600" />
-      </button>
-
       {/* Overlay สำหรับกดปิด sidebar บนมือถือ */}
       {isMobileSidebarOpen && (
         <div
@@ -227,11 +237,9 @@ export default function Sidebar({ user }: SidebarProps) {
             </div>
           ) : (
             <Link href="/dashboard/Buddhist2025" className="mx-auto">
-              <img
-                src="/x-left.png"
-                alt="Logo"
-                className="h-7 w-auto"
-              />
+              <div className="h-7 w-7 bg-orange-500 rounded-md flex items-center justify-center">
+                <span className="text-white font-bold text-sm">B</span>
+              </div>
             </Link>
           )}
 
@@ -283,7 +291,7 @@ export default function Sidebar({ user }: SidebarProps) {
               </div>
               {!sidebarCollapsed && (
                 <div className="flex items-center justify-between w-full ml-2">
-                  <span className="font-normal text-sm">{organizationMenu.name}</span>
+                  <span className="font-medium text-sm">{organizationMenu.name}</span>
                   <ChevronDown
                     className={`w-3 h-3 transition-transform ${
                       isOrganizationMenuOpen ? "rotate-180" : ""
@@ -308,7 +316,7 @@ export default function Sidebar({ user }: SidebarProps) {
                       const isSubActive =
                         pathname === subMenu.href ||
                         (subMenu.href === '/dashboard/organization' && pathname === '/dashboard/organization') ||
-                        (subMenu.href === '/dashboard/organization/components/tables' && pathname?.includes('/organization/components/tables'));
+                        (subMenu.href === '/dashboard/organization/tables' && pathname?.includes('/organization/tables'));
 
                       return (
                         <li key={subMenu.href}>
@@ -334,7 +342,7 @@ export default function Sidebar({ user }: SidebarProps) {
           <div className="mt-6">
             {!sidebarCollapsed && (
               <h3 className="px-2 text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-                ระบบจัดการ
+                ระบบจัดการ งดเหล้าเข้าพรรษา
               </h3>
             )}
 
@@ -361,7 +369,7 @@ export default function Sidebar({ user }: SidebarProps) {
                 </div>
                 {!sidebarCollapsed && (
                   <div className="flex items-center justify-between w-full ml-2">
-                    <span className="font-normal text-sm">{buddhistLentMenu.name}</span>
+                    <span className="font-medium text-sm">{buddhistLentMenu.name}</span>
                     <ChevronDown
                       className={`w-3 h-3 transition-transform ${
                         isBuddhistLentMenuOpen ? "rotate-180" : ""
@@ -432,7 +440,7 @@ export default function Sidebar({ user }: SidebarProps) {
                 </div>
                 {!sidebarCollapsed && (
                   <div className="flex items-center justify-between w-full ml-2">
-                    <span className="font-normal text-sm">{soberCheersMenu.name}</span>
+                    <span className="font-medium text-sm">{soberCheersMenu.name}</span>
                     <ChevronDown
                       className={`w-3 h-3 transition-transform ${
                         isSoberMenuOpen ? "rotate-180" : ""
@@ -504,7 +512,7 @@ export default function Sidebar({ user }: SidebarProps) {
                 </div>
                 {!sidebarCollapsed && (
                   <div className="flex items-center justify-between w-full ml-2">
-                    <span className="font-normal text-sm">{formReturnMenu.name}</span>
+                    <span className="font-medium text-sm">{formReturnMenu.name}</span>
                     <ChevronDown
                       className={`w-3 h-3 transition-transform ${
                         isFormReturnMenuOpen ? "rotate-180" : ""
@@ -551,6 +559,78 @@ export default function Sidebar({ user }: SidebarProps) {
                   </div>
                 )}
             </div>
+
+            {/* Settings menu */}
+            {isAdmin && (
+              <div className="px-2 mb-2">
+                <button
+                  onClick={() => setIsSettingsMenuOpen(!isSettingsMenuOpen)}
+                  className={cn(
+                    "group flex items-center w-full p-2 rounded text-sm transition-colors",
+                    pathname?.startsWith("/dashboard/setting")
+                      ? "bg-indigo-50 text-indigo-700 border-l-2 border-indigo-500"
+                      : "text-gray-700 hover:bg-gray-50",
+                    sidebarCollapsed && "justify-center"
+                  )}
+                  title={sidebarCollapsed ? settingsMenu.name : ""}
+                >
+                  <div
+                    className={cn(
+                      "flex items-center justify-center",
+                      sidebarCollapsed ? "h-8 w-8" : "h-4 w-4"
+                    )}
+                  >
+                    <Settings className={sidebarCollapsed ? "w-5 h-5" : "w-4 h-4"} />
+                  </div>
+                  {!sidebarCollapsed && (
+                    <div className="flex items-center justify-between w-full ml-2">
+                      <span className="font-medium text-sm">{settingsMenu.name}</span>
+                      <ChevronDown
+                        className={`w-3 h-3 transition-transform ${
+                          isSettingsMenuOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </div>
+                  )}
+                </button>
+
+                {/* Settings submenu */}
+                {(isSettingsMenuOpen ||
+                  pathname?.startsWith("/dashboard/setting")) &&
+                  !sidebarCollapsed && (
+                    <div className="mt-1 ml-2">
+                      <ul className="space-y-1">
+                        {settingsMenu.subMenus.map((subMenu) => {
+                          if (subMenu.requireAdmin && !isAdmin) {
+                            return null;
+                          }
+
+                          const Icon = subMenu.icon;
+                          const isSubActive =
+                            pathname === subMenu.href ||
+                            pathname?.startsWith(subMenu.href);
+
+                          return (
+                            <li key={subMenu.href}>
+                              <Link
+                                href={subMenu.href}
+                                className={`flex items-center p-2 text-sm rounded transition-colors ${
+                                  isSubActive
+                                    ? "bg-indigo-100 text-indigo-800"
+                                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                }`}
+                              >
+                                <Icon className="w-4 h-4 mr-2" />
+                                <span className="text-xs font-normal">{subMenu.name}</span>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  )}
+              </div>
+            )}
           </div>
         </div>
 
