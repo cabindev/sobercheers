@@ -641,58 +641,29 @@ const BuddhistTable: React.FC = () => {
          </div>
        )}
 
-       {/* Enhanced Stats - Minimal */}
+       {/* Enhanced Stats with DaisyUI Badges */}
        <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-         <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-           <div className="text-center">
-             <div className="text-2xl font-light text-gray-600 mb-1">
-               {filteredData.length.toLocaleString()}
-             </div>
-             <div className="text-xs text-gray-400 flex items-center justify-center font-light">
-               <FaUsers className="mr-1 text-xs" />
-               รายการที่แสดง
-             </div>
+         <div className="flex flex-wrap justify-center gap-4">
+           <div className="badge badge-lg bg-gray-600 text-white">
+             {filteredData.length.toLocaleString()} รายการที่แสดง
            </div>
 
-           <div className="text-center">
-             <div className="text-2xl font-light text-gray-600 mb-1">
-               {selectedRows.length.toLocaleString()}
-             </div>
-             <div className="text-xs text-gray-400 flex items-center justify-center font-light">
-               <FaBuilding className="mr-1 text-xs" />
-               รายการที่เลือก
-             </div>
+           <div className="badge badge-lg bg-gray-500 text-white">
+             {selectedRows.length.toLocaleString()} รายการที่เลือก
            </div>
 
            {tableStats && (
              <>
-               <div className="text-center">
-                 <div className="text-2xl font-light text-gray-600 mb-1">
-                   {tableStats.totalProvinces}
-                 </div>
-                 <div className="text-xs text-gray-400 flex items-center justify-center font-light">
-                   <FaMapMarkerAlt className="mr-1 text-xs" />
-                   จังหวัด
-                 </div>
+               <div className="badge badge-lg bg-gray-700 text-white">
+                 {tableStats.totalProvinces} จังหวัด
                </div>
 
-               <div className="text-center">
-                 <div className="text-2xl font-light text-gray-600 mb-1">
-                   {tableStats.recentRegistrations}
-                 </div>
-                 <div className="text-xs text-gray-400 flex items-center justify-center font-light">
-                   <FaCalendarAlt className="mr-1 text-xs" />
-                   ลงทะเบียนใหม่
-                 </div>
+               <div className="badge badge-lg bg-gray-400 text-white">
+                 {tableStats.recentRegistrations} ลงทะเบียนใหม่
                </div>
 
-               <div className="text-center">
-                 <div className="text-xl font-light text-gray-600 mb-1">
-                   {tableStats.avgMonthlyExpense.toLocaleString()}฿
-                 </div>
-                 <div className="text-xs text-gray-400 flex items-center justify-center font-light">
-                   💰 ค่าใช้จ่ายเฉลี่ย
-                 </div>
+               <div className="badge badge-lg bg-gray-800 text-white">
+                 เฉลี่ย {tableStats.avgMonthlyExpense.toLocaleString()}฿
                </div>
              </>
            )}

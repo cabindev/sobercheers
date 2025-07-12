@@ -72,8 +72,6 @@ const OrganizationTablePage: React.FC = () => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalRecords, setTotalRecords] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
   const [isDeleting, setIsDeleting] = useState<number | null>(null);
   const pageSize = 20;
@@ -86,9 +84,22 @@ const OrganizationTablePage: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    fetchOrganizations();
-  }, [filters.search, filters.organizationCategoryId, filters.province, currentPage, filters.sortBy, filters.sortOrder]);
+  // Client-side filtering like Buddhist2025/tables
+  const filteredData = data.filter((item: Organization) => {
+    return (
+      (!filters.search || 
+        `${item.firstName} ${item.lastName}`.toLowerCase().includes(filters.search.toLowerCase()) ||
+        item.phoneNumber?.toLowerCase().includes(filters.search.toLowerCase())
+      ) &&
+      (!filters.province || item.province?.includes(filters.province)) &&
+      (!filters.organizationCategoryId || item.organizationCategoryId?.toString() === filters.organizationCategoryId?.toString()) &&
+      (!filters.type || item.type?.includes(filters.type))
+    );
+  });
+
+  // Pagination
+  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const totalPages = Math.ceil(filteredData.length / pageSize);
 
   const fetchData = async () => {
     setLoading(true);
@@ -111,29 +122,28 @@ const OrganizationTablePage: React.FC = () => {
 
   const fetchOrganizations = async () => {
     try {
+      // Fetch all data for client-side filtering (like Buddhist2025/tables)
       const orgFilters: OrganizationFilters = {
-        search: filters.search || undefined,
-        organizationCategoryId: filters.organizationCategoryId || undefined,
-        province: filters.province || undefined,
+        search: undefined,
+        organizationCategoryId: undefined,
+        province: undefined,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
-        page: currentPage,
-        limit: pageSize
+        page: 1,
+        limit: 10000 // Get all records
       };
 
       const result = await getAllOrganizations(orgFilters);
       setData(result.data);
-      setTotalPages(result.totalPages);
-      setTotalRecords(result.total);
 
-      // Calculate stats
+      // Calculate stats from all data
       const uniqueProvinces = Array.from(new Set(result.data.map(org => org.province))).length;
       const totalSigners = result.data.reduce((sum, org) => sum + org.numberOfSigners, 0);
       const avgSigners = result.data.length > 0 ? Math.round(totalSigners / result.data.length) : 0;
       const orgsWithImages = result.data.filter(org => org.image1 || org.image2).length;
 
       setTableStats({
-        totalRecords: result.total,
+        totalRecords: result.data.length, // Use actual data length
         totalProvinces: uniqueProvinces,
         totalCategories: organizationCategories.length,
         recentOrganizations: 0, // This would need to be calculated based on date range
@@ -165,6 +175,25 @@ const OrganizationTablePage: React.FC = () => {
     setCurrentPage(1);
   };
 
+
+  const handleSelectRow = (id: number) => {
+    setSelectedRows(prev => 
+      prev.includes(id) 
+        ? prev.filter(rowId => rowId !== id)
+        : [...prev, id]
+    );
+  };
+
+
+
+  const handleSelectAll = () => {
+    if (selectedRows.length === filteredData.length) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(filteredData.map(item => item.id));
+    }
+  };
+
   const clearAllFilters = () => {
     setFilters({
       search: '',
@@ -179,22 +208,6 @@ const OrganizationTablePage: React.FC = () => {
       type: ''
     });
     setCurrentPage(1);
-  };
-
-  const handleSelectRow = (id: number) => {
-    setSelectedRows(prev => 
-      prev.includes(id) 
-        ? prev.filter(rowId => rowId !== id)
-        : [...prev, id]
-    );
-  };
-
-  const handleSelectAll = () => {
-    if (selectedRows.length === data.length) {
-      setSelectedRows([]);
-    } else {
-      setSelectedRows(data.map(item => item.id));
-    }
   };
 
   const handleDelete = async (id: number, name: string) => {
@@ -233,8 +246,8 @@ const OrganizationTablePage: React.FC = () => {
 
   const handleExportCSV = () => {
     const dataToExport = selectedRows.length > 0 
-      ? data.filter(item => selectedRows.includes(item.id))
-      : data;
+      ? filteredData.filter(item => selectedRows.includes(item.id))
+      : filteredData;
 
     const headers = [
       'ชื่อ-นามสกุล', 'เบอร์โทรศัพท์', 'องค์กร', 'หมวดหมู่องค์กร', 'ภูมิภาค',
@@ -272,8 +285,8 @@ const OrganizationTablePage: React.FC = () => {
 
   const handleExportExcel = () => {
     const dataToExport = selectedRows.length > 0 
-      ? data.filter(item => selectedRows.includes(item.id))
-      : data;
+      ? filteredData.filter(item => selectedRows.includes(item.id))
+      : filteredData;
 
     const excelData = dataToExport.map(item => ({
       'ชื่อ-นามสกุล': `${item.firstName} ${item.lastName}`,
@@ -337,7 +350,7 @@ const OrganizationTablePage: React.FC = () => {
               </div>
               <p className="text-sm text-gray-500 font-light">
                 ข้อมูลองค์กรที่ส่งคืนเข้าร่วมระบบ (รวม{" "}
-                {totalRecords.toLocaleString()} รายการ)
+                {data.length.toLocaleString()} รายการ)
               </p>
               {tableStats && (
                 <div className="mt-2 text-xs text-gray-400 font-light">
@@ -474,62 +487,33 @@ const OrganizationTablePage: React.FC = () => {
           </div>
         )}
 
-        {/* Statistics Summary */}
-        {tableStats && !isMobile && (
+        {/* Statistics Summary with DaisyUI Badges */}
+        {tableStats && (
           <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-              <div className="text-center">
-          <div className="text-2xl font-light text-orange-600 mb-1">
-            {data.length.toLocaleString()}
-          </div>
-          <div className="text-xs text-gray-400 flex items-center justify-center font-light">
-            <FaUsers className="mr-1 text-xs" />
-            รายการที่แสดง
-          </div>
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="badge badge-lg bg-gray-600 text-white">
+                {data.length.toLocaleString()} รายการที่แสดง
               </div>
 
-              <div className="text-center">
-          <div className="text-2xl font-light text-orange-600 mb-1">
-            {selectedRows.length.toLocaleString()}
-          </div>
-          <div className="text-xs text-gray-400 flex items-center justify-center font-light">
-            <FaCheck className="mr-1 text-xs" />
-            รายการที่เลือก
-          </div>
+              <div className="badge badge-lg bg-gray-500 text-white">
+                {selectedRows.length.toLocaleString()} รายการที่เลือก
               </div>
 
-              <div className="text-center">
-          <div className="text-2xl font-light text-orange-600 mb-1">
-            {tableStats.totalProvinces}
-          </div>
-          <div className="text-xs text-gray-400 flex items-center justify-center font-light">
-            <FaMapMarkerAlt className="mr-1 text-xs" />
-            จังหวัด
-          </div>
+              <div className="badge badge-lg bg-gray-700 text-white">
+                {tableStats.totalProvinces} จังหวัด
               </div>
 
-              <div className="text-center">
-          <div className="text-2xl font-light text-orange-600 mb-1">
-            {tableStats.avgSignersPerOrganization}
-          </div>
-          <div className="text-xs text-gray-400 flex items-center justify-center font-light">
-            <FaUsers className="mr-1 text-xs" />
-            เฉลี่ยผู้ลงนาม
-          </div>
+              <div className="badge badge-lg bg-gray-400 text-white">
+                เฉลี่ย {tableStats.avgSignersPerOrganization} ผู้ลงนาม
               </div>
 
-              <div className="text-center">
-          <div className="text-2xl font-light text-orange-600 mb-1">
-            {tableStats.organizationsWithImages}
-          </div>
-          <div className="text-xs text-gray-400 flex items-center justify-center font-light">
-            <FaImage className="mr-1 text-xs" />
-            มีรูปภาพ
-          </div>
+              <div className="badge badge-lg bg-gray-800 text-white">
+                {tableStats.organizationsWithImages} มีรูปภาพ
               </div>
             </div>
           </div>
         )}
+
 
         {/* Action buttons */}
         <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
@@ -539,9 +523,9 @@ const OrganizationTablePage: React.FC = () => {
               <button
           type="button"
           title="เพิ่มองค์กรใหม่"
-          className="flex items-center justify-center w-10 h-10 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-all duration-200 shadow-sm"
+          className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition-all duration-200"
               >
-          <FaUsers className="text-lg" />
+          <FaUsers className="text-orange-500 text-lg" />
               </button>
             </Link>
 
@@ -551,9 +535,9 @@ const OrganizationTablePage: React.FC = () => {
               onClick={handleExportCSV}
               disabled={data.length === 0}
               title={`ดาวน์โหลด CSV (${selectedRows.length > 0 ? selectedRows.length : data.length} รายการ)`}
-              className="flex items-center justify-center w-10 h-10 bg-emerald-500 text-white rounded-full hover:bg-emerald-600 transition-all duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <FaDownload className="text-lg" />
+              <FaDownload className="text-emerald-500 text-lg" />
             </button>
 
             {/* Download Excel */}
@@ -562,9 +546,9 @@ const OrganizationTablePage: React.FC = () => {
               onClick={handleExportExcel}
               disabled={data.length === 0}
               title={`ดาวน์โหลด Excel (${selectedRows.length > 0 ? selectedRows.length : data.length} รายการ)`}
-              className="flex items-center justify-center w-10 h-10 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <FaFileExcel className="text-lg" />
+              <FaFileExcel className="text-blue-500 text-lg" />
             </button>
 
             {/* Select/Unselect All */}
@@ -573,9 +557,9 @@ const OrganizationTablePage: React.FC = () => {
               onClick={handleSelectAll}
               disabled={data.length === 0}
               title={selectedRows.length === data.length ? "ยกเลิกเลือกทั้งหมด" : "เลือกทั้งหมด"}
-              className="flex items-center justify-center w-10 h-10 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-all duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <FaCheck className="text-lg" />
+              <FaCheck className="text-gray-500 text-lg" />
             </button>
 
             {/* Unselect selected items - only show when items are selected */}
@@ -584,9 +568,9 @@ const OrganizationTablePage: React.FC = () => {
           type="button"
           onClick={() => setSelectedRows([])}
           title={`ยกเลิกการเลือก (${selectedRows.length})`}
-          className="flex items-center justify-center w-10 h-10 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-200 shadow-sm"
+          className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition-all duration-200"
               >
-          <FaTimes className="text-lg" />
+          <FaTimes className="text-red-500 text-lg" />
               </button>
             )}
 
@@ -594,7 +578,7 @@ const OrganizationTablePage: React.FC = () => {
             <div className="flex items-center gap-2 ml-4">
               <span className="flex items-center text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1">
           <FaUsers className="mr-1 text-orange-500" />
-          {data.length} รายการ
+          {filteredData.length.toLocaleString()} รายการ
               </span>
               <span className="flex items-center text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1">
           <FaCheck className="mr-1 text-blue-500" />
@@ -605,7 +589,7 @@ const OrganizationTablePage: React.FC = () => {
         </div>
 
         {/* No data message */}
-        {data.length === 0 && (
+        {filteredData.length === 0 && (
           <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
             <div className="text-gray-400 text-4xl mb-4">🔍</div>
             <div className="text-gray-600 font-light mb-2 text-lg">
@@ -620,12 +604,12 @@ const OrganizationTablePage: React.FC = () => {
         )}
 
         {/* Data Table/Cards */}
-        {data.length > 0 && (
+        {filteredData.length > 0 && (
           <>
             {isMobile ? (
               // Mobile Card View
               <div className="space-y-4">
-                {data.map((org) => (
+                {paginatedData.map((org) => (
                   <div
                     key={org.id}
                     className="bg-white rounded-lg border border-gray-200 p-4 border-l-4 border-l-orange-400"
@@ -771,7 +755,7 @@ const OrganizationTablePage: React.FC = () => {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-100">
-                      {data.map((org, index) => (
+                      {paginatedData.map((org, index) => (
                         <tr
                           key={org.id}
                           className={`hover:bg-gray-50 transition-colors ${
@@ -894,8 +878,8 @@ const OrganizationTablePage: React.FC = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="text-sm text-gray-500 font-light">
                     แสดง {((currentPage - 1) * pageSize) + 1} ถึง{" "}
-                    {Math.min(currentPage * pageSize, totalRecords)} จาก{" "}
-                    {totalRecords.toLocaleString()} รายการ
+                    {Math.min(currentPage * pageSize, filteredData.length)} จาก{" "}
+                    {filteredData.length.toLocaleString()} รายการ
                   </div>
                   <div className="flex items-center space-x-1">
                     <button

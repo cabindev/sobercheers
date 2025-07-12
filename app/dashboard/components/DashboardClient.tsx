@@ -25,7 +25,9 @@ export default function DashboardClient({ children, user }: DashboardClientProps
           sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"
         )}
       >
-        <TopNav user={user} />
+        <TopNav 
+          user={user} 
+        />
         
         {/* Page content */}
         <main className="pt-2">
