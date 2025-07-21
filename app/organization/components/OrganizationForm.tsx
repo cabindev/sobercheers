@@ -89,7 +89,7 @@ export default function OrganizationForm({ organizationCategories, initialData, 
     zipcode: initialData?.zipcode || '',
     type: initialData?.type || '',
     phoneNumber: initialData?.phoneNumber || '',
-    numberOfSigners: initialData?.numberOfSigners || 1,
+    numberOfSigners: initialData?.numberOfSigners || 0,
     image1: initialData?.image1,
     image2: initialData?.image2,
     image3: initialData?.image3,
@@ -217,7 +217,7 @@ export default function OrganizationForm({ organizationCategories, initialData, 
       newErrors.zipcode = 'รหัสไปรษณีย์ต้องเป็นตัวเลข 5 หลัก';
     }
 
-    if (formData.numberOfSigners < 1) {
+    if (formData.numberOfSigners < 1 || isNaN(formData.numberOfSigners)) {
       newErrors.numberOfSigners = 'จำนวนผู้ลงนามต้องมากกว่า 0';
     }
 
@@ -497,8 +497,8 @@ export default function OrganizationForm({ organizationCategories, initialData, 
                   <input
                     type="number"
                     min="1"
-                    value={formData.numberOfSigners}
-                    onChange={(e) => handleInputChange('numberOfSigners', parseInt(e.target.value) || 1)}
+                    value={formData.numberOfSigners === 0 ? '' : formData.numberOfSigners}
+                    onChange={(e) => handleInputChange('numberOfSigners', e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
                     className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
                     placeholder="1"
                   />
