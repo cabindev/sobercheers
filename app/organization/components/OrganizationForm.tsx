@@ -434,14 +434,14 @@ export default function OrganizationForm({ organizationCategories, initialData, 
             <div className="p-4 space-y-4">
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Address | ที่อยู่ <span className="text-red-500">*</span>
+                  ชื่อองค์กร <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.addressLine1}
                   onChange={(e) => handleInputChange('addressLine1', e.target.value)}
                   className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
-                  placeholder="ที่อยู่"
+                  placeholder="ชื่อองค์กร"
                 />
                 {errors.addressLine1 && (
                   <p className="mt-1 text-xs text-red-600">{errors.addressLine1}</p>
