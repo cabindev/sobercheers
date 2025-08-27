@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
+import { toast } from 'react-hot-toast';
 import { useDashboard } from '../context/DashboardContext';
 import { cn } from '@/lib/utils';
 import { 
@@ -173,6 +174,18 @@ export default function Sidebar({ user }: SidebarProps) {
     href: '/dashboard/formReturn',
     icon: ClipboardList,
     subMenus: [
+      {
+        name: 'Dashboard 2024',
+        href: '/dashboard/form_return/2024',
+        icon: BarChart3,
+        requireAdmin: true
+      },
+      {
+        name: 'Dashboard 2025',
+        href: '/dashboard/form_return/2025',
+        icon: BarChart3,
+        requireAdmin: true
+      },
       {
         name: 'คืนข้อมูลงดเหล้าเข้าพรรษา',
         href: '/dashboard/formReturn',
@@ -670,7 +683,15 @@ export default function Sidebar({ user }: SidebarProps) {
             )}
           </div>
           <button
-            onClick={() => signOut({ callbackUrl: "/" })}
+            onClick={async () => {
+              try {
+                toast.loading('กำลังออกจากระบบ...');
+                await signOut({ callbackUrl: "/" });
+              } catch (error) {
+                toast.error('เกิดข้อผิดพลาดในการออกจากระบบ');
+                console.error('Sign out error:', error);
+              }
+            }}
             className={cn(
               "mt-2 flex items-center p-2 rounded w-full text-gray-600 hover:bg-gray-100 hover:text-gray-900 text-sm transition-colors",
               sidebarCollapsed && "justify-center"

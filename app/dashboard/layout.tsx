@@ -5,6 +5,7 @@ import authOptions from '../lib/configs/auth/authOptions';
 import { DashboardProvider } from './context/DashboardContext';
 import { TopNavProvider } from './context/TopNavContext';
 import DashboardClient from './components/DashboardClient';
+import { Toaster } from 'react-hot-toast';
 
 export default async function DashboardLayout({
   children,
@@ -23,6 +24,7 @@ export default async function DashboardLayout({
         <DashboardClient user={session.user}>
           {children}
         </DashboardClient>
+        <Toaster position="top-right" />
       </TopNavProvider>
     </DashboardProvider>
   );
