@@ -39,27 +39,35 @@ export async function getDashboardSummary2024(): Promise<{ success: boolean; dat
         distinct: ['province']
       }),
       
-      // Unique group categories in 2024
+      // Unique types in 2024
       prisma.campaignBuddhistLent.findMany({
         where: {
-          createdAt: { gte: year2024Start, lt: year2024End }
+          createdAt: { gte: year2024Start, lt: year2024End },
+          type: { not: null }
         },
-        select: { groupCategory: true },
-        distinct: ['groupCategory']
+        select: { type: true },
+        distinct: ['type']
       }),
       
       // Age data for average calculation
       prisma.campaignBuddhistLent.findMany({
         where: {
-          createdAt: { gte: year2024Start, lt: year2024End },
-          age: { not: null }
+          createdAt: { gte: year2024Start, lt: year2024End }
         },
-        select: { age: true }
+        select: { birthday: true }
       })
     ]);
 
-    // Calculate average age
-    const validAges = ageData.filter(item => item.age !== null).map(item => item.age!);
+    // Calculate average age from birthday
+    const currentDate = new Date();
+    const validAges = ageData
+      .filter(item => item.birthday !== null)
+      .map(item => {
+        const birthDate = new Date(item.birthday!);
+        const age = currentDate.getFullYear() - birthDate.getFullYear();
+        const monthDiff = currentDate.getMonth() - birthDate.getMonth();
+        return (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < birthDate.getDate())) ? age - 1 : age;
+      });
     const avgAge = validAges.length > 0 
       ? Math.round(validAges.reduce((sum, age) => sum + age, 0) / validAges.length)
       : 0;
@@ -159,10 +167,9 @@ export async function getAgeGroupChartData2024() {
 
     const ageData = await prisma.campaignBuddhistLent.findMany({
       where: {
-        createdAt: { gte: year2024Start, lt: year2024End },
-        age: { not: null }
+        createdAt: { gte: year2024Start, lt: year2024End }
       },
-      select: { age: true }
+      select: { birthday: true }
     });
 
     // Group ages into ranges
@@ -175,13 +182,18 @@ export async function getAgeGroupChartData2024() {
       '65+': 0
     };
 
+    const currentDate = new Date();
     ageData.forEach(item => {
-      const age = item.age!;
-      if (age <= 25) ageGroups['18-25']++;
-      else if (age <= 35) ageGroups['26-35']++;
-      else if (age <= 45) ageGroups['36-45']++;
-      else if (age <= 55) ageGroups['46-55']++;
-      else if (age <= 65) ageGroups['56-65']++;
+      const birthDate = new Date(item.birthday!);
+      const age = currentDate.getFullYear() - birthDate.getFullYear();
+      const monthDiff = currentDate.getMonth() - birthDate.getMonth();
+      const actualAge = (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < birthDate.getDate())) ? age - 1 : age;
+      
+      if (actualAge <= 25) ageGroups['18-25']++;
+      else if (actualAge <= 35) ageGroups['26-35']++;
+      else if (actualAge <= 45) ageGroups['36-45']++;
+      else if (actualAge <= 55) ageGroups['46-55']++;
+      else if (actualAge <= 65) ageGroups['56-65']++;
       else ageGroups['65+']++;
     });
 
@@ -277,25 +289,34 @@ export async function getMotivationChartData2024() {
     const year2024Start = new Date('2024-01-01T00:00:00.000Z');
     const year2024End = new Date('2025-01-01T00:00:00.000Z');
 
-    const motivationData = await prisma.campaignBuddhistLent.groupBy({
-      by: ['motivation'],
+    const motivationData = await prisma.campaignBuddhistLent.findMany({
       where: {
         createdAt: { gte: year2024Start, lt: year2024End }
       },
-      _count: true,
-      orderBy: {
-        _count: {
-          motivation: 'desc'
-        }
+      select: { motivations: true }
+    });
+
+    // Process JSON motivations data
+    const motivationCounts: { [key: string]: number } = {};
+    
+    motivationData.forEach(item => {
+      if (item.motivations && Array.isArray(item.motivations)) {
+        item.motivations.forEach((motivation) => {
+          if (typeof motivation === 'string') {
+            motivationCounts[motivation] = (motivationCounts[motivation] || 0) + 1;
+          }
+        });
       }
     });
 
+    // Sort by count and convert to chart format
+    const chartData = Object.entries(motivationCounts)
+      .sort(([,a], [,b]) => b - a)
+      .map(([name, value]) => ({ name, value }));
+
     return {
       success: true,
-      data: motivationData.map(item => ({
-        name: item.motivation,
-        value: item._count
-      }))
+      data: chartData
     };
   } catch (error) {
     console.error('Error fetching motivation chart data 2024:', error);

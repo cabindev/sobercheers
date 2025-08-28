@@ -738,11 +738,6 @@ export async function getTypeChartData(): Promise<ChartDataResult<Array<{ name: 
       _count: {
         groupCategoryId: true
       },
-      where: {
-        groupCategoryId: {
-          not: null
-        }
-      },
       orderBy: {
         _count: {
           groupCategoryId: 'desc'
