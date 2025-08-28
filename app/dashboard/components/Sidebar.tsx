@@ -304,7 +304,7 @@ export default function Sidebar({ user }: SidebarProps) {
               </div>
               {!sidebarCollapsed && (
                 <div className="flex items-center justify-between w-full ml-2">
-                  <span className="font-medium text-sm">{organizationMenu.name}</span>
+                  <span className="font-medium text-sm text-orange-600">{organizationMenu.name}</span>
                   <ChevronDown
                     className={`w-3 h-3 transition-transform ${
                       isOrganizationMenuOpen ? "rotate-180" : ""

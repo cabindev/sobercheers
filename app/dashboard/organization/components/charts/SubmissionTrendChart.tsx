@@ -32,14 +32,14 @@ const SubmissionTrendChart: React.FC = () => {
   if (loading) {
     return (
       <div className="h-64 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-5 w-5 border border-green-200 border-t-green-500"></div>
-        <span className="ml-2 text-xs text-gray-500">กำลังโหลด...</span>
+        <div className="animate-spin rounded-full h-5 w-5 border border-emerald-200 border-t-emerald-500"></div>
+        <span className="ml-2 text-xs text-emerald-600">กำลังโหลด...</span>
       </div>
     );
   }
 
   if (!trendData.length) {
-    return <div className="text-center text-xs text-gray-500 py-8">ไม่พบข้อมูลแนวโน้ม</div>;
+    return <div className="text-center text-xs text-emerald-600 py-8">ไม่พบข้อมูลแนวโน้ม</div>;
   }
 
   // คำนวณสถิติพื้นฐาน
@@ -55,13 +55,13 @@ const SubmissionTrendChart: React.FC = () => {
       textStyle: {
         fontSize: 13,
         fontWeight: '500',
-        color: '#4B5563'
+        color: '#065F46'
       }
     },
     tooltip: {
       trigger: 'axis',
       backgroundColor: 'white',
-      borderColor: '#E5E7EB',
+      borderColor: '#A7F3D0',
       borderWidth: 1,
       textStyle: {
         fontSize: 11,
@@ -173,28 +173,28 @@ const SubmissionTrendChart: React.FC = () => {
       </div>
       
       <div className="mt-3 grid grid-cols-2 gap-2">
-        <div className="bg-green-50 rounded p-2 text-center border border-green-200">
-          <div className="text-xs text-green-700 mb-1">รวม 30 วัน</div>
-          <div className="text-sm font-medium text-green-800">{totalSubmissions}</div>
-          <div className="text-xs text-green-600">องค์กร</div>
+        <div className="bg-emerald-50 rounded p-2 text-center border border-emerald-200">
+          <div className="text-xs text-emerald-700 mb-1">รวม 30 วัน</div>
+          <div className="text-sm font-medium text-emerald-800">{totalSubmissions}</div>
+          <div className="text-xs text-emerald-600">องค์กร</div>
         </div>
         
-        <div className="bg-green-50 rounded p-2 text-center border border-green-200">
-          <div className="text-xs text-green-700 mb-1">เฉลี่ยต่อวัน</div>
-          <div className="text-sm font-medium text-green-800">{avgPerDay}</div>
-          <div className="text-xs text-green-600">องค์กร</div>
+        <div className="bg-emerald-50 rounded p-2 text-center border border-emerald-200">
+          <div className="text-xs text-emerald-700 mb-1">เฉลี่ยต่อวัน</div>
+          <div className="text-sm font-medium text-emerald-800">{avgPerDay}</div>
+          <div className="text-xs text-emerald-600">องค์กร</div>
         </div>
         
-        <div className="bg-green-50 rounded p-2 text-center border border-green-200">
-          <div className="text-xs text-green-700 mb-1">สูงสุดต่อวัน</div>
-          <div className="text-sm font-medium text-green-800">{maxDay.count}</div>
-          <div className="text-xs text-green-600">องค์กร</div>
+        <div className="bg-emerald-50 rounded p-2 text-center border border-emerald-200">
+          <div className="text-xs text-emerald-700 mb-1">สูงสุดต่อวัน</div>
+          <div className="text-sm font-medium text-emerald-800">{maxDay.count}</div>
+          <div className="text-xs text-emerald-600">องค์กร</div>
         </div>
         
-        <div className="bg-green-50 rounded p-2 text-center border border-green-200">
-          <div className="text-xs text-green-700 mb-1">7 วันล่าสุด</div>
-          <div className="text-sm font-medium text-green-800">{recentWeek}</div>
-          <div className="text-xs text-green-600">องค์กร</div>
+        <div className="bg-emerald-50 rounded p-2 text-center border border-emerald-200">
+          <div className="text-xs text-emerald-700 mb-1">7 วันล่าสุด</div>
+          <div className="text-sm font-medium text-emerald-800">{recentWeek}</div>
+          <div className="text-xs text-emerald-600">องค์กร</div>
         </div>
       </div>
     </div>

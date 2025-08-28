@@ -1,7 +1,7 @@
-// app/dashboard/Buddhist2025/components/charts/ageGroupChart.tsx
+// app/dashboard/Buddhist2024/components/charts/ageGroupChart.tsx
 import React, { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { getAgeGroupChartData } from '../../actions/GetChartData';
+import { getAgeGroupChartData2024 } from '../../actions/GetChartData';
 
 interface AgeGroupData {
   name: string;
@@ -17,7 +17,7 @@ const AgeGroupChart: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const result = await getAgeGroupChartData();
+        const result = await getAgeGroupChartData2024();
         if (result.success && result.data) {
           setAgeGroupData(result.data);
           setTotalCount(result.data.reduce((sum, item) => sum + item.value, 0));

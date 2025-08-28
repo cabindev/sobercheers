@@ -29,19 +29,19 @@ const StatCard: React.FC<StatCardProps> = ({
   description,
   color
 }) => (
-  <div className="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+  <div className="bg-white p-4 rounded-lg border border-emerald-100 hover:shadow-lg transition-all hover:shadow-emerald-100/50">
     <div className="flex items-center justify-between mb-2">
-      <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+      <div className="text-xs font-medium text-emerald-600 uppercase tracking-wide">
         {title}
       </div>
     </div>
-    <div className="text-2xl font-semibold text-green-600 mb-1">
+    <div className="text-2xl font-semibold text-emerald-600 mb-1">
       {value}
     </div>
-    <div className="text-xs text-gray-600">
+    <div className="text-xs text-emerald-700">
       {unit}
     </div>
-    <div className="text-xs text-gray-400 mt-1">
+    <div className="text-xs text-emerald-500 mt-1">
       {description}
     </div>
   </div>

@@ -103,8 +103,10 @@ const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    async redirect() {
-      return 'https://healthy-sobriety.sdnthailand.com/';
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
 };

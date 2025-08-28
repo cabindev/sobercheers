@@ -1,15 +1,15 @@
-// app/dashboard/Buddhist2025/components/charts/alcoholConsumptionChart.tsx
+// app/dashboard/Buddhist2024/components/charts/genderChart.tsx
 import React, { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { getAlcoholConsumptionChartData } from '../../actions/GetChartData';
+import { getGenderChartData2024 } from '../../actions/GetChartData';
 
-interface AlcoholData {
+interface GenderData {
   name: string;
   value: number;
 }
 
-const AlcoholConsumptionChart: React.FC = () => {
-  const [alcoholData, setAlcoholData] = useState<AlcoholData[]>([]);
+const GenderChart: React.FC = () => {
+  const [genderData, setGenderData] = useState<GenderData[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -17,13 +17,13 @@ const AlcoholConsumptionChart: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const result = await getAlcoholConsumptionChartData();
+        const result = await getGenderChartData2024();
         if (result.success && result.data) {
-          setAlcoholData(result.data);
+          setGenderData(result.data);
           setTotalCount(result.data.reduce((sum, item) => sum + item.value, 0));
         }
       } catch (error) {
-        console.error('Error fetching alcohol consumption data:', error);
+        console.error('Error fetching gender data:', error);
       } finally {
         setLoading(false);
       }
@@ -40,13 +40,13 @@ const AlcoholConsumptionChart: React.FC = () => {
     );
   }
 
-  if (!alcoholData.length) {
-    return <div className="text-center text-xs text-emerald-600 py-8">ไม่พบข้อมูลการบริโภคเหล้า</div>;
+  if (!genderData.length) {
+    return <div className="text-center text-xs text-emerald-600 py-8">ไม่พบข้อมูลเพศ</div>;
   }
 
   const option = {
     title: {
-      text: 'ระดับการบริโภคเหล้า',
+      text: 'การแบ่งตามเพศ',
       left: 'center',
       textStyle: {
         fontSize: 13,
@@ -70,14 +70,14 @@ const AlcoholConsumptionChart: React.FC = () => {
     },
     series: [
       {
-        name: 'ระดับการบริโภค',
+        name: 'เพศ',
         type: 'pie',
         radius: ['45%', '70%'],
         center: ['50%', '55%'],
-        data: alcoholData.map((item, index) => ({
+        data: genderData.map((item, index) => ({
           ...item,
           itemStyle: {
-            color: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'][index % 5]
+            color: ['#10B981', '#34D399', '#6EE7B7'][index % 3] // Emerald/Green tones
           }
         })),
         emphasis: {
@@ -110,11 +110,12 @@ const AlcoholConsumptionChart: React.FC = () => {
         />
       </div>
       
+      {/* Summary - Compact Design */}
       <div className="mt-3 space-y-1.5">
-        {alcoholData.map((item, index) => {
-          const colors = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'];
-          const bgColors = ['bg-emerald-50', 'bg-emerald-50', 'bg-emerald-50', 'bg-emerald-50', 'bg-emerald-50'];
-          const textColors = ['text-emerald-700', 'text-emerald-700', 'text-emerald-700', 'text-emerald-700', 'text-emerald-700'];
+        {genderData.map((item, index) => {
+          const colors = ['#10B981', '#34D399', '#6EE7B7']; // Emerald/Green tones
+          const bgColors = ['bg-emerald-50', 'bg-emerald-50', 'bg-emerald-50'];
+          const textColors = ['text-emerald-700', 'text-emerald-700', 'text-emerald-700'];
           
           const color = colors[index % colors.length];
           const bgColor = bgColors[index % bgColors.length];
@@ -142,4 +143,4 @@ const AlcoholConsumptionChart: React.FC = () => {
   );
 };
 
-export default AlcoholConsumptionChart;
+export default GenderChart;

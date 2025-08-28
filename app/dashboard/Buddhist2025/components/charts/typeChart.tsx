@@ -1,15 +1,15 @@
-// app/dashboard/Buddhist2025/components/charts/alcoholConsumptionChart.tsx
+// app/dashboard/Buddhist2025/components/charts/typeChart.tsx
 import React, { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { getAlcoholConsumptionChartData } from '../../actions/GetChartData';
+import { getTypeChartData } from '../../actions/GetChartData';
 
-interface AlcoholData {
+interface TypeData {
   name: string;
   value: number;
 }
 
-const AlcoholConsumptionChart: React.FC = () => {
-  const [alcoholData, setAlcoholData] = useState<AlcoholData[]>([]);
+const TypeChart: React.FC = () => {
+  const [typeData, setTypeData] = useState<TypeData[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -17,13 +17,13 @@ const AlcoholConsumptionChart: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const result = await getAlcoholConsumptionChartData();
+        const result = await getTypeChartData();
         if (result.success && result.data) {
-          setAlcoholData(result.data);
+          setTypeData(result.data);
           setTotalCount(result.data.reduce((sum, item) => sum + item.value, 0));
         }
       } catch (error) {
-        console.error('Error fetching alcohol consumption data:', error);
+        console.error('Error fetching type data:', error);
       } finally {
         setLoading(false);
       }
@@ -40,13 +40,13 @@ const AlcoholConsumptionChart: React.FC = () => {
     );
   }
 
-  if (!alcoholData.length) {
-    return <div className="text-center text-xs text-emerald-600 py-8">ไม่พบข้อมูลการบริโภคเหล้า</div>;
+  if (!typeData.length) {
+    return <div className="text-center text-xs text-emerald-600 py-8">ไม่พบข้อมูลประเภท</div>;
   }
 
   const option = {
     title: {
-      text: 'ระดับการบริโภคเหล้า',
+      text: 'ประเภทผู้เข้าร่วม',
       left: 'center',
       textStyle: {
         fontSize: 13,
@@ -61,7 +61,7 @@ const AlcoholConsumptionChart: React.FC = () => {
       borderWidth: 1,
       textStyle: {
         fontSize: 11,
-        color: '#374151'
+        color: '#065F46'
       },
       formatter: (params: any) => {
         const percentage = ((params.value / totalCount) * 100).toFixed(1);
@@ -70,14 +70,14 @@ const AlcoholConsumptionChart: React.FC = () => {
     },
     series: [
       {
-        name: 'ระดับการบริโภค',
+        name: 'ประเภท',
         type: 'pie',
         radius: ['45%', '70%'],
         center: ['50%', '55%'],
-        data: alcoholData.map((item, index) => ({
+        data: typeData.map((item, index) => ({
           ...item,
           itemStyle: {
-            color: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'][index % 5]
+            color: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5', '#F0FDF4'][index % 6]
           }
         })),
         emphasis: {
@@ -91,9 +91,11 @@ const AlcoholConsumptionChart: React.FC = () => {
           show: true,
           formatter: (params: any) => {
             const percentage = ((params.value / totalCount) * 100).toFixed(1);
-            return `${params.name}\n${percentage}%`;
+            const shortName = params.name.length > 8 ? 
+              `${params.name.substring(0, 6)}...` : params.name;
+            return `${shortName}\n${percentage}%`;
           },
-          fontSize: 10,
+          fontSize: 9,
           fontWeight: '400',
           color: '#065F46'
         }
@@ -111,10 +113,10 @@ const AlcoholConsumptionChart: React.FC = () => {
       </div>
       
       <div className="mt-3 space-y-1.5">
-        {alcoholData.map((item, index) => {
-          const colors = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'];
-          const bgColors = ['bg-emerald-50', 'bg-emerald-50', 'bg-emerald-50', 'bg-emerald-50', 'bg-emerald-50'];
-          const textColors = ['text-emerald-700', 'text-emerald-700', 'text-emerald-700', 'text-emerald-700', 'text-emerald-700'];
+        {typeData.map((item, index) => {
+          const colors = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5', '#F0FDF4'];
+          const bgColors = ['bg-emerald-50', 'bg-green-50', 'bg-emerald-50', 'bg-green-50', 'bg-emerald-50', 'bg-green-50'];
+          const textColors = ['text-emerald-700', 'text-green-700', 'text-emerald-700', 'text-green-700', 'text-emerald-700', 'text-green-700'];
           
           const color = colors[index % colors.length];
           const bgColor = bgColors[index % bgColors.length];
@@ -122,17 +124,19 @@ const AlcoholConsumptionChart: React.FC = () => {
           const percentage = ((item.value / totalCount) * 100).toFixed(1);
           
           return (
-            <div key={item.name} className={`flex items-center justify-between py-1.5 px-2 rounded ${bgColor} hover:opacity-80 transition-opacity`}>
-              <div className="flex items-center space-x-2">
+            <div key={`${item.name}-${index}`} className={`flex items-center justify-between py-1.5 px-2 rounded ${bgColor} hover:opacity-80 transition-opacity`}>
+              <div className="flex items-center space-x-2 flex-1 min-w-0">
                 <div 
                   className="w-2.5 h-2.5 rounded-full" 
                   style={{ backgroundColor: color }}
                 ></div>
-                <span className={`text-xs font-normal ${textColor}`}>{item.name}</span>
+                <span className={`text-xs font-normal ${textColor} truncate`} title={item.name}>
+                  {item.name}
+                </span>
               </div>
               <div className="text-right">
                 <div className={`text-xs font-medium ${textColor}`}>{item.value.toLocaleString()}</div>
-                <div className="text-xs text-gray-500">{percentage}%</div>
+                <div className="text-xs text-emerald-500">{percentage}%</div>
               </div>
             </div>
           );
@@ -142,4 +146,4 @@ const AlcoholConsumptionChart: React.FC = () => {
   );
 };
 
-export default AlcoholConsumptionChart;
+export default TypeChart;

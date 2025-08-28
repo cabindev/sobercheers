@@ -34,14 +34,14 @@ const ImageCompletionChart: React.FC = () => {
   if (loading) {
     return (
       <div className="h-64 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-5 w-5 border border-green-200 border-t-green-500"></div>
-        <span className="ml-2 text-xs text-gray-500">กำลังโหลด...</span>
+        <div className="animate-spin rounded-full h-5 w-5 border border-emerald-200 border-t-emerald-500"></div>
+        <span className="ml-2 text-xs text-emerald-600">กำลังโหลด...</span>
       </div>
     );
   }
 
   if (!imageData.length) {
-    return <div className="text-center text-xs text-gray-500 py-8">ไม่พบข้อมูลความครบถ้วนรูปภาพ</div>;
+    return <div className="text-center text-xs text-emerald-600 py-8">ไม่พบข้อมูลความครบถ้วนรูปภาพ</div>;
   }
 
   const option = {
@@ -51,13 +51,13 @@ const ImageCompletionChart: React.FC = () => {
       textStyle: {
         fontSize: 13,
         fontWeight: '500',
-        color: '#4B5563'
+        color: '#065F46'
       }
     },
     tooltip: {
       trigger: 'item',
       backgroundColor: 'white',
-      borderColor: '#E5E7EB',
+      borderColor: '#A7F3D0',
       borderWidth: 1,
       textStyle: {
         fontSize: 11,
@@ -108,7 +108,7 @@ const ImageCompletionChart: React.FC = () => {
           },
           fontSize: 9,
           fontWeight: '400',
-          color: '#4B5563'
+          color: '#065F46'
         }
       }
     ]
@@ -133,16 +133,16 @@ const ImageCompletionChart: React.FC = () => {
             textColor = 'text-red-700';
           } else if (item.name.includes('ครบตามข้อกำหนด')) {
             color = '#10B981';
-            bgColor = 'bg-green-50';
-            textColor = 'text-green-700';
+            bgColor = 'bg-emerald-50';
+            textColor = 'text-emerald-700';
           } else if (item.name.includes('ครบทั้งหมด')) {
             color = '#059669';
-            bgColor = 'bg-green-100';
-            textColor = 'text-green-800';
+            bgColor = 'bg-emerald-100';
+            textColor = 'text-emerald-800';
           } else {
             color = ['#34D399', '#6EE7B7', '#A7F3D0'][index % 3];
-            bgColor = 'bg-green-50';
-            textColor = 'text-green-700';
+            bgColor = 'bg-emerald-50';
+            textColor = 'text-emerald-700';
           }
           
           const percentage = ((item.value / totalCount) * 100).toFixed(1);
@@ -166,8 +166,8 @@ const ImageCompletionChart: React.FC = () => {
           );
         })}
         
-        <div className="mt-2 p-2 bg-blue-50 rounded border border-blue-200">
-          <div className="text-xs text-blue-700 text-center">
+        <div className="mt-2 p-2 bg-emerald-50 rounded border border-emerald-200">
+          <div className="text-xs text-emerald-700 text-center">
             <strong>หมายเหตุ:</strong> ข้อกำหนดขั้นต่ำคือ 2 รูป (รูปที่ 1 และ 2)
           </div>
         </div>

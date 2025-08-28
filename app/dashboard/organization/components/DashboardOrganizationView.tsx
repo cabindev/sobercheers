@@ -61,6 +61,32 @@ export default function DashboardOrganizationView({ organization }: DashboardOrg
     }
   };
 
+  const handleImageDownload = async (imageUrl: string, index: number) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      
+      // Create a temporary URL for the blob
+      const url = window.URL.createObjectURL(blob);
+      
+      // Create a temporary link element
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${organization.firstName}_${organization.lastName}_image_${index + 1}.jpg`;
+      
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading image:', error);
+      alert('เกิดข้อผิดพลาดในการดาวน์โหลดรูปภาพ');
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-6">
       {/* Header */}
@@ -373,14 +399,13 @@ export default function DashboardOrganizationView({ organization }: DashboardOrg
                             className="w-full h-full object-cover rounded"
                           />
                           <div className="absolute top-2 right-2">
-                            <a
-                              href={image}
-                              download
-                              className="inline-flex items-center px-2 py-1 text-xs text-white bg-black bg-opacity-70 rounded hover:bg-opacity-90"
+                            <button
+                              onClick={() => handleImageDownload(image, index)}
+                              className="inline-flex items-center px-2 py-1 text-xs text-white bg-black bg-opacity-70 rounded hover:bg-opacity-90 transition-opacity"
                             >
                               <Download className="h-3 w-3 mr-1" />
                               ดาวน์โหลด
-                            </a>
+                            </button>
                           </div>
                         </div>
                       ) : (

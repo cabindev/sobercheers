@@ -20,6 +20,13 @@ export interface FormReturn2024ChartData {
     count: number;
     percentage: number;
   }>;
+  regionTypeData: Array<{
+    region: string;
+    province: string;
+    type: string;
+    count: number;
+    percentage: number;
+  }>;
   monthlyData: Array<{
     month: string;
     count: number;
@@ -37,6 +44,7 @@ export async function getFormReturn2024ChartData(): Promise<FormReturn2024ChartD
       totalOrganizations,
       provinceStats,
       typeStats,
+      regionTypeStats,
       monthlyStats
     ] = await Promise.all([
       // 2024 forms count
@@ -83,6 +91,20 @@ export async function getFormReturn2024ChartData(): Promise<FormReturn2024ChartD
         }
       }),
 
+      // Province and Type combined data (2024)
+      prisma.form_return.groupBy({
+        by: ['province', 'type'],
+        where: {
+          createdAt: { gte: year2024Start, lt: year2024End }
+        },
+        _count: true,
+        orderBy: {
+          _count: {
+            province: 'desc'
+          }
+        }
+      }),
+
       // Monthly data for 2024
       prisma.form_return.findMany({
         where: {
@@ -103,6 +125,15 @@ export async function getFormReturn2024ChartData(): Promise<FormReturn2024ChartD
 
     // Process type data
     const typeData = typeStats.map(item => ({
+      type: item.type,
+      count: item._count,
+      percentage: Math.round((item._count / totalForms) * 100 * 100) / 100
+    }));
+
+    // Process region-type combined data
+    const regionTypeData = regionTypeStats.map(item => ({
+      region: '', // Will be calculated by the component
+      province: item.province,
       type: item.type,
       count: item._count,
       percentage: Math.round((item._count / totalForms) * 100 * 100) / 100
@@ -141,6 +172,7 @@ export async function getFormReturn2024ChartData(): Promise<FormReturn2024ChartD
       },
       provinceData,
       typeData,
+      regionTypeData,
       monthlyData
     };
 
@@ -154,6 +186,7 @@ export async function getFormReturn2024ChartData(): Promise<FormReturn2024ChartD
       },
       provinceData: [],
       typeData: [],
+      regionTypeData: [],
       monthlyData: []
     };
   } finally {

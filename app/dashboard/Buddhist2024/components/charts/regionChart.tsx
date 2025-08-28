@@ -1,15 +1,16 @@
-// app/dashboard/Buddhist2025/components/charts/provinceChart.tsx
+// app/dashboard/Buddhist2024/components/charts/regionChart.tsx
 import React, { useEffect, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { getTop10ProvincesChartData } from '../../actions/GetChartData';
+import { getRegionChartData2024 } from '../../actions/GetChartData';
 
-interface ProvinceData {
+interface RegionData {
   name: string;
   value: number;
 }
 
-const ProvinceChart: React.FC = () => {
-  const [provinceData, setProvinceData] = useState<ProvinceData[]>([]);
+const RegionChart: React.FC = () => {
+  const [regionData, setRegionData] = useState<RegionData[]>([]);
+  const [chartData, setChartData] = useState<any>(null);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -17,20 +18,29 @@ const ProvinceChart: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const result = await getTop10ProvincesChartData();
+        const result = await getRegionChartData2024();
         if (result.success && result.data) {
           const sortedData = result.data.sort((a, b) => b.value - a.value);
-          setProvinceData(sortedData);
+          setRegionData(sortedData);
           setTotalCount(sortedData.reduce((sum, item) => sum + item.value, 0));
+
+          const labels = sortedData.map(item => item.name);
+          const data = sortedData.map(item => item.value);
+          setChartData({ labels, data });
         }
       } catch (error) {
-        console.error('Error fetching province data:', error);
+        console.error('Error fetching region data:', error);
       } finally {
         setLoading(false);
       }
     };
     fetchData();
   }, []);
+
+  const calculatePercentage = (count: number, total: number) => {
+    if (total === 0) return '0.0';
+    return ((count / total) * 100).toFixed(1);
+  };
 
   if (loading) {
     return (
@@ -41,19 +51,13 @@ const ProvinceChart: React.FC = () => {
     );
   }
 
-  if (!provinceData.length) {
-    return <div className="text-center text-xs text-emerald-600 py-8">ไม่พบข้อมูลจังหวัด</div>;
+  if (!regionData.length) {
+    return <div className="text-center text-xs text-emerald-600 py-8">ไม่พบข้อมูลภูมิภาค</div>;
   }
-
-  const chartData = provinceData.slice().reverse();
-  const yAxisLabels = chartData.map((item, index) => {
-    const rank = provinceData.length - index;
-    return `${rank}. ${item.name}`;
-  });
 
   const option = {
     title: {
-      text: 'อันดับ 10 จังหวัดที่มีผู้เข้าร่วมมากที่สุด',
+      text: 'ภูมิภาคที่เข้าร่วม',
       left: 'center',
       textStyle: {
         fontSize: 13,
@@ -74,20 +78,16 @@ const ProvinceChart: React.FC = () => {
         color: '#374151'
       },
       formatter: (params: any) => {
-        const data = params[0];
-        const percentage = totalCount > 0 ? ((data.value / totalCount) * 100).toFixed(1) : '0';
-        const originalIndex = chartData.length - data.dataIndex - 1;
-        const rank = originalIndex + 1;
-        const provinceName = provinceData[originalIndex].name;
-        
-        return `อันดับ ${rank}: ${provinceName}<br/>${data.value.toLocaleString()} คน (${percentage}%)`;
+        const param = params[0];
+        const percentage = calculatePercentage(param.value, totalCount);
+        return `${param.name}: ${param.value.toLocaleString()} คน (${percentage}%)`;
       }
     },
     grid: {
-      left: '25%',
+      left: '20%',
       right: '10%',
+      bottom: '10%',
       top: '15%',
-      bottom: '5%',
       containLabel: false
     },
     xAxis: {
@@ -110,7 +110,7 @@ const ProvinceChart: React.FC = () => {
     },
     yAxis: {
       type: 'category',
-      data: yAxisLabels,
+      data: chartData?.labels || [],
       axisTick: {
         show: false
       },
@@ -118,32 +118,18 @@ const ProvinceChart: React.FC = () => {
         show: false
       },
       axisLabel: {
-        fontSize: 9,
-        color: '#374151',
-        margin: 10,
-        formatter: (value: string) => {
-          const parts = value.split('. ');
-          if (parts.length > 1) {
-            const rank = parts[0];
-            const province = parts[1];
-            return province.length > 12 ? `${rank}. ${province.substring(0, 10)}...` : value;
-          }
-          return value;
-        }
+        fontSize: 10,
+        color: '#374151'
       }
     },
     series: [
       {
         type: 'bar',
-        data: chartData.map(item => item.value),
-        barWidth: '60%',
+        data: chartData?.data || [],
         itemStyle: {
           color: (params: any) => {
-            const rank = chartData.length - params.dataIndex;
-            if (rank === 1) return '#10B981'; // Gold - Emerald
-            if (rank === 2) return '#34D399'; // Silver - Emerald
-            if (rank === 3) return '#6EE7B7'; // Bronze - Emerald
-            return '#A7F3D0'; // Default emerald
+            const colors = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'];
+            return colors[params.dataIndex % colors.length];
           },
           borderRadius: [0, 3, 3, 0]
         },
@@ -156,10 +142,12 @@ const ProvinceChart: React.FC = () => {
         label: {
           show: true,
           position: 'right',
-          formatter: '{c}',
+          formatter: (params: any) => {
+            const percentage = calculatePercentage(params.value, totalCount);
+            return `${params.value.toLocaleString()} (${percentage}%)`;
+          },
           fontSize: 9,
-          color: '#374151',
-          fontWeight: '500'
+          color: '#374151'
         }
       }
     ]
@@ -175,7 +163,7 @@ const ProvinceChart: React.FC = () => {
       </div>
       
       <div className="mt-3 space-y-1.5">
-        {provinceData.slice(0, 5).map((item, index) => {
+        {regionData.slice(0, 5).map((item, index) => {
           const colors = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'];
           const bgColors = ['bg-emerald-50', 'bg-emerald-50', 'bg-emerald-50', 'bg-emerald-50', 'bg-emerald-50'];
           const textColors = ['text-emerald-700', 'text-emerald-700', 'text-emerald-700', 'text-emerald-700', 'text-emerald-700'];
@@ -183,13 +171,11 @@ const ProvinceChart: React.FC = () => {
           const color = colors[index % colors.length];
           const bgColor = bgColors[index % bgColors.length];
           const textColor = textColors[index % textColors.length];
-          const percentage = ((item.value / totalCount) * 100).toFixed(1);
-          const emoji = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
+          const percentage = calculatePercentage(item.value, totalCount);
           
           return (
             <div key={item.name} className={`flex items-center justify-between py-1.5 px-2 rounded ${bgColor} hover:opacity-80 transition-opacity`}>
               <div className="flex items-center space-x-2">
-                <div className="text-xs">{emoji}</div>
                 <div 
                   className="w-2.5 h-2.5 rounded-full" 
                   style={{ backgroundColor: color }}
@@ -208,4 +194,4 @@ const ProvinceChart: React.FC = () => {
   );
 };
 
-export default ProvinceChart;
+export default RegionChart;

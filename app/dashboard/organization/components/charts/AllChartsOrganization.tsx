@@ -27,11 +27,11 @@ const ChartCard: React.FC<ChartCardProps> = ({
   className = '', 
   description
 }) => (
-  <div className={`bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow ${className}`}>
-    <div className="p-4 border-b border-gray-100">
-      <h3 className="text-sm font-medium text-gray-800">{title}</h3>
+  <div className={`bg-white rounded-lg border border-emerald-100 hover:shadow-lg transition-all hover:shadow-emerald-100/50 ${className}`}>
+    <div className="p-4 border-b border-emerald-50">
+      <h3 className="text-sm font-medium text-emerald-800">{title}</h3>
       {description && (
-        <p className="text-xs text-gray-500 mt-1">{description}</p>
+        <p className="text-xs text-emerald-600 mt-1">{description}</p>
       )}
     </div>
     <div className="p-0">
@@ -67,7 +67,7 @@ const OrganizationTypeChart: React.FC = () => {
   if (loading) {
     return (
       <div className="h-64 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-5 w-5 border border-green-200 border-t-green-500"></div>
+        <div className="animate-spin rounded-full h-5 w-5 border border-emerald-200 border-t-emerald-500"></div>
         <span className="ml-2 text-xs text-gray-500">กำลังโหลด...</span>
       </div>
     );
@@ -110,7 +110,7 @@ const OrganizationTypeChart: React.FC = () => {
         data: typeData.map((item, index) => ({
           ...item,
           itemStyle: {
-            color: ['#10B981', '#34D399', '#6EE7B7', '#059669', '#047857'][index % 5] // Green gradient tones
+            color: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'][index % 5] // Soft green gradient tones
           }
         })),
         emphasis: {
@@ -147,9 +147,9 @@ const OrganizationTypeChart: React.FC = () => {
       
       <div className="mt-3 space-y-1.5">
         {typeData.map((item, index) => {
-          const colors = ['#10B981', '#34D399', '#6EE7B7', '#059669', '#047857'];
-          const bgColors = ['bg-green-50', 'bg-green-100', 'bg-green-50', 'bg-green-100', 'bg-green-50'];
-          const textColors = ['text-green-700', 'text-green-800', 'text-green-700', 'text-green-800', 'text-green-700'];
+          const colors = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'];
+          const bgColors = ['bg-emerald-50', 'bg-green-50', 'bg-emerald-50', 'bg-green-50', 'bg-emerald-50'];
+          const textColors = ['text-emerald-700', 'text-green-700', 'text-emerald-700', 'text-green-700', 'text-emerald-700'];
           
           const color = colors[index % colors.length];
           const bgColor = bgColors[index % bgColors.length];
@@ -209,15 +209,15 @@ const DashboardOrganization: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
       <div className="p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-semibold text-gray-800 mb-2">
+            <h1 className="text-2xl font-semibold text-emerald-800 mb-2">
               Organization Dashboard 2025
             </h1>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-emerald-600">
               แดชบอร์ดติดตามและวิเคราะห์ข้อมูลองค์กรที่เข้าร่วมระบบ | Dashboard for tracking and analyzing participating organizations
             </p>
           </div>
@@ -319,7 +319,7 @@ const DashboardOrganization: React.FC = () => {
           {/* Additional Statistics */}
           <div className="mb-8 bg-white rounded-lg border border-gray-200 p-6">
             <div className="text-center mb-4">
-              <h3 className="text-base font-semibold text-gray-800 mb-2">
+              <h3 className="text-base font-semibold text-emerald-800 mb-2">
                 สถิติเพิ่มเติม | Additional Statistics
               </h3>
             </div>
@@ -351,11 +351,11 @@ const DashboardOrganization: React.FC = () => {
                   label2: 'Average Signers per Org'
                 }
               ].map((stat) => (
-                <div key={stat.key} className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-                  <div className="text-2xl font-semibold text-green-600 mb-1">
+                <div key={stat.key} className="text-center p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                  <div className="text-2xl font-semibold text-emerald-600 mb-1">
                     {typeof stat.value === 'number' ? stat.value.toLocaleString() : stat.value}
                   </div>
-                  <div className="text-xs text-green-700 mb-1">{stat.label1}</div>
+                  <div className="text-xs text-emerald-700 mb-1">{stat.label1}</div>
                   <div className="text-xs text-gray-500">{stat.label2}</div>
                 </div>
               ))}
@@ -363,9 +363,9 @@ const DashboardOrganization: React.FC = () => {
           </div>
 
           {/* Summary Insights */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white rounded-lg border border-emerald-100 p-6">
             <div className="text-center mb-4">
-              <h3 className="text-base font-semibold text-gray-800 mb-2">
+              <h3 className="text-base font-semibold text-emerald-800 mb-2">
                 สรุปข้อมูลสำคัญ | Key Insights
               </h3>
             </div>
@@ -394,7 +394,7 @@ const DashboardOrganization: React.FC = () => {
           </div>
 
           {/* Footer */}
-          <div className="text-center py-6 border-t border-gray-200 bg-white rounded-lg mt-6">
+          <div className="text-center py-6 border-t border-emerald-200 bg-white rounded-lg mt-6">
             <div className="space-y-1">
               <p className="text-sm font-medium text-gray-700">
                 Organization Dashboard 2025

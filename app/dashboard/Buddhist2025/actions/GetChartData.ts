@@ -730,3 +730,52 @@ export async function getDashboardSummary(): Promise<ChartDataResult<{
   }
 }
 
+// Type/Group Category Chart Data
+export async function getTypeChartData(): Promise<ChartDataResult<Array<{ name: string; value: number }>>> {
+  try {
+    const typeData = await prisma.buddhist2025.groupBy({
+      by: ['groupCategoryId'],
+      _count: {
+        groupCategoryId: true
+      },
+      where: {
+        groupCategoryId: {
+          not: null
+        }
+      },
+      orderBy: {
+        _count: {
+          groupCategoryId: 'desc'
+        }
+      }
+    });
+
+    // Get GroupCategory names
+    const groupCategories = await prisma.groupCategory.findMany({
+      select: {
+        id: true,
+        name: true
+      }
+    });
+
+    const chartData = typeData.map(item => {
+      const category = groupCategories.find(cat => cat.id === item.groupCategoryId);
+      return {
+        name: category?.name || 'ไม่ระบุ',
+        value: item._count.groupCategoryId
+      };
+    });
+
+    return {
+      success: true,
+      data: chartData
+    };
+  } catch (error) {
+    console.error('Error fetching type chart data:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to fetch type data'
+    };
+  }
+}
+

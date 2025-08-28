@@ -37,14 +37,14 @@ const SignersChart: React.FC = () => {
   if (loading) {
     return (
       <div className="h-64 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-5 w-5 border border-green-200 border-t-green-500"></div>
-        <span className="ml-2 text-xs text-gray-500">กำลังโหลด...</span>
+        <div className="animate-spin rounded-full h-5 w-5 border border-emerald-200 border-t-emerald-500"></div>
+        <span className="ml-2 text-xs text-emerald-600">กำลังโหลด...</span>
       </div>
     );
   }
 
   if (!signersData.length) {
-    return <div className="text-center text-xs text-gray-500 py-8">ไม่พบข้อมูลผู้ลงนาม</div>;
+    return <div className="text-center text-xs text-emerald-600 py-8">ไม่พบข้อมูลผู้ลงนาม</div>;
   }
 
   const calculatePercentage = (count: number, total: number) => {
@@ -61,7 +61,7 @@ const SignersChart: React.FC = () => {
       textStyle: {
         fontSize: 13,
         fontWeight: '500',
-        color: '#4B5563'
+        color: '#065F46'
       }
     },
     tooltip: {
@@ -70,7 +70,7 @@ const SignersChart: React.FC = () => {
         type: 'shadow'
       },
       backgroundColor: 'white',
-      borderColor: '#E5E7EB',
+      borderColor: '#A7F3D0',
       borderWidth: 1,
       textStyle: {
         fontSize: 11,
@@ -160,9 +160,9 @@ const SignersChart: React.FC = () => {
       
       <div className="mt-3 space-y-1.5">
         {signersData.slice(0, 4).map((item, index) => {
-          const colors = ['#10B981', '#34D399', '#6EE7B7', '#059669'];
-          const bgColors = ['bg-green-50', 'bg-green-100', 'bg-green-50', 'bg-green-100'];
-          const textColors = ['text-green-700', 'text-green-800', 'text-green-700', 'text-green-800'];
+          const colors = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0'];
+          const bgColors = ['bg-emerald-50', 'bg-emerald-100', 'bg-emerald-50', 'bg-emerald-100'];
+          const textColors = ['text-emerald-700', 'text-emerald-800', 'text-emerald-700', 'text-emerald-800'];
           
           const color = colors[index % colors.length];
           const bgColor = bgColors[index % bgColors.length];
@@ -187,8 +187,8 @@ const SignersChart: React.FC = () => {
           );
         })}
         
-        <div className="mt-2 p-2 bg-green-50 rounded border border-green-200">
-          <div className="text-xs text-green-700 text-center">
+        <div className="mt-2 p-2 bg-emerald-50 rounded border border-emerald-200">
+          <div className="text-xs text-emerald-700 text-center">
             <strong>สรุป:</strong> รวม {totalSigners.toLocaleString()} คน จาก {totalCount.toLocaleString()} องค์กร
             <br />เฉลี่ย {averageSigners} คน/องค์กร
           </div>

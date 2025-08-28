@@ -35,14 +35,14 @@ const OrganizationCategoryChart: React.FC = () => {
   if (loading) {
     return (
       <div className="h-64 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-5 w-5 border border-green-200 border-t-green-500"></div>
-        <span className="ml-2 text-xs text-gray-500">กำลังโหลด...</span>
+        <div className="animate-spin rounded-full h-5 w-5 border border-emerald-200 border-t-emerald-500"></div>
+        <span className="ml-2 text-xs text-emerald-600">กำลังโหลด...</span>
       </div>
     );
   }
 
   if (!categoryData.length) {
-    return <div className="text-center text-xs text-gray-500 py-8">ไม่พบข้อมูลหมวดหมู่องค์กร</div>;
+    return <div className="text-center text-xs text-emerald-600 py-8">ไม่พบข้อมูลหมวดหมู่องค์กร</div>;
   }
 
   const option = {
@@ -52,13 +52,13 @@ const OrganizationCategoryChart: React.FC = () => {
       textStyle: {
         fontSize: 13,
         fontWeight: '500',
-        color: '#4B5563'
+        color: '#065F46'
       }
     },
     tooltip: {
       trigger: 'item',
       backgroundColor: 'white',
-      borderColor: '#E5E7EB',
+      borderColor: '#A7F3D0',
       borderWidth: 1,
       textStyle: {
         fontSize: 11,
@@ -98,7 +98,7 @@ const OrganizationCategoryChart: React.FC = () => {
           },
           fontSize: 10,
           fontWeight: '400',
-          color: '#4B5563'
+          color: '#065F46'
         }
       }
     ]
@@ -116,8 +116,8 @@ const OrganizationCategoryChart: React.FC = () => {
       <div className="mt-3 space-y-1.5">
         {categoryData.map((item, index) => {
           const colors = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'];
-          const bgColors = ['bg-green-50', 'bg-green-100', 'bg-green-50', 'bg-green-100', 'bg-green-50'];
-          const textColors = ['text-green-700', 'text-green-800', 'text-green-700', 'text-green-800', 'text-green-700'];
+          const bgColors = ['bg-emerald-50', 'bg-emerald-100', 'bg-emerald-50', 'bg-emerald-100', 'bg-emerald-50'];
+          const textColors = ['text-emerald-700', 'text-emerald-800', 'text-emerald-700', 'text-emerald-800', 'text-emerald-700'];
           
           const color = colors[index % colors.length];
           const bgColor = bgColors[index % bgColors.length];

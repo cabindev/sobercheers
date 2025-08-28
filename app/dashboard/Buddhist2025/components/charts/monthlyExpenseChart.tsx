@@ -37,14 +37,14 @@ const MonthlyExpenseChart: React.FC = () => {
   if (loading) {
     return (
       <div className="h-64 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-5 w-5 border border-orange-200 border-t-orange-500"></div>
-        <span className="ml-2 text-xs text-gray-500">กำลังโหลด...</span>
+        <div className="animate-spin rounded-full h-5 w-5 border border-emerald-200 border-t-emerald-500"></div>
+        <span className="ml-2 text-xs text-emerald-600">กำลังโหลด...</span>
       </div>
     );
   }
 
   if (!expenseData.length) {
-    return <div className="text-center text-xs text-gray-500 py-8">ไม่พบข้อมูลรายจ่ายรายเดือน</div>;
+    return <div className="text-center text-xs text-emerald-600 py-8">ไม่พบข้อมูลรายจ่ายรายเดือน</div>;
   }
 
   const calculatePercentage = (count: number, total: number) => {
@@ -61,7 +61,7 @@ const MonthlyExpenseChart: React.FC = () => {
       textStyle: {
         fontSize: 13,
         fontWeight: '500',
-        color: '#4B5563'
+        color: '#065F46'
       }
     },
     tooltip: {
@@ -70,7 +70,7 @@ const MonthlyExpenseChart: React.FC = () => {
         type: 'shadow'
       },
       backgroundColor: 'white',
-      borderColor: '#E5E7EB',
+      borderColor: '#A7F3D0',
       borderWidth: 1,
       textStyle: {
         fontSize: 11,
@@ -134,14 +134,14 @@ const MonthlyExpenseChart: React.FC = () => {
         data: expenseData.map(item => ({
           value: item.count,
           itemStyle: {
-            color: '#F59E0B',
+            color: '#10B981',
             borderRadius: [3, 3, 0, 0]
           }
         })),
         barWidth: '60%',
         emphasis: {
           itemStyle: {
-            color: '#F97316'
+            color: '#059669'
           }
         }
       }
@@ -159,9 +159,9 @@ const MonthlyExpenseChart: React.FC = () => {
       
       <div className="mt-3 space-y-1.5">
         {expenseData.slice(0, 4).map((item, index) => {
-          const colors = ['#F59E0B', '#FCD34D', '#FEF3C7', '#F97316'];
-          const bgColors = ['bg-orange-50', 'bg-amber-50', 'bg-yellow-50', 'bg-orange-50'];
-          const textColors = ['text-orange-700', 'text-amber-700', 'text-yellow-700', 'text-orange-700'];
+          const colors = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0'];
+          const bgColors = ['bg-emerald-50', 'bg-emerald-50', 'bg-emerald-50', 'bg-emerald-50'];
+          const textColors = ['text-emerald-700', 'text-emerald-700', 'text-emerald-700', 'text-emerald-700'];
           
           const color = colors[index % colors.length];
           const bgColor = bgColors[index % bgColors.length];
