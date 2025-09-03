@@ -187,6 +187,12 @@ export default function Sidebar({ user }: SidebarProps) {
         requireAdmin: true
       },
       {
+        name: 'ตารางข้อมูลการคืนฟอร์ม',
+        href: '/dashboard/form_return/table',
+        icon: Table,
+        requireAdmin: true
+      },
+      {
         name: 'คืนข้อมูลงดเหล้าเข้าพรรษา',
         href: '/dashboard/formReturn',
         icon: FileText,
