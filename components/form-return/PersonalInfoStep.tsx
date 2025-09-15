@@ -123,9 +123,11 @@ export default function PersonalInfoStep({ data, onUpdate, isEditing = false }: 
         
         <div className="space-y-3">
           <p className="text-sm text-slate-600">ช่ององค์กร <span className="text-red-500">*</span></p>
+          {/* Debug info - แสดงจำนวนตัวเลือก */}
+          <p className="text-xs text-gray-500">มีตัวเลือกทั้งหมด {organizationOptions.length} รายการ</p>
           
           {/* Grid ของตัวเลือกองค์กร */}
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 max-h-none overflow-visible">
             {organizationOptions.map((option) => (
               <button
                 key={option}

@@ -1,3 +1,4 @@
+//dashboard/form_return/table/page.tsx
 'use client'
 import React, { useState, useEffect } from 'react';
 import { 
@@ -77,6 +78,15 @@ const FormReturnTable: React.FC = () => {
   const [tableStats, setTableStats] = useState<TableStats | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Centralized tailwind-like class tokens for consistent color usage
+  const primaryBtn = "bg-amber-600 text-white";
+  const primaryBtnHover = "hover:bg-amber-700";
+  const primarySoftBg = "bg-amber-50";
+  const borderPrimary = "border-amber-200";
+  const textMain = "text-gray-900";
+  const textMuted = "text-gray-600";
+  const badgePrimary = "badge badge-sm bg-amber-600 text-white";
 
   // Helper function to get selected organization name for file export
   const getSelectedOrgFileName = () => {
@@ -377,10 +387,10 @@ const FormReturnTable: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border border-gray-200 border-t-orange-400 mx-auto mb-3"></div>
-          <p className="text-sm text-gray-500 font-light">กำลังโหลดข้อมูลการคืนฟอร์ม...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border border-amber-200 border-t-amber-400 mx-auto mb-3"></div>
+          <p className={`text-sm ${textMain} font-light`}>กำลังโหลดข้อมูลการคืนฟอร์ม...</p>
         </div>
       </div>
     );
@@ -388,13 +398,13 @@ const FormReturnTable: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-gray-600 text-lg mb-3 font-light">❌ เกิดข้อผิดพลาด</div>
-          <p className="text-sm text-gray-500 mb-4 font-light">{error}</p>
+          <div className={`${textMain} text-lg mb-3 font-light`}>❌ เกิดข้อผิดพลาด</div>
+          <p className={`text-sm ${textMuted} mb-4 font-light`}>{error}</p>
           <button
             onClick={fetchData}
-            className="px-4 py-2 bg-orange-500 text-white text-sm font-light rounded-md hover:bg-orange-600 transition-colors"
+            className={`px-4 py-2 ${primaryBtn} text-sm font-light rounded-md ${primaryBtnHover} transition-colors`}
           >
             ลองใหม่
           </button>
@@ -404,141 +414,126 @@ const FormReturnTable: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg border border-orange-200 p-6 mb-6">
+        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
               <div className="flex items-center mb-2">
-                <FaTable className="text-orange-400 mr-2 text-sm" />
-                <h1 className="text-xl font-light text-orange-700">
+                <FaTable className="text-amber-400 mr-2 text-sm" />
+                <h1 className={`text-lg font-light ${textMain}`}>
                   ข้อมูลการคืนฟอร์มงดเหล้าเข้าพรรษา ปี {selectedYear + 543}
                 </h1>
               </div>
-              <p className="text-sm text-orange-600/70 font-light">
+              <p className={`text-xs ${textMuted} font-light`}>
                 ข้อมูลการคืนฟอร์มปี {selectedYear + 543} ({selectedYear}) - แสดง{" "}
                 {filteredData.length.toLocaleString()} รายการ จากทั้งหมด {data.length.toLocaleString()} รายการ
               </p>
-              {tableStats && (
-                <div className="mt-2 text-xs text-orange-500/60 font-light">
-                  ส่งใหม่ 7 วันล่าสุด:{" "}
-                  {tableStats.recentSubmissions.toLocaleString()} รายการ
-                </div>
-              )}
             </div>
 
-            <div className="mt-4 md:mt-0 flex items-center space-x-2">
+            <div className="mt-3 md:mt-0 flex items-center space-x-2">
               <Link href="/dashboard/form_return/2025">
-                <button className="flex items-center px-3 py-2 bg-gray-100 text-gray-600 text-sm font-light rounded-md hover:bg-gray-200 transition-colors">
-                  <FaArrowLeft className="mr-2 text-xs" />
-                  กลับสู่ Dashboard
+                <button className="flex items-center px-2 py-1 bg-gray-100 text-gray-800 text-xs font-light rounded hover:bg-gray-200 transition-colors">
+                  <FaArrowLeft className="mr-1 text-xs" />
+                  กลับ
                 </button>
               </Link>
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`flex items-center px-3 py-2 text-sm font-light rounded-md transition-colors ${
+                className={`flex items-center px-2 py-1 text-xs font-light rounded transition-colors ${
                   showFilters
-                    ? "bg-orange-600 text-white hover:bg-orange-700"
-                    : "bg-orange-100 text-orange-600 hover:bg-orange-200"
+                    ? `${primaryBtn} ${primaryBtnHover}`
+                    : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                 }`}
               >
                 {showFilters ? (
-                  <FaTimes className="mr-2 text-xs" />
+                  <FaTimes className="mr-1 text-xs" />
                 ) : (
-                  <FaFilter className="mr-2 text-xs" />
+                  <FaFilter className="mr-1 text-xs" />
                 )}
-                {showFilters ? "ปิดตัวกรอง" : "ตัวกรอง"}
+                {showFilters ? "ปิด" : "กรอง"}
               </button>
             </div>
           </div>
         </div>
 
         {/* Year and Organization Selection */}
-        <div className="bg-white rounded-lg border border-orange-200 p-6 mb-6">
-          <div className="flex flex-col gap-6">
-            {/* Year Selection */}
-            <div>
-              <h3 className="text-base font-light text-orange-600 flex items-center mb-2">
-                <FaCalendarAlt className="mr-2 text-orange-400 text-sm" />
-                เลือกปีที่ต้องการดู
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                <select
-                  className="px-4 py-2 border border-orange-200 rounded-md text-sm font-light focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-all"
-                  value={selectedYear}
-                  onChange={(e) => handleYearChange(parseInt(e.target.value))}
-                >
-                  {filterOptions?.years.map((year) => (
-                    <option key={year} value={year}>
-                      {year + 543} ({year}) {/* แสดงทั้งปี พ.ศ. และ ค.ศ. */}
-                    </option>
-                  ))}
-                </select>
-                <div className="text-xs text-orange-500 flex items-center">
-                  📊 แสดงข้อมูลปี {selectedYear + 543}
-                </div>
-              </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-3 mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <label className={`text-xs ${textMuted}`}>ปี:</label>
+              <select
+          className="px-3 py-1 text-sm font-light border border-amber-200 rounded-md focus:ring-1 focus:ring-amber-400 focus:border-amber-400"
+          value={selectedYear}
+          onChange={(e) => handleYearChange(parseInt(e.target.value))}
+              >
+          {filterOptions?.years.map((year) => (
+            <option key={year} value={year}>
+              {year + 543} ({year})
+            </option>
+          ))}
+              </select>
+
+              <span className={`text-xs ${textMuted} ml-1`}>
+          แสดง {selectedYear + 543}
+              </span>
             </div>
 
-            {/* Organization Selection */}
-            <div>
-              <h3 className="text-base font-light text-orange-600 flex items-center mb-2">
-                <FaBuilding className="mr-2 text-orange-400 text-sm" />
-                เลือกองค์กรเฉพาะ (ดาวน์โหลดเฉพาะองค์กร)
-                <span className="ml-2 text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">
-                  {organizationsForSelectedYear.length} องค์กร
-                </span>
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                <select
-                  className="px-4 py-2 border border-orange-200 rounded-md text-sm font-light focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-all min-w-60"
-                  value={selectedOrganizationName}
-                  onChange={(e) => handleOrganizationFilter(e.target.value)}
-                >
-                  <option value="">เลือกองค์กร (ปี {selectedYear + 543})...</option>
-                  {organizationsForSelectedYear.map((orgName) => (
-                    <option key={orgName} value={orgName}>
-                      {orgName}
-                    </option>
-                  ))}
-                </select>
-                
-                {selectedOrganizationName && (
-                  <button
-                    onClick={() => handleOrganizationFilter('')}
-                    className="px-3 py-2 bg-orange-100 text-orange-600 text-sm font-light rounded-md hover:bg-orange-200 transition-colors"
-                  >
-                    <FaTimes className="mr-1 text-xs" />
-                    ล้างการเลือก
-                  </button>
-                )}
+            <div className="flex items-center gap-2">
+              <label className={`text-xs ${textMuted} hidden sm:inline`}>องค์กร:</label>
+              <select
+          className="px-3 py-1 text-sm font-light border border-amber-200 rounded-md min-w-[220px] focus:ring-1 focus:ring-amber-400 focus:border-amber-400"
+          value={selectedOrganizationName}
+          onChange={(e) => handleOrganizationFilter(e.target.value)}
+              >
+          <option value="">
+            ทุกองค์กร (ปี {selectedYear + 543}) — {organizationsForSelectedYear.length}
+          </option>
+          {organizationsForSelectedYear.map((orgName) => (
+            <option key={orgName} value={orgName}>
+              {orgName}
+            </option>
+          ))}
+              </select>
+
+              {selectedOrganizationName ? (
+          <button
+            onClick={() => handleOrganizationFilter('')}
+            className="px-2 py-1 text-xs bg-amber-100 text-amber-700 rounded-md hover:bg-amber-200 transition-colors"
+            title="ล้างการเลือกองค์กร"
+          >
+            ล้าง
+          </button>
+              ) : null}
+
+              <div className="ml-2 text-xs text-gray-600">
+          <span className="inline-flex items-center px-2 py-0.5 bg-amber-50 border border-amber-100 rounded-full">
+            <FaBuilding className="mr-1 text-xxs text-amber-400" />
+            {organizationsForSelectedYear.length}
+          </span>
               </div>
-              
-                {selectedOrganizationName && (
-                  <div className="mt-2 p-2 bg-orange-50 rounded-md border border-orange-100">
-                    <p className="text-xs text-orange-600">
-                      ✅ แสดงข้อมูลเฉพาะองค์กร: <strong>
-                        {selectedOrganizationName}
-                      </strong> (ปี {selectedYear + 543})
-                    </p>
-                  </div>
-                )}
             </div>
           </div>
+
+          {selectedOrganizationName && (
+            <div className={`mt-2 text-xs ${textMuted}`}>
+              กรองแสดงเฉพาะ: <strong className={textMain}>{selectedOrganizationName}</strong> — ปี {selectedYear + 543}
+            </div>
+          )}
         </div>
 
         {/* Filters */}
         {showFilters && filterOptions && (
-          <div className="bg-white rounded-lg border border-orange-200 p-6 mb-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base font-light text-orange-600 flex items-center">
-                <FaFilter className="mr-2 text-orange-400 text-xs" />
+              <h3 className={`text-base font-light ${textMain} flex items-center`}>
+                <FaFilter className="mr-2 text-amber-400 text-xs" />
                 ตัวกรองข้อมูล
               </h3>
               <button
                 onClick={clearAllFilters}
-                className="text-orange-500 hover:text-orange-700 text-xs flex items-center transition-colors font-light"
+                className={`text-amber-500 hover:text-amber-700 text-xs flex items-center transition-colors font-light`}
               >
                 <FaTimes className="mr-1 text-xs" />
                 ล้างตัวกรองทั้งหมด
@@ -548,15 +543,15 @@ const FormReturnTable: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {/* Search by name */}
               <div>
-                <label className="block text-xs font-light text-orange-600 mb-2">
+                <label className={`block text-xs font-light ${textMain} mb-2`}>
                   ค้นหาด้วยชื่อ
                 </label>
                 <div className="relative">
-                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-300 text-xs" />
+                  <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-300 text-xs" />
                   <input
                     type="text"
                     placeholder="พิมพ์ชื่อ..."
-                    className="pl-8 pr-3 py-2 w-full border border-orange-200 rounded-md text-sm font-light focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                    className="pl-8 pr-3 py-2 w-full border border-amber-200 rounded-md text-sm font-light focus:ring-1 focus:ring-amber-400 focus:border-amber-400 transition-all"
                     value={filters.name}
                     onChange={(e) => handleFilterChange(e.target.value, "name")}
                   />
@@ -565,11 +560,11 @@ const FormReturnTable: React.FC = () => {
 
               {/* Province filter */}
               <div>
-                <label className="block text-xs font-light text-orange-600 mb-2">
+                <label className={`block text-xs font-light ${textMain} mb-2`}>
                   จังหวัด
                 </label>
                 <select
-                  className="w-full px-3 py-2 border border-orange-200 rounded-md text-sm font-light focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                  className="w-full px-3 py-2 border border-amber-200 rounded-md text-sm font-light focus:ring-1 focus:ring-amber-400 focus:border-amber-400 transition-all"
                   value={filters.province}
                   onChange={(e) => handleFilterChange(e.target.value, "province")}
                 >
@@ -586,11 +581,11 @@ const FormReturnTable: React.FC = () => {
 
               {/* Organization filter */}
               <div>
-                <label className="block text-xs font-light text-orange-600 mb-2">
+                <label className={`block text-xs font-light ${textMain} mb-2`}>
                   องค์กร
                 </label>
                 <select
-                  className="w-full px-3 py-2 border border-orange-200 rounded-md text-sm font-light focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                  className="w-full px-3 py-2 border border-amber-200 rounded-md text-sm font-light focus:ring-1 focus:ring-amber-400 focus:border-amber-400 transition-all"
                   value={filters.organizationName}
                   onChange={(e) => handleFilterChange(e.target.value, "organizationName")}
                 >
@@ -607,11 +602,11 @@ const FormReturnTable: React.FC = () => {
 
               {/* Type filter */}
               <div>
-                <label className="block text-xs font-light text-orange-600 mb-2">
+                <label className={`block text-xs font-light ${textMain} mb-2`}>
                   ประเภท
                 </label>
                 <select
-                  className="w-full px-3 py-2 border border-orange-200 rounded-md text-sm font-light focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                  className="w-full px-3 py-2 border border-amber-200 rounded-md text-sm font-light focus:ring-1 focus:ring-amber-400 focus:border-amber-400 transition-all"
                   value={filters.type}
                   onChange={(e) => handleFilterChange(e.target.value, "type")}
                 >
@@ -628,11 +623,11 @@ const FormReturnTable: React.FC = () => {
 
               {/* District filter */}
               <div>
-                <label className="block text-xs font-light text-orange-600 mb-2">
+                <label className={`block text-xs font-light ${textMain} mb-2`}>
                   อำเภอ
                 </label>
                 <select
-                  className="w-full px-3 py-2 border border-orange-200 rounded-md text-sm font-light focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                  className="w-full px-3 py-2 border border-amber-200 rounded-md text-sm font-light focus:ring-1 focus:ring-amber-400 focus:border-amber-400 transition-all"
                   value={filters.amphoe}
                   onChange={(e) => handleFilterChange(e.target.value, "amphoe")}
                 >
@@ -649,11 +644,11 @@ const FormReturnTable: React.FC = () => {
 
               {/* Tambon filter */}
               <div>
-                <label className="block text-xs font-light text-orange-600 mb-2">
+                <label className={`block text-xs font-light ${textMain} mb-2`}>
                   ตำบล
                 </label>
                 <select
-                  className="w-full px-3 py-2 border border-orange-200 rounded-md text-sm font-light focus:ring-1 focus:ring-orange-400 focus:border-orange-400 transition-all"
+                  className="w-full px-3 py-2 border border-amber-200 rounded-md text-sm font-light focus:ring-1 focus:ring-amber-400 focus:border-amber-400 transition-all"
                   value={filters.district}
                   onChange={(e) => handleFilterChange(e.target.value, "district")}
                 >
@@ -671,8 +666,8 @@ const FormReturnTable: React.FC = () => {
 
             {/* Active filters display */}
             {Object.entries(filters).some(([_, value]) => value !== "") && (
-              <div className="mt-4 p-3 bg-orange-50 rounded-md border border-orange-100">
-                <div className="text-xs text-orange-600 mb-2 font-light">
+              <div className="mt-4 p-3 bg-amber-50 rounded-md border border-amber-100">
+                <div className={`text-xs ${textMain} mb-2 font-light`}>
                   ตัวกรองที่ใช้งาน:
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -690,12 +685,12 @@ const FormReturnTable: React.FC = () => {
                     return (
                       <span
                         key={key}
-                        className="inline-flex items-center px-2 py-1 bg-orange-200 text-orange-700 text-xs font-light rounded border border-orange-300"
+                        className="inline-flex items-center px-2 py-1 bg-amber-200 text-amber-700 text-xs font-light rounded border border-amber-300"
                       >
                         {labels[key] || key}: {value}
                         <button
                           onClick={() => handleFilterChange("", key as any)}
-                          className="ml-2 text-orange-600 hover:text-orange-800"
+                          className="ml-2 text-amber-600 hover:text-amber-800"
                         >
                           ×
                         </button>
@@ -709,36 +704,36 @@ const FormReturnTable: React.FC = () => {
         )}
 
         {/* Enhanced Stats */}
-        <div className="bg-white rounded-lg border border-orange-200 p-6 mb-6">
-          <div className="flex flex-wrap justify-center gap-4">
-            <div className="badge badge-lg bg-blue-600 text-white">
+        <div className="bg-white rounded-lg border border-gray-200 p-3 mb-4">
+          <div className="flex flex-wrap justify-center gap-2">
+            <div className={badgePrimary}>
               ปี {selectedYear + 543} ({selectedYear})
             </div>
 
-            <div className="badge badge-lg bg-orange-600 text-white">
+            <div className={badgePrimary}>
               {filteredData.length.toLocaleString()} รายการที่แสดง
             </div>
 
-            <div className="badge badge-lg bg-orange-500 text-white">
+            <div className={badgePrimary}>
               {selectedRows.length.toLocaleString()} รายการที่เลือก
             </div>
 
             {selectedOrganizationName ? (
-              <div className="badge badge-lg bg-green-600 text-white">
+              <div className={badgePrimary}>
                 องค์กรที่เลือก: {selectedOrganizationName}
               </div>
             ) : (
               tableStats && (
                 <>
-                  <div className="badge badge-lg bg-orange-700 text-white">
+                  <div className={badgePrimary}>
                     {tableStats.totalProvinces} จังหวัด
                   </div>
 
-                  <div className="badge badge-lg bg-orange-400 text-white">
+                  <div className={badgePrimary}>
                     {tableStats.totalOrganizations} องค์กร
                   </div>
 
-                  <div className="badge badge-lg bg-orange-800 text-white">
+                  <div className={badgePrimary}>
                     รวม {tableStats.totalSigners.toLocaleString()} ผู้ลงชื่อ
                   </div>
                 </>
@@ -748,45 +743,41 @@ const FormReturnTable: React.FC = () => {
         </div>
 
         {/* Action buttons */}
-        <div className="bg-white rounded-lg border border-orange-200 p-4 mb-6">
+        <div className="bg-white rounded-lg border border-gray-200 p-3 mb-4">
           <div className="flex flex-wrap gap-3">
             <button
               onClick={handleExportCSV}
               disabled={filteredData.length === 0}
-              className="flex items-center px-4 py-2 bg-orange-500 text-white text-sm font-light rounded-md hover:bg-orange-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`flex items-center px-2 py-1 ${primaryBtn} text-xs font-light rounded-sm ${primaryBtnHover} transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               <FaDownload className="mr-2 text-xs" />
               ดาวน์โหลด CSV{" "}
-              {selectedRows.length > 0 
-                ? `(${selectedRows.length} รายการ)` 
-                : `(ปี ${selectedYear + 543}${selectedOrganizationName ? `, ${selectedOrganizationName}` : ''})`
-              }
+              {selectedRows.length > 0
+              ? `(${selectedRows.length} รายการ)`
+              : `(ปี ${selectedYear + 543}${selectedOrganizationName ? `, ${selectedOrganizationName}` : ''})`}
             </button>
             <button
               onClick={handleExportExcel}
               disabled={filteredData.length === 0}
-              className="flex items-center px-4 py-2 bg-orange-500 text-white text-sm font-light rounded-md hover:bg-orange-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`flex items-center px-2 py-1 ${primaryBtn} text-xs font-light rounded-sm ${primaryBtnHover} transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               <FaFileExcel className="mr-2 text-xs" />
               ดาวน์โหลด Excel{" "}
-              {selectedRows.length > 0 
-                ? `(${selectedRows.length} รายการ)` 
-                : `(ปี ${selectedYear + 543}${selectedOrganizationName ? `, ${selectedOrganizationName}` : ''})`
-              }
+              {selectedRows.length > 0
+              ? `(${selectedRows.length} รายการ)`
+              : `(ปี ${selectedYear + 543}${selectedOrganizationName ? `, ${selectedOrganizationName}` : ''})`}
             </button>
             <button
               onClick={handleSelectAll}
               disabled={filteredData.length === 0}
-              className="px-4 py-2 bg-orange-400 text-white text-sm font-light rounded-md hover:bg-orange-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`px-2 py-1 ${primaryBtn} text-xs font-light rounded-sm ${primaryBtnHover} transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
             >
-              {selectedRows.length === filteredData.length
-                ? "ยกเลิกเลือกทั้งหมด"
-                : "เลือกทั้งหมด"}
+              {selectedRows.length === filteredData.length ? "ยกเลิกเลือกทั้งหมด" : "เลือกทั้งหมด"}
             </button>
             {selectedRows.length > 0 && (
               <button
                 onClick={() => setSelectedRows([])}
-                className="px-4 py-2 bg-orange-600 text-white text-sm font-light rounded-md hover:bg-orange-700 transition-all duration-300"
+                className="px-4 py-2 bg-amber-600 text-white text-sm font-light rounded-md hover:bg-amber-700 transition-all duration-300"
               >
                 ยกเลิกการเลือก ({selectedRows.length})
               </button>
@@ -796,12 +787,12 @@ const FormReturnTable: React.FC = () => {
 
         {/* No data message */}
         {filteredData.length === 0 && (
-          <div className="bg-white rounded-lg border border-orange-200 p-8 text-center">
-            <div className="text-orange-400 text-4xl mb-4">🔍</div>
-            <div className="text-orange-600 font-light mb-2 text-lg">
+          <div className="bg-white rounded-lg border border-gray-200 p-6 text-center">
+            <div className="text-amber-400 text-4xl mb-4">🔍</div>
+            <div className={`${textMain} font-light mb-2 text-lg`}>
               ไม่พบข้อมูล
             </div>
-            <div className="text-sm text-orange-500/60 font-light">
+            <div className={`text-sm ${textMuted} font-light`}>
               {Object.values(filters).some((f) => f !== "")
                 ? "ลองปรับเปลี่ยนตัวกรองข้อมูล"
                 : "ไม่มีข้อมูลในระบบ"}
@@ -818,29 +809,29 @@ const FormReturnTable: React.FC = () => {
                 {paginatedData.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-white rounded-lg border border-orange-200 p-4 border-l-4 border-l-orange-400"
+                    className="bg-white rounded-lg border border-gray-200 p-4 border-l-4 border-l-amber-400"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
-                        <h3 className="font-light text-gray-700 text-base mb-1">
+                        <h3 className={`font-light ${textMain} text-base mb-1`}>
                           {item.firstName} {item.lastName}
                         </h3>
-                        <p className="text-xs text-orange-500 flex items-center font-light">
+                        <p className={`text-xs ${textMuted} flex items-center font-light`}>
                           <FaPhone className="mr-1" />
                           {item.phoneNumber}
                         </p>
                       </div>
-                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleEdit(item)}
-                          className="p-1 text-blue-500 hover:text-blue-700 transition-colors"
+                          className="p-1 text-amber-700 hover:text-amber-900 transition-colors"
                           title="แก้ไข"
                         >
                           <FaEdit className="text-sm" />
                         </button>
                         <button
                           onClick={() => handleDelete(item)}
-                          className="p-1 text-red-500 hover:text-red-700 transition-colors"
+                          className="p-1 text-amber-700 hover:text-red-600 transition-colors"
                           title="ลบ"
                         >
                           <FaTrash className="text-sm" />
@@ -849,28 +840,28 @@ const FormReturnTable: React.FC = () => {
                           type="checkbox"
                           checked={selectedRows.includes(item.id)}
                           onChange={() => handleSelectRow(item.id)}
-                          className="h-4 w-4 text-orange-500 rounded border-orange-300 focus:ring-orange-400"
+                          className="h-4 w-4 text-amber-500 rounded border-amber-300 focus:ring-amber-400"
                         />
-                      </div>
+                        </div>
                     </div>
 
                     <div className="space-y-2 text-xs">
                       <div>
-                        <strong className="text-orange-600 font-light flex items-center">
+                        <strong className={`font-light ${textMain} flex items-center`}>
                           <FaBuilding className="mr-1" />
                           องค์กร:
                         </strong>
-                        <div className="text-gray-600 font-light">
+                        <div className={`font-light ${textMain}`}>
                           {item.organizationName}
                         </div>
                       </div>
 
                       <div>
-                        <strong className="text-orange-600 font-light flex items-center">
+                        <strong className={`font-light ${textMain} flex items-center`}>
                           <FaMapMarkerAlt className="mr-1" />
                           ที่อยู่:
                         </strong>
-                        <div className="text-gray-600 font-light">
+                        <div className={`font-light ${textMain}`}>
                           {[item.addressLine1, item.district, item.amphoe, item.province]
                             .filter(Boolean)
                             .join(", ")}
@@ -879,30 +870,30 @@ const FormReturnTable: React.FC = () => {
 
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <strong className="text-orange-600 font-light">
+                          <strong className={`font-light ${textMain}`}>
                             ประเภท:
                           </strong>
-                          <div className="text-gray-600 font-light">
+                          <div className={`font-light ${textMain}`}>
                             {item.type}
                           </div>
                         </div>
                         <div>
-                          <strong className="text-orange-600 font-light flex items-center">
+                          <strong className={`font-light ${textMain} flex items-center`}>
                             <FaUsers className="mr-1" />
                             ผู้ลงชื่อ:
                           </strong>
-                          <div className="text-gray-600 font-light">
+                          <div className={`font-light ${textMain}`}>
                             {item.numberOfSigners} คน
                           </div>
                         </div>
                       </div>
 
                       <div>
-                        <strong className="text-orange-600 font-light flex items-center">
+                        <strong className={`font-light ${textMain} flex items-center`}>
                           <FaCalendarAlt className="mr-1" />
                           วันที่:
                         </strong>
-                        <div className="text-gray-600 font-light">
+                        <div className={`font-light ${textMain}`}>
                           {formatDate(item.createdAt)}
                         </div>
                       </div>
@@ -912,12 +903,12 @@ const FormReturnTable: React.FC = () => {
               </div>
             ) : (
               // Desktop Table View
-              <div className="bg-white rounded-lg border border-orange-200 overflow-hidden">
+              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-orange-200">
-                    <thead className="bg-orange-50">
+                  <table className="min-w-full divide-y divide-amber-200">
+                    <thead className={primarySoftBg}>
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-light text-orange-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-light text-amber-600 uppercase tracking-wider">
                           <input
                             type="checkbox"
                             checked={
@@ -925,38 +916,38 @@ const FormReturnTable: React.FC = () => {
                               filteredData.length > 0
                             }
                             onChange={handleSelectAll}
-                            className="h-4 w-4 text-orange-500 rounded border-orange-300"
+                            className="h-4 w-4 text-amber-500 rounded border-amber-300"
                           />
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-light text-orange-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-light text-gray-900 uppercase tracking-wider">
                           ชื่อ-นามสกุล
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-light text-orange-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-light text-gray-900 uppercase tracking-wider">
                           องค์กร
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-light text-orange-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-light text-gray-900 uppercase tracking-wider">
                           จังหวัด/อำเภอ
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-light text-orange-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-light text-gray-900 uppercase tracking-wider">
                           ประเภท
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-light text-orange-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-light text-gray-900 uppercase tracking-wider">
                           จำนวนผู้ลงชื่อ
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-light text-orange-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-light text-gray-900 uppercase tracking-wider">
                           วันที่บันทึก
                         </th>
-                        <th className="px-4 py-3 text-center text-xs font-light text-orange-600 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-center text-xs font-light text-gray-900 uppercase tracking-wider">
                           จัดการ
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-orange-100">
+                    <tbody className="bg-white divide-y divide-amber-100">
                       {paginatedData.map((item, index) => (
                         <tr
                           key={item.id}
-                          className={`hover:bg-orange-50 transition-colors ${
-                            index % 2 === 0 ? "bg-white" : "bg-orange-25"
+                          className={`hover:bg-amber-50 transition-colors ${
+                            index % 2 === 0 ? "bg-white" : "bg-amber-25"
                           }`}
                         >
                           <td className="px-4 py-3 whitespace-nowrap">
@@ -964,14 +955,14 @@ const FormReturnTable: React.FC = () => {
                               type="checkbox"
                               checked={selectedRows.includes(item.id)}
                               onChange={() => handleSelectRow(item.id)}
-                              className="h-4 w-4 text-orange-500 rounded border-orange-300"
+                              className="h-4 w-4 text-amber-500 rounded border-amber-300"
                             />
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="text-sm font-light text-gray-700">
+                            <div className={`text-sm font-light ${textMain}`}>
                               {item.firstName} {item.lastName}
                             </div>
-                            <div className="text-xs text-orange-400 font-light">
+                            <div className={`text-xs ${textMuted} font-light`}>
                               {item.phoneNumber}
                             </div>
                             <div className="text-xs text-gray-400 font-light">
@@ -980,20 +971,20 @@ const FormReturnTable: React.FC = () => {
                           </td>
                           <td className="px-4 py-3">
                             <div
-                              className="text-sm font-light text-gray-700 max-w-32 truncate"
+                              className="text-sm font-light text-gray-900 max-w-32 truncate"
                               title={item.organizationName}
                             >
                               {item.organizationName}
                             </div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                             <div className="font-light">{item.province}</div>
-                            <div className="text-xs text-gray-400 font-light">
+                            <div className="text-xs text-gray-600 font-light">
                               {item.amphoe}
                             </div>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <span className="inline-flex px-2 py-1 text-xs font-light rounded-full bg-orange-100 text-orange-800">
+                            <span className="inline-flex px-2 py-1 text-xs font-light rounded-full bg-amber-100 text-amber-800">
                               {item.type}
                             </span>
                           </td>
@@ -1002,27 +993,27 @@ const FormReturnTable: React.FC = () => {
                               {item.numberOfSigners} คน
                             </div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 font-light">
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 font-light">
                             {formatDate(item.createdAt)}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-center">
+                            <td className="px-4 py-3 whitespace-nowrap text-center">
                             <div className="flex justify-center gap-2">
                               <button
-                                onClick={() => handleEdit(item)}
-                                className="p-1 text-blue-500 hover:text-blue-700 transition-colors"
-                                title="แก้ไข"
+                              onClick={() => handleEdit(item)}
+                              className="p-1 text-amber-700 hover:text-amber-900 transition-colors"
+                              title="แก้ไข"
                               >
-                                <FaEdit className="text-sm" />
+                              <FaEdit className="text-sm" />
                               </button>
                               <button
-                                onClick={() => handleDelete(item)}
-                                className="p-1 text-red-500 hover:text-red-700 transition-colors"
-                                title="ลบ"
+                              onClick={() => handleDelete(item)}
+                              className="p-1 text-amber-700 hover:text-red-600 transition-colors"
+                              title="ลบ"
                               >
-                                <FaTrash className="text-sm" />
+                              <FaTrash className="text-sm" />
                               </button>
                             </div>
-                          </td>
+                            </td>
                         </tr>
                       ))}
                     </tbody>
@@ -1033,9 +1024,9 @@ const FormReturnTable: React.FC = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="bg-white rounded-lg border border-orange-200 p-4 mt-6">
+              <div className="bg-white rounded-lg border border-gray-200 p-4 mt-6">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="text-sm text-gray-500 font-light">
+                  <div className={`text-sm ${textMain} font-light`}>
                     แสดง {(currentPage - 1) * pageSize + 1} ถึง{" "}
                     {Math.min(currentPage * pageSize, filteredData.length)} จาก{" "}
                     {filteredData.length.toLocaleString()} รายการ
@@ -1044,7 +1035,7 @@ const FormReturnTable: React.FC = () => {
                     <button
                       onClick={() => setCurrentPage(1)}
                       disabled={currentPage === 1}
-                      className="px-3 py-2 border border-orange-200 rounded-md text-xs font-light text-orange-600 bg-white hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      className="px-3 py-2 border border-amber-200 rounded-md text-xs font-light text-amber-600 bg-white hover:bg-amber-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     >
                       หน้าแรก
                     </button>
@@ -1053,7 +1044,7 @@ const FormReturnTable: React.FC = () => {
                         setCurrentPage((prev) => Math.max(prev - 1, 1))
                       }
                       disabled={currentPage === 1}
-                      className="px-3 py-2 border border-orange-200 rounded-md text-xs font-light text-orange-600 bg-white hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      className="px-3 py-2 border border-amber-200 rounded-md text-xs font-light text-amber-600 bg-white hover:bg-amber-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     >
                       ก่อนหน้า
                     </button>
@@ -1074,8 +1065,8 @@ const FormReturnTable: React.FC = () => {
                           onClick={() => setCurrentPage(pageNumber)}
                           className={`px-3 py-2 border rounded-md text-xs font-light transition-all ${
                             currentPage === pageNumber
-                              ? "border-orange-400 bg-orange-500 text-white"
-                              : "border-orange-200 bg-white text-orange-600 hover:bg-orange-50"
+                              ? "border-amber-400 bg-amber-500 text-white"
+                              : "border-amber-200 bg-white text-amber-600 hover:bg-amber-50"
                           }`}
                         >
                           {pageNumber}
@@ -1088,14 +1079,14 @@ const FormReturnTable: React.FC = () => {
                         setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                       }
                       disabled={currentPage === totalPages}
-                      className="px-3 py-2 border border-orange-200 rounded-md text-xs font-light text-orange-600 bg-white hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      className="px-3 py-2 border border-amber-200 rounded-md text-xs font-light text-amber-600 bg-white hover:bg-amber-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     >
                       ถัดไป
                     </button>
                     <button
                       onClick={() => setCurrentPage(totalPages)}
                       disabled={currentPage === totalPages}
-                      className="px-3 py-2 border border-orange-200 rounded-md text-xs font-light text-orange-600 bg-white hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      className="px-3 py-2 border border-amber-200 rounded-md text-xs font-light text-amber-600 bg-white hover:bg-amber-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     >
                       หน้าสุดท้าย
                     </button>

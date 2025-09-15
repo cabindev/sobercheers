@@ -33,13 +33,13 @@ export default function DashboardFormReturn2024() {
 
   if (loading) {
     return (
-      <div className="p-8 space-y-8 bg-gradient-to-br from-emerald-50/40 via-white to-emerald-100/30 min-h-screen">
+      <div className="p-8 space-y-8 min-h-screen">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <h1 className="text-2xl font-bold text-emerald-800 tracking-tight">
+            <h1 className="text-2xl font-bold text-black tracking-tight">
               Dashboard Form Return 2024
             </h1>
-            <p className="text-sm text-emerald-600/70 mt-1">
+            <p className="text-sm text-black/70 mt-1">
               ภาพรวมข้อมูลการคืนฟอร์มปี 2024
             </p>
           </div>
@@ -47,19 +47,19 @@ export default function DashboardFormReturn2024() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[...Array(2)].map((_, i) => (
-            <div key={i} className="bg-white p-6 rounded-xl shadow-sm animate-pulse ring-1 ring-emerald-100/50">
-              <div className="bg-gradient-to-r from-emerald-400 to-emerald-500 h-1.5 mb-4"></div>
-              <div className="h-4 bg-emerald-100 rounded w-3/4 mb-3"></div>
-              <div className="h-8 bg-emerald-200 rounded w-1/2"></div>
+            <div key={i} className="bg-white p-6 rounded-xl shadow-sm animate-pulse ring-1 ring-amber-100/50">
+              <div className="bg-gradient-to-r from-amber-400 to-amber-500 h-1.5 mb-4"></div>
+              <div className="h-4 bg-amber-100 rounded w-3/4 mb-3"></div>
+              <div className="h-8 bg-amber-200 rounded w-1/2"></div>
             </div>
           ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white p-6 rounded-xl shadow-sm animate-pulse ring-1 ring-emerald-100/50">
-              <div className="h-5 bg-emerald-100 rounded w-1/3 mb-4"></div>
-              <div className="h-48 bg-emerald-50 rounded-lg"></div>
+            <div key={i} className="bg-white p-6 rounded-xl shadow-sm animate-pulse ring-1 ring-amber-100/50">
+              <div className="h-5 bg-amber-100 rounded w-1/3 mb-4"></div>
+              <div className="h-48 bg-amber-50 rounded-lg"></div>
             </div>
           ))}
         </div>
@@ -87,18 +87,18 @@ export default function DashboardFormReturn2024() {
   if (!data) return null
 
   return (
-    <div className="p-8 space-y-8 bg-gradient-to-br from-orange-50/40 via-white to-orange-100/30 min-h-screen">
+    <div className="p-8 space-y-8 min-h-screen">
       <div className="flex items-center justify-between mb-2">
         <div>
-          <h1 className="text-2xl font-bold text-orange-800 tracking-tight">
+          <h1 className="text-2xl font-bold text-black tracking-tight">
             Dashboard Form Return 2024
           </h1>
-          <p className="text-sm text-orange-600/70 mt-1">
+          <p className="text-sm text-black/70 mt-1">
             ภาพรวมข้อมูลการคืนฟอร์มปี 2024
           </p>
         </div>
         <div className="text-right">
-          <div className="text-xs text-emerald-600 font-medium bg-emerald-50 px-3 py-1.5 rounded-full">
+          <div className="text-xs text-black font-medium px-3 py-1.5 rounded-full">
             อัพเดทล่าสุด: {new Date().toLocaleDateString('th-TH')}
           </div>
         </div>
@@ -107,16 +107,16 @@ export default function DashboardFormReturn2024() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <StatsCard
-          title="ฟอร์มทั้งหมด"
+          title="ข้อมูลทั้งหมด"
           value={data.stats.totalForms}
           icon="📋"
-          color="emerald"
+          colorClass="text-amber-500"
         />
         <StatsCard
           title="จำนวนองค์กร"
           value={data.stats.totalOrganizations}
           icon="🏢"
-          color="emerald"
+          colorClass="text-amber-500"
         />
       </div>
 

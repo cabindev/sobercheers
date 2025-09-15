@@ -16,6 +16,7 @@ interface OrganizationTypeChartProps {
 export default function OrganizationTypeChart({ data }: OrganizationTypeChartProps) {
   const chartRef = useRef<HTMLDivElement>(null)
   const chartInstance = useRef<echarts.ECharts | null>(null)
+  const yellow = '#f59e0b' // ใช้โทนเหลืองเดียวกันทั้งหมด
 
   useEffect(() => {
     if (!chartRef.current || !data.length) return
@@ -30,16 +31,16 @@ export default function OrganizationTypeChart({ data }: OrganizationTypeChartPro
         textStyle: {
           fontSize: 14,
           fontWeight: 'normal',
-          color: '#92400e'
+          color: yellow
         }
       },
       tooltip: {
         trigger: 'item',
         formatter: (params: any) => {
-          return `<div class="bg-white p-2 rounded shadow border text-sm">
-            <div class="font-medium text-amber-800">${params.name}</div>
-            <div class="text-gray-600 text-xs">จำนวน: ${params.value.toLocaleString('th-TH')} คน</div>
-            <div class="text-gray-600 text-xs">สัดส่วน: ${params.percent}%</div>
+          return `<div style="background:#fff;padding:8px;border-radius:6px;border:1px solid #e5e7eb;font-size:12px;color:${yellow}">
+            <div style="font-weight:500;color:${yellow}">${params.name}</div>
+            <div style="color:#6b7280;font-size:11px">จำนวน: ${params.value.toLocaleString('th-TH')} คน</div>
+            <div style="color:#6b7280;font-size:11px">สัดส่วน: ${params.percent}%</div>
           </div>`
         }
       },
@@ -49,7 +50,7 @@ export default function OrganizationTypeChart({ data }: OrganizationTypeChartPro
         bottom: 0,
         textStyle: {
           fontSize: 9,
-          color: '#6b7280'
+          color: yellow
         }
       },
       series: [
@@ -72,23 +73,23 @@ export default function OrganizationTypeChart({ data }: OrganizationTypeChartPro
               show: true,
               fontSize: 12,
               fontWeight: 'normal',
-              color: '#92400e',
+              color: yellow,
               formatter: '{b}\n{c} คน'
             },
             itemStyle: {
               shadowBlur: 6,
               shadowOffsetX: 0,
-              shadowColor: 'rgba(146, 64, 14, 0.2)'
+              shadowColor: 'rgba(245,158,11,0.2)'
             }
           },
           labelLine: {
             show: false
           },
-          data: data.map((item, index) => ({
+          data: data.map((item) => ({
             value: item.count,
             name: item.type,
             itemStyle: {
-              color: `hsl(${45 + index * 12}, 68%, ${55 + (index % 5) * 5}%)`
+              color: yellow
             }
           }))
         }
@@ -121,20 +122,20 @@ export default function OrganizationTypeChart({ data }: OrganizationTypeChartPro
       
       {/* Top types list */}
       <div className="mt-3 pt-3 border-t border-amber-50">
-        <h4 className="text-xs font-medium text-amber-800 mb-2">
+        <h4 className="text-xs font-medium mb-2" style={{ color: yellow }}>
           อาชีพ/องค์กรที่พบมากที่สุด
         </h4>
         <div className="grid grid-cols-1 gap-1">
-          {topTypes.map((item, index) => (
+          {topTypes.map((item) => (
             <div key={item.type} className="flex items-center justify-between text-xs">
               <div className="flex items-center">
                 <div 
                   className="w-2 h-2 rounded-full mr-2"
-                  style={{ backgroundColor: `hsl(${45 + index * 12}, 68%, ${55 + (index % 5) * 5}%)` }}
+                  style={{ backgroundColor: yellow }}
                 />
-                <span className="text-gray-700 font-light">{item.type}</span>
+                <span className="font-light" style={{ color: '#374151' }}>{item.type}</span>
               </div>
-              <div className="text-amber-700 font-light">
+              <div className="font-light" style={{ color: yellow }}>
                 {item.count.toLocaleString('th-TH')} ({item.percentage}%)
               </div>
             </div>
@@ -143,8 +144,8 @@ export default function OrganizationTypeChart({ data }: OrganizationTypeChartPro
         
         <div className="mt-2 pt-2 border-t border-amber-50">
           <div className="text-center">
-            <p className="text-xs text-gray-500 font-light">รวมทั้งหมด</p>
-            <p className="text-sm font-light text-amber-800">
+            <p className="text-xs font-light" style={{ color: '#6b7280' }}>รวมทั้งหมด</p>
+            <p className="text-sm font-light" style={{ color: yellow }}>
               {totalCount.toLocaleString('th-TH')} คน
             </p>
           </div>

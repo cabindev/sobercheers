@@ -137,7 +137,7 @@ export default function RegionTypeChart({ data }: RegionTypeChartProps) {
 
     // Prepare data for nested pie chart
     const seriesData: any[] = []
-    const colors = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5', '#F0FDF4']
+    const colors = ['#D97706', '#F59E0B', '#FBBF24', '#FCD34D', '#FDE68A', '#FEF3C7']
     let colorIndex = 0
 
     // Create nested data structure
@@ -169,33 +169,33 @@ export default function RegionTypeChart({ data }: RegionTypeChartProps) {
         textStyle: {
           fontSize: 14,
           fontWeight: 'normal',
-          color: '#065F46'
+          color: '#92400e'
         }
       },
       tooltip: {
         trigger: 'item',
         backgroundColor: 'white',
-        borderColor: '#A7F3D0',
+        borderColor: '#FDE68A',
         borderWidth: 1,
         textStyle: {
-          color: '#065F46'
+          color: '#92400e'
         },
         formatter: (params: any) => {
           if (params.data.children) {
             // Region tooltip
             return `<div class="bg-white p-2 rounded shadow border text-sm">
-              <div class="font-medium text-emerald-800">${params.name}</div>
-              <div class="text-emerald-600 text-xs">จำนวน: ${params.value.toLocaleString('th-TH')} ฟอร์ม</div>
-              <div class="text-emerald-600 text-xs">สัดส่วน: ${params.percent}%</div>
+              <div class="font-medium text-amber-800">${params.name}</div>
+              <div class="text-amber-600 text-xs">จำนวน: ${params.value.toLocaleString('th-TH')} ฟอร์ม</div>
+              <div class="text-amber-600 text-xs">สัดส่วน: ${params.percent}%</div>
             </div>`
           } else {
             // Type tooltip
             const [region, type] = params.name.split(' - ')
             return `<div class="bg-white p-2 rounded shadow border text-sm">
-              <div class="font-medium text-emerald-800">${region}</div>
-              <div class="font-medium text-emerald-700">${type}</div>
-              <div class="text-emerald-600 text-xs">จำนวน: ${params.value.toLocaleString('th-TH')} ฟอร์ม</div>
-              <div class="text-emerald-600 text-xs">สัดส่วน: ${params.percent}%</div>
+              <div class="font-medium text-amber-800">${region}</div>
+              <div class="font-medium text-amber-700">${type}</div>
+              <div class="text-amber-600 text-xs">จำนวน: ${params.value.toLocaleString('th-TH')} ฟอร์ม</div>
+              <div class="text-amber-600 text-xs">สัดส่วน: ${params.percent}%</div>
             </div>`
           }
         }
@@ -214,7 +214,7 @@ export default function RegionTypeChart({ data }: RegionTypeChartProps) {
           label: {
             show: true,
             fontSize: 10,
-            color: '#065F46',
+            color: '#92400e',
             formatter: '{b}'
           }
         },
@@ -249,7 +249,7 @@ export default function RegionTypeChart({ data }: RegionTypeChartProps) {
           label: {
             show: true,
             fontSize: 9,
-            color: '#065F46',
+            color: '#92400e',
             formatter: (params: any) => {
               const [, type] = params.name.split(' - ')
               return type
@@ -279,15 +279,15 @@ export default function RegionTypeChart({ data }: RegionTypeChartProps) {
   }, [data])
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm border border-emerald-100">
+    <div className="bg-white p-4 rounded-lg shadow-sm border border-amber-100">
       <div 
         ref={chartRef} 
         className="w-full h-80"
       />
       
       {/* Summary by region */}
-      <div className="mt-3 pt-3 border-t border-emerald-50">
-        <h4 className="text-xs font-medium text-emerald-800 mb-2">
+      <div className="mt-3 pt-3 border-t border-amber-50">
+        <h4 className="text-xs font-medium text-amber-800 mb-2">
           สรุปตามภูมิภาค
         </h4>
         <div className="grid grid-cols-2 gap-2 text-xs">
@@ -311,11 +311,11 @@ export default function RegionTypeChart({ data }: RegionTypeChartProps) {
                 <div className="flex items-center">
                   <div 
                     className="w-2 h-2 rounded-full mr-2"
-                    style={{ backgroundColor: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5', '#F0FDF4'][index % 6] }}
+                    style={{ backgroundColor: ['#D97706', '#F59E0B', '#FBBF24', '#FCD34D', '#FDE68A', '#FEF3C7'][index % 6] }}
                   />
-                  <span className="text-emerald-700 font-light">{region}</span>
+                  <span className="text-amber-700 font-light">{region}</span>
                 </div>
-                <div className="text-emerald-600 font-light">
+                <div className="text-amber-600 font-light">
                   {summary.total.toLocaleString('th-TH')} ({summary.types.size} ประเภท)
                 </div>
               </div>

@@ -33,13 +33,13 @@ export default function DashboardFormReturn2025() {
 
   if (loading) {
     return (
-      <div className="p-8 space-y-8 bg-gradient-to-br from-orange-50/40 via-white to-orange-100/30 min-h-screen">
+      <div className="p-8 space-y-8 min-h-screen">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <h1 className="text-2xl font-bold text-orange-800 tracking-tight">
+            <h1 className="text-2xl font-semibold text-black tracking-tight">
               Dashboard Form Return 2025
             </h1>
-            <p className="text-sm text-orange-600/70 mt-1">
+            <p className="text-sm text-black/70 mt-1">
               ภาพรวมข้อมูลการคืนฟอร์มปี 2025
             </p>
           </div>
@@ -47,19 +47,19 @@ export default function DashboardFormReturn2025() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white p-6 rounded-xl shadow-sm animate-pulse ring-1 ring-orange-100/50">
-              <div className="bg-gradient-to-r from-orange-400 to-orange-500 h-1.5 mb-4"></div>
-              <div className="h-4 bg-orange-100 rounded w-3/4 mb-3"></div>
-              <div className="h-8 bg-orange-200 rounded w-1/2"></div>
+            <div key={i} className="bg-white p-6 rounded-xl shadow-sm animate-pulse ring-1 ring-amber-100/50">
+              <div className="bg-gradient-to-r from-amber-600 to-amber-700 h-1.5 mb-4"></div>
+              <div className="h-4 bg-amber-100 rounded w-3/4 mb-3"></div>
+              <div className="h-8 bg-amber-200 rounded w-1/2"></div>
             </div>
           ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-white p-6 rounded-xl shadow-sm animate-pulse ring-1 ring-orange-100/50">
-              <div className="h-5 bg-orange-100 rounded w-1/3 mb-4"></div>
-              <div className="h-48 bg-orange-50 rounded-lg"></div>
+            <div key={i} className="bg-white p-6 rounded-xl shadow-sm animate-pulse ring-1 ring-amber-100/50">
+              <div className="h-5 bg-amber-100 rounded w-1/3 mb-4"></div>
+              <div className="h-48 bg-amber-50 rounded-lg"></div>
             </div>
           ))}
         </div>
@@ -87,18 +87,18 @@ export default function DashboardFormReturn2025() {
   if (!data) return null
 
   return (
-    <div className="p-8 space-y-8 bg-gradient-to-br from-orange-50/40 via-white to-orange-100/30 min-h-screen">
+    <div className="p-8 space-y-8 min-h-screen">
       <div className="flex items-center justify-between mb-2">
         <div>
-          <h1 className="text-2xl font-bold text-orange-800 tracking-tight">
+          <h1 className="text-2xl font-bold text-black tracking-tight">
             Dashboard Form Return 2025
           </h1>
-          <p className="text-sm text-orange-600/70 mt-1">
+          <p className="text-sm text-black/70 mt-1">
             ภาพรวมข้อมูลการคืนฟอร์มปี 2025
           </p>
         </div>
         <div className="text-right">
-          <div className="text-xs text-orange-600 font-medium bg-orange-50 px-3 py-1.5 rounded-full">
+          <div className="text-xs text-black font-medium px-3 py-1.5 rounded-full">
             อัพเดทล่าสุด: {new Date().toLocaleDateString('th-TH')}
           </div>
         </div>
@@ -107,23 +107,23 @@ export default function DashboardFormReturn2025() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatsCard
-          title="ฟอร์มทั้งหมด"
+          title="ข้อมูลทั้งหมด"
           value={data.stats.totalForms}
           icon="📋"
-          color="orange"
+          colorClass="text-amber-500"
           trend={data.stats.monthlyGrowth}
         />
         <StatsCard
           title="จำนวนองค์กร"
           value={data.stats.totalOrganizations}
           icon="🏢"
-          color="orange"
+          colorClass="text-amber-500"
         />
         <StatsCard
           title="แนวโน้มรายเดือน"
           value={data.stats.monthlyGrowth}
           icon="📊"
-          color="orange"
+          colorClass="text-amber-500"
           trend={data.stats.monthlyGrowth}
         />
       </div>

@@ -136,20 +136,20 @@ export default function RegionChart({ data }: RegionChartProps) {
         textStyle: {
           fontSize: 14,
           fontWeight: 'normal',
-          color: '#065F46'
+          color: '#92400e'
         }
       },
       tooltip: {
         trigger: 'item',
         backgroundColor: 'white',
-        borderColor: '#A7F3D0',
+        borderColor: '#FDE68A',
         borderWidth: 1,
         formatter: (params: any) => {
           const percentage = ((params.value / totalCount) * 100).toFixed(1)
           return `<div class="bg-white p-2 rounded shadow border text-sm">
-            <div class="font-medium text-emerald-800">${params.name}</div>
-            <div class="text-emerald-600 text-xs">จำนวน: ${params.value.toLocaleString('th-TH')} ฟอร์ม</div>
-            <div class="text-emerald-600 text-xs">สัดส่วน: ${percentage}%</div>
+            <div class="font-medium text-amber-800">${params.name}</div>
+            <div class="text-amber-600 text-xs">จำนวน: ${params.value.toLocaleString('th-TH')} ฟอร์ม</div>
+            <div class="text-amber-600 text-xs">สัดส่วน: ${percentage}%</div>
           </div>`
         }
       },
@@ -159,7 +159,7 @@ export default function RegionChart({ data }: RegionChartProps) {
         bottom: 0,
         textStyle: {
           fontSize: 10,
-          color: '#065F46'
+          color: '#92400e'
         }
       },
       series: [
@@ -183,12 +183,12 @@ export default function RegionChart({ data }: RegionChartProps) {
               show: true,
               fontSize: 14,
               fontWeight: 'normal',
-              color: '#065F46'
+              color: '#92400e'
             },
             itemStyle: {
               shadowBlur: 6,
               shadowOffsetX: 0,
-              shadowColor: 'rgba(16, 185, 129, 0.2)'
+              shadowColor: 'rgba(146, 64, 14, 0.2)'
             }
           },
           labelLine: {
@@ -198,7 +198,7 @@ export default function RegionChart({ data }: RegionChartProps) {
             value: item.value,
             name: item.name,
             itemStyle: {
-              color: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5', '#F0FDF4'][index % 6]
+              color: ['#D97706', '#F59E0B', '#FBBF24', '#FCD34D', '#FDE68A', '#FEF3C7'][index % 6]
             }
           }))
         }
@@ -220,15 +220,15 @@ export default function RegionChart({ data }: RegionChartProps) {
   }, [data])
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm border border-emerald-100">
+    <div className="bg-white p-4 rounded-lg shadow-sm border border-amber-100">
       <div 
         ref={chartRef} 
         className="w-full h-72"
       />
       
       {/* Region summary */}
-      <div className="mt-3 pt-3 border-t border-emerald-50">
-        <h4 className="text-xs font-medium text-emerald-800 mb-2">
+      <div className="mt-3 pt-3 border-t border-amber-50">
+        <h4 className="text-xs font-medium text-amber-800 mb-2">
           สรุปตามภูมิภาค
         </h4>
         <div className="grid grid-cols-1 gap-1">
@@ -248,7 +248,7 @@ export default function RegionChart({ data }: RegionChartProps) {
 
             return regionData.slice(0, 6).map((item, index) => {
               const percentage = ((item.value / totalCount) * 100).toFixed(1)
-              const colors = ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5', '#F0FDF4']
+              const colors = ['#D97706', '#F59E0B', '#FBBF24', '#FCD34D', '#FDE68A', '#FEF3C7']
               
               return (
                 <div key={item.name} className="flex items-center justify-between text-xs">
@@ -257,9 +257,9 @@ export default function RegionChart({ data }: RegionChartProps) {
                       className="w-2 h-2 rounded-full mr-2"
                       style={{ backgroundColor: colors[index % colors.length] }}
                     />
-                    <span className="text-emerald-700 font-light">{item.name}</span>
+                    <span className="text-amber-700 font-light">{item.name}</span>
                   </div>
-                  <div className="text-emerald-600 font-light">
+                  <div className="text-amber-600 font-light">
                     {item.value.toLocaleString('th-TH')} ({percentage}%)
                   </div>
                 </div>

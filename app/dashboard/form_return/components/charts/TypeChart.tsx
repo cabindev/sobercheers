@@ -1,7 +1,12 @@
+//dashboard/form_return/components/charts/TypeChart.tsx
 'use client'
 
 import React, { useEffect, useRef } from 'react'
 import * as echarts from 'echarts'
+
+const yellow = '#f59e0b'
+const yellowDark = '#d97706'
+const yellowAlpha = 'rgba(245,158,11,0.2)'
 
 interface TypeData {
   type: string
@@ -30,7 +35,7 @@ export default function TypeChart({ data }: TypeChartProps) {
         textStyle: {
           fontSize: 14,
           fontWeight: 'normal',
-          color: '#92400e'
+          color: yellow
         }
       },
       tooltip: {
@@ -95,8 +100,8 @@ export default function TypeChart({ data }: TypeChartProps) {
             value: item.count,
             itemStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: `hsl(${50 + index * 10}, 70%, 65%)` },
-                { offset: 1, color: `hsl(${50 + index * 10}, 70%, 50%)` }
+                { offset: 0, color: yellow },
+                { offset: 1, color: yellowDark }
               ]),
               borderRadius: [2, 2, 0, 0]
             }
@@ -104,13 +109,13 @@ export default function TypeChart({ data }: TypeChartProps) {
           emphasis: {
             itemStyle: {
               shadowBlur: 6,
-              shadowColor: 'rgba(146, 64, 14, 0.2)'
+              shadowColor: yellowAlpha
             }
           },
           label: {
             show: true,
             position: 'top',
-            color: '#92400e',
+            color: yellow,
             fontSize: 10,
             fontWeight: 'normal',
             formatter: '{c}'
@@ -145,13 +150,13 @@ export default function TypeChart({ data }: TypeChartProps) {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <p className="text-xs text-gray-500 font-light">ประเภทที่มีมากที่สุด</p>
-            <p className="text-sm font-light text-amber-800">
+            <p className="text-sm font-light" style={{ color: yellow }}>
               {data[0]?.type || '-'}
             </p>
           </div>
           <div>
             <p className="text-xs text-gray-500 font-light">จำนวนประเภททั้งหมด</p>
-            <p className="text-sm font-light text-amber-800">
+            <p className="text-sm font-light" style={{ color: yellow }}>
               {data.length} ประเภท
             </p>
           </div>

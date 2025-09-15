@@ -1,7 +1,11 @@
+//dashboard/form_return/components/charts/ProvinceChart.tsx
 'use client'
 
 import React, { useEffect, useRef } from 'react'
 import * as echarts from 'echarts'
+
+const yellow = '#f59e0b' // ใช้โทนเหลืองเดียวกันทั้งหมด
+const yellowShadow = 'rgba(245, 158, 11, 0.18)'
 
 interface ProvinceData {
   province: string
@@ -30,7 +34,7 @@ export default function ProvinceChart({ data }: ProvinceChartProps) {
         textStyle: {
           fontSize: 14,
           fontWeight: 'normal',
-          color: '#92400e'
+          color: yellow
         }
       },
       tooltip: {
@@ -49,7 +53,7 @@ export default function ProvinceChart({ data }: ProvinceChartProps) {
         bottom: 0,
         textStyle: {
           fontSize: 10,
-          color: '#6b7280'
+          color: yellow
         }
       },
       series: [
@@ -73,22 +77,22 @@ export default function ProvinceChart({ data }: ProvinceChartProps) {
               show: true,
               fontSize: 14,
               fontWeight: 'normal',
-              color: '#92400e'
+              color: yellow
             },
             itemStyle: {
               shadowBlur: 6,
               shadowOffsetX: 0,
-              shadowColor: 'rgba(146, 64, 14, 0.2)'
+              shadowColor: yellowShadow
             }
           },
           labelLine: {
             show: false
           },
-          data: data.slice(0, 15).map((item, index) => ({
+          data: data.slice(0, 15).map((item) => ({
             value: item.count,
             name: item.province,
             itemStyle: {
-              color: `hsl(${45 + index * 8}, 65%, ${60 + index * 2}%)`
+              color: yellow
             }
           }))
         }
@@ -118,20 +122,20 @@ export default function ProvinceChart({ data }: ProvinceChartProps) {
       
       {/* Top provinces list */}
       <div className="mt-3 pt-3 border-t border-amber-50">
-        <h4 className="text-xs font-medium text-amber-800 mb-2">
+        <h4 className="text-xs font-medium mb-2" style={{ color: yellow }}>
           จังหวัดที่มีการส่งฟอร์มมากที่สุด
         </h4>
         <div className="grid grid-cols-1 gap-1">
-          {data.slice(0, 5).map((item, index) => (
+          {data.slice(0, 5).map((item) => (
             <div key={item.province} className="flex items-center justify-between text-xs">
               <div className="flex items-center">
                 <div 
                   className="w-2 h-2 rounded-full mr-2"
-                  style={{ backgroundColor: `hsl(${45 + index * 8}, 65%, ${60 + index * 2}%)` }}
+                  style={{ backgroundColor: yellow }}
                 />
                 <span className="text-gray-700 font-light">{item.province}</span>
               </div>
-              <div className="text-amber-700 font-light">
+              <div className="font-light" style={{ color: yellow }}>
                 {item.count.toLocaleString('th-TH')} ({item.percentage}%)
               </div>
             </div>

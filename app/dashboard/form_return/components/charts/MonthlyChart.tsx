@@ -3,6 +3,8 @@
 import React, { useEffect, useRef } from 'react'
 import * as echarts from 'echarts'
 
+const yellow = '#f59e0b' // ใช้โทนเหลืองเดียวกันทั้งหมด
+
 interface MonthlyData {
   month: string
   count: number
@@ -29,7 +31,7 @@ export default function MonthlyChart({ data }: MonthlyChartProps) {
         textStyle: {
           fontSize: 14,
           fontWeight: 400,
-          color: '#92400e'
+          color: yellow
         }
       },
       tooltip: {
@@ -114,15 +116,15 @@ export default function MonthlyChart({ data }: MonthlyChartProps) {
           data: data.map(item => item.count),
           itemStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: '#fbbf24' },
-              { offset: 1, color: '#f59e0b' }
+              { offset: 0, color: yellow },
+              { offset: 1, color: yellow }
             ]),
             borderRadius: [2, 2, 0, 0]
           },
           emphasis: {
             itemStyle: {
               shadowBlur: 6,
-              shadowColor: 'rgba(146, 64, 14, 0.2)'
+              shadowColor: 'rgba(245,158,11,0.2)'
             }
           }
         }
@@ -159,13 +161,13 @@ export default function MonthlyChart({ data }: MonthlyChartProps) {
         <div className="grid grid-cols-2 gap-3">
           <div className="text-center">
             <p className="text-xs text-gray-500 font-light">รวมฟอร์ม (2025)</p>
-            <p className="text-sm font-light text-amber-800">
+            <p className="text-sm font-light" style={{ color: yellow }}>
               {totalForms.toLocaleString('th-TH')}
             </p>
           </div>
           <div className="text-center">
             <p className="text-xs text-gray-500 font-light">เดือนที่มีมากสุด</p>
-            <p className="text-sm font-light text-amber-800">
+            <p className="text-sm font-light" style={{ color: yellow }}>
               {peakMonth?.month || '-'}
             </p>
           </div>
