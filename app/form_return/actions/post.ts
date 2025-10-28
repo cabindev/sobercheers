@@ -66,15 +66,6 @@ export async function createFormReturn(formData: FormData): Promise<{
       return { success: false, error: 'รูปภาพต้องเป็นไฟล์ JPEG, PNG หรือ WebP เท่านั้น' };
     }
 
-    // Check if phone number already exists
-    const existingForm = await prisma.form_return.findUnique({
-      where: { phoneNumber: phoneNumber.trim() }
-    });
-
-    if (existingForm) {
-      return { success: false, error: 'เบอร์โทรศัพท์นี้ถูกใช้แล้ว' };
-    }
-
     // Save images sequentially
     let image1Path: string;
     let image2Path: string;
@@ -282,23 +273,11 @@ export async function updateFormReturn(
     const image2 = formData.get('image2') as File | null;
 
     // Validation
-    if (!firstName?.trim() || !lastName?.trim() || !organizationName?.trim() || 
-        !addressLine1?.trim() || !district?.trim() || !amphoe?.trim() || 
-        !province?.trim() || !zipcode?.trim() || !type?.trim() || 
+    if (!firstName?.trim() || !lastName?.trim() || !organizationName?.trim() ||
+        !addressLine1?.trim() || !district?.trim() || !amphoe?.trim() ||
+        !province?.trim() || !zipcode?.trim() || !type?.trim() ||
         !phoneNumber?.trim() || !numberOfSigners) {
       return { success: false, error: 'กรุณากรอกข้อมูลให้ครบถ้วน' };
-    }
-
-    // Check phone number uniqueness (excluding current record)
-    const existingPhone = await prisma.form_return.findFirst({
-      where: {
-        phoneNumber: phoneNumber.trim(),
-        NOT: { id }
-      }
-    });
-
-    if (existingPhone) {
-      return { success: false, error: 'เบอร์โทรศัพท์นี้ถูกใช้แล้ว' };
     }
 
     // Prepare update data

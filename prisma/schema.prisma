@@ -126,17 +126,17 @@ model Form_return {
   organizationName String
   addressLine1     String
   district         String
-  amphoe           String    
+  amphoe           String
   province         String
   zipcode          String
   type             String
-  phoneNumber      String    @unique
+  phoneNumber      String
   image1           String
   image2           String
   numberOfSigners  Int
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
-  
+
   @@index([createdAt])
   @@index([province, createdAt])
 }
