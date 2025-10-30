@@ -104,9 +104,9 @@ export default function ImageUploadStep({
           แนบรูปภาพประกอบ
         </h3>
         <p className="text-sm text-slate-600">
-          {isEditing 
-            ? 'คุณสามารถแก้ไขรูปภาพที่มีอยู่ หรือเพิ่มรูปภาพใหม่' 
-            : 'กรุณาแนบรูปภาพที่แสดงถึงการดำเนินงานของท่าน (ทั้ง 2 รูป)'
+          {isEditing
+            ? 'คุณสามารถแก้ไขรูปภาพที่มีอยู่ หรือเพิ่มรูปภาพใหม่'
+            : 'คุณสามารถแนบรูปภาพที่แสดงถึงการดำเนินงานของท่าน (ไม่บังคับ)'
           }
         </p>
       </div>
@@ -115,13 +115,8 @@ export default function ImageUploadStep({
         {/* Image 1 */}
         <div className="space-y-4">
           <label className="block text-sm font-medium text-slate-700">
-            รูปภาพที่ 1 
-            {!isEditing && <span className="text-red-500">*</span>}
-            {isEditing && (
-              <span className="text-slate-500 text-xs ml-2">
-                (มีรูปภาพเดิมแล้ว - ไม่บังคับแก้ไข)
-              </span>
-            )}
+            รูปภาพที่ 1
+            <span className="text-slate-500 text-xs ml-2">(ไม่บังคับ)</span>
           </label>
           
           <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
@@ -207,15 +202,10 @@ export default function ImageUploadStep({
         {/* Image 2 */}
         <div className="space-y-4">
           <label className="block text-sm font-medium text-slate-700">
-            รูปภาพที่ 2 
-            {!isEditing && <span className="text-red-500">*</span>}
-            {isEditing && (
-              <span className="text-slate-500 text-xs ml-2">
-                (มีรูปภาพเดิมแล้ว - ไม่บังคับแก้ไข)
-              </span>
-            )}
+            รูปภาพที่ 2
+            <span className="text-slate-500 text-xs ml-2">(ไม่บังคับ)</span>
           </label>
-          
+
           <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
             {image2Preview ? (
               <div className="space-y-4">

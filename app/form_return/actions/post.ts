@@ -30,10 +30,10 @@ export async function createFormReturn(formData: FormData): Promise<{
     const image2 = formData.get('image2') as File | null;
 
     // Enhanced Validation
-    if (!firstName?.trim() || !lastName?.trim() || !organizationName?.trim() || 
-        !addressLine1?.trim() || !district?.trim() || !amphoe?.trim() || 
-        !province?.trim() || !zipcode?.trim() || !type?.trim() || 
-        !phoneNumber?.trim() || !numberOfSigners || !image1 || !image2) {
+    if (!firstName?.trim() || !lastName?.trim() || !organizationName?.trim() ||
+        !addressLine1?.trim() || !district?.trim() || !amphoe?.trim() ||
+        !province?.trim() || !zipcode?.trim() || !type?.trim() ||
+        !phoneNumber?.trim() || !numberOfSigners) {
       return { success: false, error: 'กรุณากรอกข้อมูลให้ครบถ้วน' };
     }
 
@@ -55,37 +55,53 @@ export async function createFormReturn(formData: FormData): Promise<{
       return { success: false, error: 'จำนวนผู้ลงนามมากเกินไป' };
     }
 
-    // File validation
+    // File validation (optional)
     const maxSize = 10 * 1024 * 1024; // 10MB
-    if (image1.size > maxSize || image2.size > maxSize) {
-      return { success: false, error: 'รูปภาพมีขนาดใหญ่เกินไป (สูงสุด 10MB)' };
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+    if (image1 && image1.size > 0) {
+      if (image1.size > maxSize) {
+        return { success: false, error: 'รูปภาพที่ 1 มีขนาดใหญ่เกินไป (สูงสุด 10MB)' };
+      }
+      if (!allowedTypes.includes(image1.type)) {
+        return { success: false, error: 'รูปภาพที่ 1 ต้องเป็นไฟล์ JPEG, PNG หรือ WebP เท่านั้น' };
+      }
     }
 
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-    if (!allowedTypes.includes(image1.type) || !allowedTypes.includes(image2.type)) {
-      return { success: false, error: 'รูปภาพต้องเป็นไฟล์ JPEG, PNG หรือ WebP เท่านั้น' };
+    if (image2 && image2.size > 0) {
+      if (image2.size > maxSize) {
+        return { success: false, error: 'รูปภาพที่ 2 มีขนาดใหญ่เกินไป (สูงสุด 10MB)' };
+      }
+      if (!allowedTypes.includes(image2.type)) {
+        return { success: false, error: 'รูปภาพที่ 2 ต้องเป็นไฟล์ JPEG, PNG หรือ WebP เท่านั้น' };
+      }
     }
 
     // Save images sequentially
-    let image1Path: string;
-    let image2Path: string;
+    let image1Path: string | undefined;
+    let image2Path: string | undefined;
 
     try {
       if (process.env.NODE_ENV === 'development') {
         console.log('Saving images...');
       }
-      
-      image1Path = await saveImage(image1, 'img1');
-      image2Path = await saveImage(image2, 'img2');
-      
+
+      if (image1 && image1.size > 0) {
+        image1Path = await saveImage(image1, 'img1');
+      }
+
+      if (image2 && image2.size > 0) {
+        image2Path = await saveImage(image2, 'img2');
+      }
+
       if (process.env.NODE_ENV === 'development') {
         console.log('Images saved successfully:', { image1Path, image2Path });
       }
     } catch (imageError) {
       console.error('Image saving error:', imageError);
-      return { 
-        success: false, 
-        error: `ไม่สามารถบันทึกรูปภาพได้: ${imageError instanceof Error ? imageError.message : 'ข้อผิดพลาดที่ไม่ทราบสาเหตุ'}` 
+      return {
+        success: false,
+        error: `ไม่สามารถบันทึกรูปภาพได้: ${imageError instanceof Error ? imageError.message : 'ข้อผิดพลาดที่ไม่ทราบสาเหตุ'}`
       };
     }
 

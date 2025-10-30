@@ -131,8 +131,8 @@ model Form_return {
   zipcode          String
   type             String
   phoneNumber      String
-  image1           String
-  image2           String
+  image1           String?
+  image2           String?
   numberOfSigners  Int
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt

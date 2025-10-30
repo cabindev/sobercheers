@@ -43,14 +43,14 @@ export default function CreateFormReturn() {
       case 1:
         return !!(formData.firstName && formData.lastName && formData.organizationName);
       case 2:
-        return !!(formData.addressLine1 && formData.district && formData.amphoe && 
+        return !!(formData.addressLine1 && formData.district && formData.amphoe &&
                  formData.province && formData.zipcode);
       case 3:
-        return !!(formData.phoneNumber && formData.numberOfSigners && 
-                 formData.phoneNumber.length === 10 && 
+        return !!(formData.phoneNumber && formData.numberOfSigners &&
+                 formData.phoneNumber.length === 10 &&
                  formData.numberOfSigners > 1);
       case 4:
-        return !!(image1File && image2File);
+        return true; // รูปภาพไม่บังคับ
       default:
         return true;
     }
