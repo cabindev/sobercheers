@@ -76,32 +76,36 @@ export default function ConfirmationStep({ data, image1File, image2File }: Confi
         {/* Images */}
         <div className="bg-slate-50 rounded-lg p-6">
           <h4 className="font-medium text-slate-900 mb-4">รูปภาพประกอบ</h4>
-          <div className="grid grid-cols-2 gap-4">
-            {image1File && (
-              <div>
-                <p className="text-sm text-slate-600 mb-2">รูปภาพที่ 1</p>
-                <Image
-                  src={URL.createObjectURL(image1File)}
-                  alt="Preview 1"
-                  width={120}
-                  height={120}
-                  className="rounded-lg object-cover"
-                />
-              </div>
-            )}
-            {image2File && (
-              <div>
-                <p className="text-sm text-slate-600 mb-2">รูปภาพที่ 2</p>
-                <Image
-                  src={URL.createObjectURL(image2File)}
-                  alt="Preview 2"
-                  width={120}
-                  height={120}
-                  className="rounded-lg object-cover"
-                />
-              </div>
-            )}
-          </div>
+          {!image1File && !image2File ? (
+            <p className="text-sm text-slate-500 italic">ไม่มีรูปภาพแนบ</p>
+          ) : (
+            <div className="grid grid-cols-2 gap-4">
+              {image1File && (
+                <div>
+                  <p className="text-sm text-slate-600 mb-2">รูปภาพที่ 1</p>
+                  <Image
+                    src={URL.createObjectURL(image1File)}
+                    alt="Preview 1"
+                    width={120}
+                    height={120}
+                    className="rounded-lg object-cover"
+                  />
+                </div>
+              )}
+              {image2File && (
+                <div>
+                  <p className="text-sm text-slate-600 mb-2">รูปภาพที่ 2</p>
+                  <Image
+                    src={URL.createObjectURL(image2File)}
+                    alt="Preview 2"
+                    width={120}
+                    height={120}
+                    className="rounded-lg object-cover"
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 
 interface ProductionImageProps {
- src: string;
+ src?: string | null;
  alt: string;
  width?: number;
  height?: number;
@@ -45,9 +45,16 @@ export default function ProductionImage({
  useEffect(() => {
    if (!isClient) return;
 
+   // ✅ Handle null or undefined src
+   if (!src || src.trim() === '') {
+     setHasError(true);
+     setImageSrc('/images/placeholder.jpg');
+     return;
+   }
+
    // ✅ Handle different src formats
    let fullSrc = src;
-   
+
    // If it's a blob URL (from file upload preview)
    if (src.startsWith('blob:')) {
      fullSrc = src;
