@@ -12,8 +12,8 @@ interface ImageUploadStepProps {
   onImageUpdate: (image1File?: File, image2File?: File) => void;
   isEditing?: boolean;
   existingImages?: {
-    image1?: string;
-    image2?: string;
+    image1?: string | null;
+    image2?: string | null;
   };
 }
 

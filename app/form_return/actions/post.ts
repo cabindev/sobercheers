@@ -106,22 +106,25 @@ export async function createFormReturn(formData: FormData): Promise<{
     }
 
     // Create form return record
+    const createData: any = {
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      organizationName: organizationName.trim(),
+      addressLine1: addressLine1.trim(),
+      district: district.trim(),
+      amphoe: amphoe.trim(),
+      province: province.trim(),
+      zipcode: zipcode.trim(),
+      type: type.trim(),
+      phoneNumber: phoneNumber.trim(),
+      numberOfSigners,
+    };
+
+    if (image1Path) createData.image1 = image1Path;
+    if (image2Path) createData.image2 = image2Path;
+
     const newFormReturn = await prisma.form_return.create({
-      data: {
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        organizationName: organizationName.trim(),
-        addressLine1: addressLine1.trim(),
-        district: district.trim(),
-        amphoe: amphoe.trim(),
-        province: province.trim(),
-        zipcode: zipcode.trim(),
-        type: type.trim(),
-        phoneNumber: phoneNumber.trim(),
-        numberOfSigners,
-        ...(image1Path && { image1: image1Path }),
-        ...(image2Path && { image2: image2Path }),
-      },
+      data: createData,
     });
 
     // ✅ เฉพาะ revalidatePath เมื่อมีข้อมูลใหม่

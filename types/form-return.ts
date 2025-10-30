@@ -12,8 +12,8 @@ export interface FormReturnData {
   type: string;
   phoneNumber: string;
   numberOfSigners: number;
-  image1?: string;
-  image2?: string;
+  image1?: string | null;
+  image2?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
