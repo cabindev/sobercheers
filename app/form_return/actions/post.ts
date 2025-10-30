@@ -119,8 +119,8 @@ export async function createFormReturn(formData: FormData): Promise<{
         type: type.trim(),
         phoneNumber: phoneNumber.trim(),
         numberOfSigners,
-        image1: image1Path,
-        image2: image2Path,
+        ...(image1Path && { image1: image1Path }),
+        ...(image2Path && { image2: image2Path }),
       },
     });
 
